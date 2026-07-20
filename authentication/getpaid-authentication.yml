@@ -1,0 +1,17 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/getpaid-openapi-original.yml
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: OAuth
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.getpaid.io/oauth/token
+    scopes: 4
+  sources:
+  - openapi/getpaid-openapi-original.yml

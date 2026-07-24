@@ -1,0 +1,704 @@
+openapi: 3.1.0
+info:
+  title: Getpaid Accounts API
+  version: v2
+  contact:
+    email: support@getpaid.io
+  description: '# Getting started
+
+
+    Our APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all
+
+    resources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage
+
+    of the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of
+
+    this Getpaid API.
+
+
+    To get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid
+
+    dashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to
+
+    authenticate with Getpaid API.
+
+
+    ## Postman
+
+
+    Getpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and
+
+    the environments](/integration/api/postman) to start testing the Getpaid API.
+
+
+    ## Fields formats
+
+
+    | Type | Format |
+
+    | :- | :- |
+
+    | `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |
+
+    | `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |
+
+    | `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |
+
+    | `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |
+
+    | `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |
+
+    | `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |
+
+    | `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |
+
+    | `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |
+
+    | `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |
+
+    | `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |
+
+    | `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |
+
+    '
+servers:
+- url: https://api.getpaid.io
+  description: Live
+- url: https://api.sandbox.getpaid.io
+  description: Sandbox
+tags:
+- name: Accounts
+  description: Getpaid accounts created for sellers so they can start accepting payments and receiving payouts.
+paths:
+  /v2/accounts/query:
+    post:
+      tags:
+      - Accounts
+      summary: Query accounts
+      description: 'Query accounts filtering, sorting and paginating results.
+
+
+        See [Queries](/operate/queries) for more examples and details about pagination and common query patterns.
+
+        '
+      operationId: query_accounts
+      security:
+      - OAuth:
+        - accounts:read
+      parameters:
+      - $ref: '#/components/parameters/GetpaidIdempotencyKey'
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryAccountsRequest'
+            examples:
+              QueryAccounts:
+                $ref: '#/components/examples/QueryAccounts'
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Getpaid-Trace-Id:
+              $ref: '#/components/headers/GetpaidTraceId'
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryAccountsResponse'
+              examples:
+                FilteredAccounts:
+                  $ref: '#/components/examples/FilteredAccounts'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          $ref: '#/components/responses/422InvalidParameters'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  /v2/accounts/{account_id}/themes:
+    get:
+      tags:
+      - Accounts
+      summary: Get account themes
+      description: 'Retrieve the themes configured for an account.
+
+
+        Sellers can retrieve themes they own. Platforms can retrieve themes for sellers they own.
+
+        '
+      operationId: get_account_themes
+      security:
+      - OAuth:
+        - accounts:read
+      parameters:
+      - name: account_id
+        in: path
+        description: The ID of the account whose themes should be retrieved.
+        required: true
+        schema:
+          $ref: '#/components/schemas/AccountId'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Getpaid-Trace-Id:
+              $ref: '#/components/headers/GetpaidTraceId'
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetThemesResponse'
+              examples:
+                AccountThemes:
+                  $ref: '#/components/examples/AccountThemes'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+components:
+  examples:
+    FilteredAccounts:
+      summary: Filtered accounts
+      value:
+        type: accounts
+        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+        data:
+        - id: acc_44678r08jtm8zbt227tzhc4nw5
+          legal_name: Garage Deutschland AG
+          country: DE
+          created_at: '2026-01-16T08:02:55.339Z'
+        - id: acc_5y789s19kum9act338uaic5ox6
+          legal_name: Titan Auto Parts GmbH
+          country: DE
+          created_at: '2026-01-04T11:28:17.144Z'
+    AccountThemes:
+      summary: Account themes
+      value:
+        themes:
+        - id: thm_4jkgtzffbf9pzem7dgfhdeztwa
+          name: Default Titan Auto Parts GmbH
+          settings:
+            logo:
+              id: doc_4wt0wrfqwz0vkatave0fkjg046
+              content_type: image/png
+              url: https://example.com/logo.png
+            business:
+              legal_name: Titan Auto Parts GmbH
+              trading_name: Titan Auto
+            colors:
+              primary: '#05495c'
+              secondary: '#e07b7b'
+          is_default: true
+          created_at: '2026-02-03T10:00:00.000Z'
+          updated_at: '2026-02-03T10:00:00.000Z'
+    QueryAccounts:
+      summary: Query accounts
+      value:
+        type: accounts
+        filters:
+          country: DE
+          legal_name: Garage
+        sorts:
+        - field: created_at
+          direction: descending
+  responses:
+    422InvalidParameters:
+      description: Invalid Parameters
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ProblemDetailsBase'
+            - type: object
+              required:
+              - errors
+              properties:
+                errors:
+                  type: object
+                  description: The JSON path of any request body fields or header names that are invalid with a description of the error
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+                  example:
+                    currency:
+                    - invalid_option
+                type:
+                  example: https://docs.getpaid.io/integration/api/responses#422---invalid-parameters
+                title:
+                  example: Invalid Parameters
+                status:
+                  example: 422
+    404NotFound:
+      description: Not Found
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ProblemDetailsBase'
+            - type: object
+              properties:
+                type:
+                  example: https://docs.getpaid.io/integration/api/responses#404---not-found
+                title:
+                  example: Not Found
+                status:
+                  example: 404
+    500InternalServerError:
+      description: Internal Server Error
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    429TooManyRequests:
+      description: Too Many Requests
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    401Unauthorized:
+      description: Unauthorized
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    400BadRequest:
+      description: Bad Request
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+  schemas:
+    QueryAccountsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - accounts
+          filters:
+            $ref: '#/components/schemas/AccountsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/AccountsSortsRequest'
+    PaginationData:
+      description: The list of queried elements.
+      type: array
+      items:
+        type: object
+    AccountId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the account.
+        example: acc_44678r08jtm8zbt227tzhc4nw5
+    AccountsFiltersRequest:
+      description: Filtering accounts.
+      type: object
+      properties:
+        id:
+          allOf:
+          - description: The account identifier to filter by using an exact match operation.
+          - $ref: '#/components/schemas/AccountId'
+        legal_name:
+          description: The account legal name to filter by using a contains operation.
+          type: string
+          maxLength: 255
+        country:
+          allOf:
+          - description: The country to filter by using an exact match operation.
+          - $ref: '#/components/schemas/Country'
+    MediumString:
+      type: string
+      minLength: 1
+      maxLength: 250
+    PaginationFirst:
+      description: Pagination. The number of elements that will be retrieved.
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 100
+    ThemeId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the theme.
+        example: thm_4jkgtzffbf9pzem7dgfhdeztwa
+    Country:
+      type: string
+      format: country
+      minLength: 2
+      maxLength: 2
+      description: The two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+      example: DE
+    AccountLegalName:
+      allOf:
+      - description: The legal name of the account.
+      - $ref: '#/components/schemas/MediumString'
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
+      type: string
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    AccountThemeSettings:
+      type: object
+      required:
+      - logo
+      - business
+      - colors
+      properties:
+        logo:
+          $ref: '#/components/schemas/ThemeAsset'
+        icon:
+          $ref: '#/components/schemas/ThemeAsset'
+        business:
+          $ref: '#/components/schemas/ThemeBusinessSettings'
+        colors:
+          $ref: '#/components/schemas/ThemeColorSettings'
+        font:
+          $ref: '#/components/schemas/ThemeFontSettings'
+    PaginatedResponse:
+      type: object
+      required:
+      - data
+      properties:
+        cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+        data:
+          $ref: '#/components/schemas/PaginationData'
+    ThemeAsset:
+      type: object
+      required:
+      - id
+      - content_type
+      - url
+      properties:
+        id:
+          $ref: '#/components/schemas/DocumentId'
+        content_type:
+          type: string
+          description: The media type of the theme asset.
+          example: image/png
+        url:
+          allOf:
+          - $ref: '#/components/schemas/Url'
+          - description: The public URL of the theme asset.
+            example: https://example.com/logo.png
+    BaseQueryRequest:
+      type: object
+      properties:
+        type:
+          description: 'The type of the Getpaid solution resources to query.
+
+
+            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
+
+            must match the resource targeted by the request URL.
+
+            '
+          type: string
+        first:
+          allOf:
+          - $ref: '#/components/schemas/PaginationFirst'
+        after:
+          $ref: '#/components/schemas/PaginationAfter'
+        filters:
+          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
+        sorts:
+          $ref: '#/components/schemas/BaseSortsRequest'
+    ThemeBusinessSettings:
+      type: object
+      required:
+      - legal_name
+      properties:
+        legal_name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The legal business name displayed by the theme.
+        trading_name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The trading name displayed by the theme.
+    CreatedAt:
+      allOf:
+      - description: When the resource was created.
+      - $ref: '#/components/schemas/DateTime'
+    UpdatedAt:
+      allOf:
+      - description: When the resource was last updated.
+      - $ref: '#/components/schemas/DateTime'
+    PaginationCursor:
+      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+      type: string
+      maxLength: 250
+      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    ThemeFontSettings:
+      type: object
+      properties:
+        family:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The font family used by the theme.
+        size:
+          type: string
+          description: The base font size used by the theme.
+          example: 0.875rem
+        external_url:
+          allOf:
+          - $ref: '#/components/schemas/Url'
+          - description: The URL of the external font stylesheet used by the theme.
+            example: https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap
+    PaginationAfter:
+      description: Pagination. The `cursor` from next page will be retrieved.
+      type: string
+      maxLength: 250
+    AccountTheme:
+      type: object
+      required:
+      - id
+      - name
+      - settings
+      - is_default
+      - created_at
+      - updated_at
+      properties:
+        id:
+          $ref: '#/components/schemas/ThemeId'
+        name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The name of the theme.
+        settings:
+          $ref: '#/components/schemas/AccountThemeSettings'
+        is_default:
+          type: boolean
+          description: Whether this is the default theme for the account.
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+    ThemeColorSettings:
+      type: object
+      required:
+      - primary
+      - secondary
+      properties:
+        primary:
+          type: string
+          description: The primary theme color as a hex RGB value.
+          example: '#05495c'
+        secondary:
+          type: string
+          description: The secondary theme color as a hex RGB value.
+          example: '#e07b7b'
+        text:
+          type: string
+          description: The text theme color as a hex RGB value.
+          example: '#000000'
+        error_text:
+          type: string
+          description: The error text theme color as a hex RGB value.
+          example: '#b71d18'
+    AccountsSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        allOf:
+        - $ref: '#/components/schemas/BaseSortItemRequest'
+        - properties:
+            field:
+              enum:
+              - id
+              - created_at
+              - legal_name
+              - country
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    BaseSortItemRequest:
+      description: Each field to sort by.
+      type: object
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          description: The field to sort by. Each field available can only be used once in the list.
+          type: string
+        direction:
+          description: The sort direction
+          type: string
+          enum:
+          - ascending
+          - descending
+    GetThemesResponse:
+      type: object
+      required:
+      - themes
+      properties:
+        themes:
+          type: array
+          description: The account themes.
+          items:
+            $ref: '#/components/schemas/AccountTheme'
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
+    Url:
+      type: string
+      format: uri
+      maxLength: 1024
+    DocumentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the document.
+        example: doc_4wt0wrfqwz0vkatave0fkjg046
+    BaseSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        description: Each field to sort by.
+        type: object
+        required:
+        - field
+        - direction
+        properties:
+          field:
+            description: The field to sort by. Each field available can only be used once in the list.
+            type: string
+          direction:
+            description: The sort direction
+            type: string
+            enum:
+            - ascending
+            - descending
+    QueryAccountsResponse:
+      allOf:
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - accounts
+          cursor:
+            type: string
+          data:
+            items:
+              required:
+              - id
+              - legal_name
+              - country
+              - created_at
+              properties:
+                id:
+                  $ref: '#/components/schemas/AccountId'
+                legal_name:
+                  $ref: '#/components/schemas/AccountLegalName'
+                country:
+                  $ref: '#/components/schemas/Country'
+                created_at:
+                  $ref: '#/components/schemas/CreatedAt'
+      - $ref: '#/components/schemas/PaginatedResponse'
+  parameters:
+    GetpaidIdempotencyKey:
+      name: Getpaid-Idempotency-Key
+      in: header
+      description: 'A unique idempotency key to allow safe retrying.
+
+        See [Getpaid API idempotency](/integration/api/idempotency) for more details.
+
+        '
+      schema:
+        type: string
+        minLength: 10
+        maxLength: 100
+        pattern: ^[a-zA-Z0-9_-]{10,100}$
+        example: 5c255194-30ec-11ed-a261-0242ac120002
+  headers:
+    GetpaidTraceId:
+      description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests
+      schema:
+        type: string
+        example: 96ce50247f87f540bb2d86771b3728b8
+  securitySchemes:
+    OAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.getpaid.io/oauth/token
+          scopes:
+            accounts:read: Allows to read accounts and onboarding applications.
+            accounts:read_write: Allows to read, create and/or operate accounts and onboarding applications.
+            payments:read: Allows to read payments and checkouts.
+            payments:read_write: Allows to read, create and/or operate payments and checkouts.
+x-tagGroups:
+- name: General
+  tags:
+  - Authentication
+  - Documents
+- name: Accept payments
+  tags:
+  - Checkouts
+  - Payments
+  - Accept payments webhooks
+- name: Onboard sellers
+  tags:
+  - Accounts
+  - Applications
+  - Onboard sellers webhooks
+- name: Operate
+  tags:
+  - Queries
+  - Exports
+  - Analytics
+  - Operate webhooks

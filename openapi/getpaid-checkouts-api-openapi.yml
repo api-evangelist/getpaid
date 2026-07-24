@@ -1,0 +1,2672 @@
+openapi: 3.1.0
+info:
+  title: Getpaid Accounts Checkouts API
+  version: v2
+  contact:
+    email: support@getpaid.io
+  description: '# Getting started
+
+
+    Our APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all
+
+    resources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage
+
+    of the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of
+
+    this Getpaid API.
+
+
+    To get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid
+
+    dashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to
+
+    authenticate with Getpaid API.
+
+
+    ## Postman
+
+
+    Getpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and
+
+    the environments](/integration/api/postman) to start testing the Getpaid API.
+
+
+    ## Fields formats
+
+
+    | Type | Format |
+
+    | :- | :- |
+
+    | `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |
+
+    | `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |
+
+    | `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |
+
+    | `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |
+
+    | `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |
+
+    | `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |
+
+    | `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |
+
+    | `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |
+
+    | `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |
+
+    | `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |
+
+    | `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |
+
+    '
+servers:
+- url: https://api.getpaid.io
+  description: Live
+- url: https://api.sandbox.getpaid.io
+  description: Sandbox
+tags:
+- name: Checkouts
+  description: Payment checkout sessions for one-time payments that the buyer can complete using Getpaid hosted checkout.
+paths:
+  /v2/checkouts:
+    post:
+      tags:
+      - Checkouts
+      summary: Create a checkout
+      description: "Create a payment checkout session.\n\nRelated webhooks:\n\n- [`checkout_completed`](#tag/Accept-payments-webhooks/operation/checkout_completed): sent when the checkout process is completed with a successful payment.\n- [`checkout_failed`](#tag/Accept-payments-webhooks/operation/checkout_failed): sent when the checkout lifetime is reached without a successful payment attempt, and at least one payment was attempted but none were successful.\n- [`checkout_in_progress`](#tag/Accept-payments-webhooks/operation/checkout_in_progress): sent when the checkout lifetime reaches its expiration, but a payment attempt is still in progress.\n- [`checkout_unattempted`](#tag/Accept-payments-webhooks/operation/checkout_unattempted): sent when the checkout lifetime is reached without a payment.\n- For each payment attempt:\n  - [`payment_captured`](#tag/Accept-payments-webhooks/operation/payment_captured): sent when the payment funds are captured and secured.\n  - [`payment_failed`](#tag/Accept-payments-webhooks/operation/payment_failed): sent when a payment fails due to business (decline) or technical issues.\n"
+      operationId: create_checkout
+      security:
+      - OAuth:
+        - payments:read_write
+      parameters:
+      - $ref: '#/components/parameters/GetpaidIdempotencyKey'
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckoutRequest'
+            examples:
+              CreateCheckout:
+                $ref: '#/components/examples/CreateCheckout'
+              CreateInitialRecurringCheckout:
+                $ref: '#/components/examples/CreateInitialRecurringCheckout'
+              CreateCheckoutExplicitMethods:
+                $ref: '#/components/examples/CreateCheckoutExplicitMethods'
+              CreateCheckoutBuyerDetails:
+                $ref: '#/components/examples/CreateCheckoutBuyerDetails'
+              CreateCheckoutCanada:
+                $ref: '#/components/examples/CreateCheckoutCanada'
+        required: true
+      responses:
+        '201':
+          description: Created
+          headers:
+            Getpaid-Trace-Id:
+              $ref: '#/components/headers/GetpaidTraceId'
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCheckoutResponse'
+              examples:
+                CheckoutCreated:
+                  $ref: '#/components/examples/CheckoutCreated'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          $ref: '#/components/responses/422InvalidParameters'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  /v2/checkouts/{checkout_id}:
+    get:
+      tags:
+      - Checkouts
+      summary: Get a checkout
+      description: Retrieve a payment checkout session.
+      operationId: get_checkout
+      security:
+      - OAuth:
+        - payments:read
+      - OAuth:
+        - payments:read_write
+      parameters:
+      - name: checkout_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/CheckoutId'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Getpaid-Trace-Id:
+              $ref: '#/components/headers/GetpaidTraceId'
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCheckoutResponse'
+              examples:
+                CheckoutCompleted:
+                  $ref: '#/components/examples/CheckoutCompleted'
+                CheckoutInitiated:
+                  $ref: '#/components/examples/CheckoutInitiated'
+                CheckoutStarted:
+                  $ref: '#/components/examples/CheckoutStarted'
+                CheckoutInProgress:
+                  $ref: '#/components/examples/CheckoutInProgress'
+                CheckoutFailed:
+                  $ref: '#/components/examples/CheckoutFailed'
+                CheckoutExpired:
+                  $ref: '#/components/examples/CheckoutExpired'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '422':
+          $ref: '#/components/responses/422InvalidParameters'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  /v2/checkouts/query:
+    post:
+      tags:
+      - Checkouts
+      summary: Query checkouts
+      description: 'Query checkouts filtering, and sorting and paginating results.
+
+
+        See [Query resources](#tag/Queries/operation/query_resources) for more examples and details
+
+        about other resources, pagination and everything related to operate the Getpaid solution.
+
+        '
+      operationId: query_checkouts
+      security:
+      - OAuth:
+        - payments:read
+      parameters:
+      - $ref: '#/components/parameters/GetpaidIdempotencyKey'
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryCheckoutsRequest'
+            examples:
+              QueryPayments:
+                $ref: '#/components/examples/QueryCheckouts'
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Getpaid-Trace-Id:
+              $ref: '#/components/headers/GetpaidTraceId'
+              required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryCheckoutsResponse'
+              examples:
+                FilteredCheckouts:
+                  $ref: '#/components/examples/FilteredCheckouts'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          $ref: '#/components/responses/422InvalidParameters'
+        '429':
+          $ref: '#/components/responses/429TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+components:
+  schemas:
+    CheckoutInitiatedStarted:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - is_expired
+      - amount
+      - currency
+      - flow
+      - origin
+      - payment_methods
+      - splits
+      - payments
+      - theme
+      - events
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        is_expired:
+          $ref: '#/components/schemas/CheckoutIsExpired'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        flow:
+          $ref: '#/components/schemas/CheckoutFlow'
+        origin:
+          $ref: '#/components/schemas/CheckoutOrigin'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsAvailable'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculated'
+        standing_instruction:
+          $ref: '#/components/schemas/NewStandingInstruction'
+        payments:
+          $ref: '#/components/schemas/CheckoutPayments'
+        theme:
+          allOf:
+          - description: The theme used for the checkout.
+          - $ref: '#/components/schemas/ThemeRef'
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    PaginationData:
+      description: The list of queried elements.
+      type: array
+      items:
+        type: object
+    Version:
+      description: A resource version.
+      type: string
+      format: version
+      minLength: 1
+      maxLength: 50
+      example: '2'
+    AccountId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the account.
+        example: acc_44678r08jtm8zbt227tzhc4nw5
+    Percentage:
+      type: number
+      format: float
+      minimum: 0
+      maximum: 100
+      multipleOf: 0.1
+      example: 62.5
+    CheckoutDefaultPaymentMethodsRequest:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: The available payment methods selection method.
+          type: string
+        options:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsOptions'
+    PaymentMethodDetails:
+      description: The payment method used.
+      anyOf:
+      - $ref: '#/components/schemas/CardPaymentMethodDetails'
+      - $ref: '#/components/schemas/SddPaymentMethodDetails'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodDetails'
+          sepa_direct_debit: '#/components/schemas/SddPaymentMethodDetails'
+    AmountMinor:
+      type: integer
+      format: amount-minor
+      description: The payment amount in the minor currency unit (e.g. 100 cents for 1 EUR).
+      example: 1000
+    Country:
+      type: string
+      format: country
+      minLength: 2
+      maxLength: 2
+      description: The two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+      example: DE
+    PaymentWebhooksRequest:
+      description: Configuration for webhooks to receive payment status updates.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          allOf:
+          - description: The URL to which webhook events will be sent.
+            example: https://webhooks.titanauto.com/getpaid
+          - $ref: '#/components/schemas/Url'
+    SplitBaseAmount:
+      type: object
+      description: 'The amount in payment currency to be allocated to this account.
+
+
+        The sum of all split amounts for all accounts must be exactly the total amount of the payment
+
+        or use the `remaining` type for one of the accounts to allocate the remaining amount after all
+
+        other splits have been calculated.
+
+        '
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of split amount.
+          enum:
+          - fixed
+          - percentage
+          - remaining
+    PaginatedResponse:
+      type: object
+      required:
+      - data
+      properties:
+        cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+        data:
+          $ref: '#/components/schemas/PaginationData'
+    BasePaymentMethodDetails:
+      allOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - required:
+        - display_hint
+        properties:
+          display_hint:
+            $ref: '#/components/schemas/PaymentMethodDisplayHint'
+    ProcessingFeeCalculated:
+      allOf:
+      - $ref: '#/components/schemas/ProcessingFeeRequest'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/ProcessingFeeAmount'
+    SplitRemainingAmountRequest:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+    SplitPercentageAmountRequest:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+      - type: object
+        required:
+        - percentage
+        properties:
+          percentage:
+            allOf:
+            - $ref: '#/components/schemas/Percentage'
+            - description: The percentage of the total amount to allocate to this account.
+    PaginationCursor:
+      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+      type: string
+      maxLength: 250
+      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    AccountVersion:
+      allOf:
+      - description: The account version.
+      - $ref: '#/components/schemas/Version'
+    NewStandingInstruction:
+      allOf:
+      - description: Details for a new standing instruction for recurring payments.
+      - $ref: '#/components/schemas/BaseStandingInstruction'
+    CheckoutPayments:
+      description: The payments initiated as part of this checkout.
+      type: array
+      uniqueItems: true
+      items:
+        description: A payment initiated as part of this checkout.
+        type: object
+        required:
+        - index
+        - id
+        - status
+        - created_at
+        - updated_at
+        - method
+        properties:
+          index:
+            $ref: '#/components/schemas/Index'
+          id:
+            $ref: '#/components/schemas/PaymentId'
+          status:
+            $ref: '#/components/schemas/PaymentStatusPhase'
+          created_at:
+            $ref: '#/components/schemas/CreatedAt'
+          updated_at:
+            $ref: '#/components/schemas/UpdatedAt'
+          method:
+            $ref: '#/components/schemas/PaymentMethodDetails'
+    ProcessingFeeAmount:
+      allOf:
+      - description: The processing fee amount covered by this account in the minor currency unit (e.g. 100 cents for 1 EUR).
+      - $ref: '#/components/schemas/AmountMinor'
+    SddPaymentMethodDetails:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethodDetails'
+      - required:
+        - bank_account
+        properties:
+          bank_account:
+            description: The bank account details.
+            type: object
+            required:
+            - type
+            - number
+            properties:
+              type:
+                description: The type of bank account.
+                type: string
+                enum:
+                - business
+                - consumer
+              number:
+                description: The bank account number details.
+                type: object
+                required:
+                - type
+                - value
+                properties:
+                  type:
+                    description: The type of bank account number.
+                    type: string
+                    enum:
+                    - iban
+                  value:
+                    description: The bank account number value.
+                    type: string
+                    minLength: 15
+                    maxLength: 33
+                    example: DE85100100100006992334
+    CheckoutPaymentMethodsRequest:
+      description: 'Configure payment methods for the checkout.
+
+
+        - `explicit`: use `available` to provide the methods to display.
+
+        - `default`: all available payment methods are selected automatically.
+
+        '
+      anyOf:
+      - $ref: '#/components/schemas/CheckoutExplicitPaymentMethodsRequest'
+      - $ref: '#/components/schemas/CheckoutDefaultPaymentMethodsRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          explicit: '#/components/schemas/CheckoutExplicitPaymentMethodsRequest'
+          default: '#/components/schemas/CheckoutDefaultPaymentMethodsRequest'
+    PaymentMethodDescriptor:
+      description: A payment method.
+      oneOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - $ref: '#/components/schemas/CardPaymentMethodDescriptor'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodDescriptor'
+          sepa_direct_debit: '#/components/schemas/PaymentMethodBase'
+    SplitsCalculated:
+      description: 'The list of payment splits for the accounts involved in the funds flow.
+
+
+        The final split gross amounts have been calculated but processing fees are not included until the payment is captured.
+
+        '
+      type: object
+      required:
+      - type
+      - accounts
+      properties:
+        type:
+          $ref: '#/components/schemas/SplitsType'
+        accounts:
+          description: The list of accounts involved in the payment that will receive the funds.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            description: A payment split account.
+            type: object
+            required:
+            - type
+            - id
+            - version
+            - legal_name
+            - split
+            - processing_fee
+            properties:
+              type:
+                $ref: '#/components/schemas/SplitsAccountType'
+              id:
+                $ref: '#/components/schemas/AccountId'
+              version:
+                $ref: '#/components/schemas/AccountVersion'
+              legal_name:
+                $ref: '#/components/schemas/AccountLegalName'
+              split:
+                description: The amount in the payment currency to be allocated to this account.
+                oneOf:
+                - $ref: '#/components/schemas/SplitFixedAmount'
+                - $ref: '#/components/schemas/SplitPercentageAmountCalculated'
+                - $ref: '#/components/schemas/SplitRemainingAmountCalculated'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    fixed: '#/components/schemas/SplitFixedAmount'
+                    percentage: '#/components/schemas/SplitPercentageAmountCalculated'
+                    remaining: '#/components/schemas/SplitRemainingAmountCalculated'
+              processing_fee:
+                $ref: '#/components/schemas/ProcessingFeeRequest'
+    CheckoutId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the checkout.
+        example: cko_4kf9v6xp00hzc99rdwr5m97wce
+    BaseSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        description: Each field to sort by.
+        type: object
+        required:
+        - field
+        - direction
+        properties:
+          field:
+            description: The field to sort by. Each field available can only be used once in the list.
+            type: string
+          direction:
+            description: The sort direction
+            type: string
+            enum:
+            - ascending
+            - descending
+    CheckoutCompleted:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - is_expired
+      - amount
+      - currency
+      - origin
+      - payment_methods
+      - splits
+      - payments
+      - theme
+      - events
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        is_expired:
+          $ref: '#/components/schemas/CheckoutIsExpired'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        origin:
+          $ref: '#/components/schemas/CheckoutOrigin'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsWithSelected'
+        splits:
+          $ref: '#/components/schemas/SplitsAndFeesCalculated'
+        standing_instruction:
+          $ref: '#/components/schemas/ActiveStandingInstruction'
+        payments:
+          $ref: '#/components/schemas/CheckoutPayments'
+        theme:
+          allOf:
+          - description: The theme used for the checkout.
+          - $ref: '#/components/schemas/ThemeRef'
+    CardDynamicDescriptor:
+      description: 'The card dynamic descriptor.
+
+
+        It will be prefixed with `GPD*` when displayed on the buyer statement. You don''t need to include the `GPD*` prefix in the value sent.
+
+        '
+      type: string
+      pattern: ^[a-zA-Z0-9 *\._-]{1,18}$
+      minLength: 1
+      maxLength: 18
+      example: TITAN*202510-0232
+    CheckoutExplicitPaymentMethodsRequest:
+      type: object
+      required:
+      - type
+      - available
+      properties:
+        type:
+          description: The available payment methods selection method.
+          type: string
+        available:
+          description: The list of payment methods to display in the checkout overriding the default methods.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/PaymentMethodDescriptor'
+        options:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsOptions'
+    CheckoutBuyerAddress:
+      allOf:
+      - description: 'The buyer''s address.
+
+
+          **Required if the country of the seller account is Canada (CA).**
+
+          '
+        properties:
+          line1:
+            type: string
+          line2:
+            type: string
+          street_number:
+            type: string
+          city:
+            type: string
+          region:
+            type: string
+          postal_code:
+            type: string
+          country:
+            allOf:
+            - description: 'The country of the buyer''s address in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+
+                **Required if the country of the seller account is Canada (CA).**
+
+                '
+            - $ref: '#/components/schemas/Country'
+      - $ref: '#/components/schemas/AddressOptionalFields'
+    PaymentStatusPhase:
+      description: 'The phase of the payment, based on its status.
+
+
+        - `in_progress`: The payment is being processed.
+
+        - `completed`: The payment attempt completed successfully.
+
+        - `failed`: The payment attempt was unsuccessful.
+
+        '
+      type: string
+      enum:
+      - in_progress
+      - completed
+      - failed
+    QueryPaymentMethodHint:
+      description: The payment method used in a checkout.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: The type of payment method.
+          type: string
+          enum:
+          - card
+          - sepa_direct_debit
+        scheme:
+          description: The scheme of the payment method (e.g., visa, mastercard).
+          type: string
+    CheckoutOriginApi:
+      allOf:
+      - $ref: '#/components/schemas/CheckoutOriginBase'
+    SplitsRequest:
+      description: 'The list of payment splits for the accounts involved in the funds flow.
+
+
+        See [how splits work](/monetize/splits) for more information.
+
+        '
+      type: object
+      required:
+      - type
+      - accounts
+      properties:
+        type:
+          $ref: '#/components/schemas/SplitsType'
+        accounts:
+          description: The list of accounts involved in the payment that will receive the funds.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            description: A payment split account.
+            type: object
+            required:
+            - type
+            - id
+            - split
+            properties:
+              type:
+                $ref: '#/components/schemas/SplitsAccountType'
+              id:
+                $ref: '#/components/schemas/AccountId'
+              split:
+                description: The amount in the payment currency to be allocated to this account.
+                oneOf:
+                - $ref: '#/components/schemas/SplitFixedAmount'
+                - $ref: '#/components/schemas/SplitPercentageAmountRequest'
+                - $ref: '#/components/schemas/SplitRemainingAmountRequest'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    fixed: '#/components/schemas/SplitFixedAmount'
+                    percentage: '#/components/schemas/SplitPercentageAmountRequest'
+                    remaining: '#/components/schemas/SplitRemainingAmountRequest'
+              processing_fee:
+                $ref: '#/components/schemas/ProcessingFeeRequest'
+    Currency:
+      type: string
+      format: currency
+      minLength: 3
+      maxLength: 3
+      description: The processing currency code according to the [ISO-4217 standard](https://en.wikipedia.org/wiki/ISO_4217)
+      example: EUR
+    StandingInstructionStatus:
+      description: 'The status of the standing instruction.
+
+
+        - `new`: requested to creation as part of an initial payment.
+
+        - `active`: standing instruction is active and can be used for subsequent payments.
+
+        '
+      type: string
+      enum:
+      - new
+      - active
+    ThemeRef:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          $ref: '#/components/schemas/ThemeId'
+        name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The name of the theme.
+    PaymentMethodType:
+      description: The type of payment method.
+      type: string
+      enum:
+      - card
+      - sepa_direct_debit
+    CheckoutBuyerRequest:
+      description: 'Buyer details to pre-fill during checkout.
+
+
+        **Required if the country of the seller account is Canada (CA).**
+
+        '
+      type: object
+      properties:
+        first_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The buyer's first name.
+            example: Jane
+        last_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The buyer's last name.
+            example: Doe
+        email:
+          allOf:
+          - description: 'The buyer''s email address.
+
+
+              **Required if the country of the seller account is Canada (CA).**
+
+              '
+          - $ref: '#/components/schemas/Email'
+        address:
+          $ref: '#/components/schemas/CheckoutBuyerAddress'
+        nationality:
+          allOf:
+          - description: The buyer's nationality in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+            example: DE
+          - $ref: '#/components/schemas/Country'
+        business:
+          description: The buyer's business details.
+          properties:
+            legal_name:
+              allOf:
+              - $ref: '#/components/schemas/MediumString'
+              - description: The legal name of the business.
+                example: Motorbikes Düsseldorf GmbH
+    SplitPercentageAmountCalculated:
+      allOf:
+      - $ref: '#/components/schemas/SplitPercentageAmountRequest'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
+      type: string
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    CardPaymentMethodDescriptor:
+      allOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - required:
+        - scheme
+        properties:
+          scheme:
+            $ref: '#/components/schemas/CardScheme'
+    Email:
+      description: An email address.
+      type: string
+      format: email
+      maxLength: 320
+      example: jane.doe@company.com
+    SplitRemainingAmountCalculated:
+      allOf:
+      - $ref: '#/components/schemas/SplitRemainingAmountRequest'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
+    BaseQueryRequest:
+      type: object
+      properties:
+        type:
+          description: 'The type of the Getpaid solution resources to query.
+
+
+            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
+
+            must match the resource targeted by the request URL.
+
+            '
+          type: string
+        first:
+          allOf:
+          - $ref: '#/components/schemas/PaginationFirst'
+        after:
+          $ref: '#/components/schemas/PaginationAfter'
+        filters:
+          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
+        sorts:
+          $ref: '#/components/schemas/BaseSortsRequest'
+    CheckoutExpired:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - is_expired
+      - amount
+      - currency
+      - origin
+      - payment_methods
+      - splits
+      - payments
+      - theme
+      - events
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        is_expired:
+          $ref: '#/components/schemas/CheckoutIsExpired'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        origin:
+          $ref: '#/components/schemas/CheckoutOrigin'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsAvailable'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculated'
+        standing_instruction:
+          $ref: '#/components/schemas/NewStandingInstruction'
+        payments:
+          $ref: '#/components/schemas/CheckoutPayments'
+        theme:
+          allOf:
+          - description: The theme used for the checkout.
+          - $ref: '#/components/schemas/ThemeRef'
+    UpdatedAt:
+      allOf:
+      - description: When the resource was last updated.
+      - $ref: '#/components/schemas/DateTime'
+    CreatedAt:
+      allOf:
+      - description: When the resource was created.
+      - $ref: '#/components/schemas/DateTime'
+    PaginationAfter:
+      description: Pagination. The `cursor` from next page will be retrieved.
+      type: string
+      maxLength: 250
+    CardScheme:
+      description: The card scheme.
+      type: string
+      enum:
+      - visa
+      - mastercard
+    SplitFixedAmount:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
+    SplitAmountMinor:
+      allOf:
+      - description: The amount allocated to this account in the minor currency unit (e.g. 100 cents for 1 EUR).
+      - $ref: '#/components/schemas/AmountMinor'
+    CheckoutPaymentMethodsWithSelected:
+      allOf:
+      - required:
+        - selected
+        properties:
+          type:
+            type: string
+          selected:
+            $ref: '#/components/schemas/PaymentMethodDescriptor'
+            description: The payment method selected by the buyer.
+      - $ref: '#/components/schemas/CheckoutPaymentMethodsAvailable'
+    BaseSortItemRequest:
+      description: Each field to sort by.
+      type: object
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          description: The field to sort by. Each field available can only be used once in the list.
+          type: string
+        direction:
+          description: The sort direction
+          type: string
+          enum:
+          - ascending
+          - descending
+    CheckoutExpiresAt:
+      allOf:
+      - description: When the checkout session will expire if not completed.
+      - $ref: '#/components/schemas/DateTime'
+    CheckoutPaymentMethodsResponse:
+      description: The payment methods of this checkout.
+      type: object
+      required:
+      - type
+      - available
+      properties:
+        type:
+          description: The available payment methods selection method.
+          type: string
+          enum:
+          - default
+          - explicit
+        available:
+          description: The list of payment methods available for this checkout.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/PaymentMethodDescriptor'
+    StandingInstructionId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the standing instruction.
+        example: sti_4tbftjwzxja1h71nzas1g0g1xm
+    CheckoutOrigin:
+      description: The origin of the checkout initiation.
+      allOf:
+      - $ref: '#/components/schemas/CheckoutOriginApi'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/CheckoutOriginApi'
+    SplitsAccountType:
+      description: 'The type of account.
+
+
+        Exactly one account of type `platform` and one of type `seller` are required and allowed per payment.
+
+        '
+      type: string
+      enum:
+      - platform
+      - seller
+      - other
+    GetCheckoutResponse:
+      oneOf:
+      - $ref: '#/components/schemas/CheckoutInitiatedStarted'
+      - $ref: '#/components/schemas/CheckoutInProgress'
+      - $ref: '#/components/schemas/CheckoutCompleted'
+      - $ref: '#/components/schemas/CheckoutFailed'
+      - $ref: '#/components/schemas/CheckoutExpired'
+      discriminator:
+        propertyName: status
+        mapping:
+          initiated: '#/components/schemas/CheckoutInitiatedStarted'
+          started: '#/components/schemas/CheckoutInitiatedStarted'
+          in_progress: '#/components/schemas/CheckoutInProgress'
+          completed: '#/components/schemas/CheckoutCompleted'
+          failed: '#/components/schemas/CheckoutFailed'
+          expired: '#/components/schemas/CheckoutExpired'
+    PaymentMethodBase:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+    PaginationFirst:
+      description: Pagination. The number of elements that will be retrieved.
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 100
+    CheckoutPaymentMethodsOptions:
+      description: Configuration options for the payment methods available in the checkout.
+      type: object
+      properties:
+        cards:
+          $ref: '#/components/schemas/CheckoutCardPaymentMethodOptions'
+        sepa_direct_debit:
+          $ref: '#/components/schemas/CheckoutSepaDirectDebitPaymentMethodOptions'
+    BaseStandingInstruction:
+      type: object
+      required:
+      - status
+      - terms
+      properties:
+        status:
+          $ref: '#/components/schemas/StandingInstructionStatus'
+        terms:
+          $ref: '#/components/schemas/StandingInstructionTerms'
+    StandingInstructionTerms:
+      description: Terms for standing instructions of recurring payments.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: 'Type of standing instruction.
+
+
+            - `recurring`: periodic charges at a fixed frequency.
+
+            - `unscheduled`: payments with no fixed schedule or frequency.
+
+            '
+          type: string
+          enum:
+          - recurring
+          - unscheduled
+    QueryCheckoutsResponse:
+      allOf:
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - checkouts
+          cursor:
+            type: string
+          data:
+            items:
+              required:
+              - id
+              - reference
+              - status
+              - amount
+              - currency
+              - created_at
+              - updated_at
+              - expires_at
+              - payment_methods
+              - seller
+              - parties
+              properties:
+                id:
+                  $ref: '#/components/schemas/CheckoutId'
+                reference:
+                  $ref: '#/components/schemas/Reference'
+                status:
+                  $ref: '#/components/schemas/CheckoutStatus'
+                amount:
+                  $ref: '#/components/schemas/AmountMinor'
+                currency:
+                  $ref: '#/components/schemas/Currency'
+                created_at:
+                  $ref: '#/components/schemas/CreatedAt'
+                updated_at:
+                  $ref: '#/components/schemas/UpdatedAt'
+                expires_at:
+                  $ref: '#/components/schemas/CheckoutExpiresAt'
+                payment_methods:
+                  description: The list of payment methods available in the checkout.
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/QueryPaymentMethodHint'
+                seller:
+                  $ref: '#/components/schemas/SellerRef'
+                parties:
+                  description: The list of parties involved in the transaction.
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/PartyRef'
+      - $ref: '#/components/schemas/PaginatedResponse'
+    CheckoutStatus:
+      description: 'The status of the checkout.
+
+        See the [list, transitions, and description of each status](/payments/checkouts#lifecycle) for more details.
+
+        '
+      type: string
+      enum:
+      - initiated
+      - started
+      - in_progress
+      - completed
+      - failed
+      - expired
+    CreateCheckoutRequest:
+      type: object
+      required:
+      - reference
+      - amount
+      - currency
+      - description
+      - splits
+      - redirect
+      properties:
+        reference:
+          $ref: '#/components/schemas/Reference'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        expires_in:
+          description: Checkout expiration duration in HHHH:mm format, from 00:01 (1 minute) to 2160:00 (90 days).
+          type: string
+          pattern: ^\d{2,4}:[0-5]\d$
+          minLength: 5
+          maxLength: 7
+          example: 01:30
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsRequest'
+        splits:
+          $ref: '#/components/schemas/SplitsRequest'
+        buyer:
+          $ref: '#/components/schemas/CheckoutBuyerRequest'
+        standing_instruction:
+          $ref: '#/components/schemas/InitialStandingInstructionRequest'
+        redirect:
+          description: Configuration for the redirect behavior after the payment is completed.
+          required:
+          - default
+          properties:
+            default:
+              allOf:
+              - $ref: '#/components/schemas/Url'
+              - description: The URL to which the buyer will be redirected after the payment is completed (success or failure), if `completed` or `failed` are not provided.
+                example: https://titanauto.com/checkout/complete?order=202510-0232
+            completed:
+              allOf:
+              - $ref: '#/components/schemas/Url'
+              - description: The URL to which the buyer will be redirected if the payment results in success.
+                example: https://titanauto.com/checkout/complete?order=202510-0232
+            failed:
+              allOf:
+              - $ref: '#/components/schemas/Url'
+              - description: The URL to which the buyer will be redirected if the payment results in failure.
+                example: https://titanauto.com/checkout/payment-failed?order=202510-0232
+        webhooks:
+          $ref: '#/components/schemas/PaymentWebhooksRequest'
+    CheckoutIsExpired:
+      type: boolean
+      description: Indicates whether the checkout has expired. A checkout is considered expired when the current time has passed the `expires_at` timestamp.
+      example: false
+    ProcessingFeeRequest:
+      description: 'The processing fee covered by this account.
+
+
+        If not specified, the account will not cover any processing fee.
+
+
+        The sum of all processing fees covered by all accounts must be exactly 100%.
+
+        '
+      type: object
+      required:
+      - percentage
+      properties:
+        percentage:
+          allOf:
+          - $ref: '#/components/schemas/Percentage'
+          - description: The percentage of the total processing fee that this account will cover.
+            example: 100
+    AddressOptionalFields:
+      type: object
+      properties:
+        line1:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The first line of the address.
+            example: Immermannstraße
+        line2:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The second line of the address.
+            example: Haus 2, Wohnung 3A
+        street_number:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: 'The number assigned to the building on the street.
+
+              May include alphanumeric formatting such as "7A" or "12-14". street number.
+
+              '
+            example: '40'
+        city:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The city, town, municipality, or locality where the address is located.
+            example: Düsseldorf
+        region:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The administrative area such as region, province, state, or county.
+            example: Nordrhein-Westfalen
+        postal_code:
+          description: The postal code, postcode, or ZIP code used for mail delivery.
+          type: string
+          minLength: 1
+          maxLength: 16
+          example: '40210'
+    CheckoutFailed:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - is_expired
+      - amount
+      - currency
+      - origin
+      - payment_methods
+      - splits
+      - payments
+      - theme
+      - events
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        is_expired:
+          $ref: '#/components/schemas/CheckoutIsExpired'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        origin:
+          $ref: '#/components/schemas/CheckoutOrigin'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsAvailable'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculated'
+        standing_instruction:
+          $ref: '#/components/schemas/NewStandingInstruction'
+        payments:
+          $ref: '#/components/schemas/CheckoutPayments'
+        theme:
+          allOf:
+          - description: The theme used for the checkout.
+          - $ref: '#/components/schemas/ThemeRef'
+    CardPaymentMethodDetails:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethodDetails'
+      - required:
+        - card
+        properties:
+          card:
+            description: The card details.
+            type: object
+            required:
+            - scheme
+            - holder_name
+            - first_digits
+            - last_digits
+            - expiry_month
+            - expiry_year
+            properties:
+              scheme:
+                $ref: '#/components/schemas/CardScheme'
+              holder_name:
+                description: The name of the cardholder as printed on the card.
+                type: string
+                minLength: 1
+                maxLength: 26
+                example: Jane Doe
+              first_digits:
+                description: The first four to six digits of the card number (BIN) that identify the issuing bank.
+                type: string
+                minLength: 4
+                maxLength: 6
+                example: '424242'
+              last_digits:
+                description: The last four digits of the card number.
+                type: string
+                minLength: 4
+                maxLength: 4
+                example: '4242'
+              expiry_month:
+                description: The expiration month of the card.
+                type: integer
+                minimum: 1
+                maximum: 12
+                example: 12
+              expiry_year:
+                description: The expiration year of the card.
+                type: integer
+                minimum: 2021
+                example: 2025
+              kind:
+                description: Kind of the payment card.
+                type: string
+                enum:
+                - credit
+                - debit
+                example: credit
+              segment:
+                description: Segment of the payment card.
+                type: string
+                enum:
+                - consumer
+                - corporate
+                example: consumer
+    CheckoutCardPaymentMethodOptions:
+      description: Configuration options for card payment methods in the checkout.
+      type: object
+      required:
+      - dynamic_descriptor
+      properties:
+        dynamic_descriptor:
+          $ref: '#/components/schemas/CardDynamicDescriptor'
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    CheckoutSepaDirectDebitPaymentMethodOptions:
+      description: Configuration options for SEPA Direct Debit payment methods in the checkout.
+      type: object
+      required:
+      - remittance_info
+      properties:
+        remittance_info:
+          $ref: '#/components/schemas/SddRemittanceInfo'
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
+    Url:
+      type: string
+      format: uri
+      maxLength: 1024
+    SellerRef:
+      description: A reference to the seller account.
+      type: object
+      required:
+      - id
+      - legal_name
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        legal_name:
+          $ref: '#/components/schemas/AccountLegalName'
+    SddRemittanceInfo:
+      description: 'The SEPA Direct Debit remittance information shown on the buyer statement.
+
+        '
+      type: string
+      minLength: 1
+      maxLength: 140
+      example: 'Titan Auto Parts Ord. #0232 Inv. #202500632'
+    CheckoutsFiltersRequest:
+      description: Filtering checkouts.
+      type: object
+      properties:
+        id:
+          allOf:
+          - description: The checkout identifier to filter by using an exact match operation.
+          - $ref: '#/components/schemas/CheckoutId'
+        reference:
+          description: The checkout reference to filter by using a contains operation.
+          type: string
+        seller_legal_name:
+          description: The seller legal name to filter by using a contains operation.
+          type: string
+        statuses:
+          description: The list of checkout statuses to filter by.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/CheckoutStatus'
+    PaymentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the payment.
+        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+    CheckoutFlow:
+      description: The flow required for the checkout to complete.
+      type: object
+      required:
+      - next_step
+      properties:
+        next_step:
+          description: The next step required to complete the flow.
+          type: object
+          required:
+          - type
+          - url
+          properties:
+            type:
+              description: The type of the next step.
+              type: string
+              enum:
+              - redirect
+            url:
+              allOf:
+              - $ref: '#/components/schemas/Url'
+              - description: The URL to redirect the buyer to complete the payment.
+    CreateCheckoutResponse:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - flow
+      - payment_methods
+      - splits
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+          const: initiated
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        flow:
+          $ref: '#/components/schemas/CheckoutFlow'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsResponse'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculated'
+    PaymentMethodDisplayHint:
+      allOf:
+      - description: A hint of the payment method used.
+      - $ref: '#/components/schemas/ShortString'
+    MediumString:
+      type: string
+      minLength: 1
+      maxLength: 250
+    CheckoutsSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        allOf:
+        - $ref: '#/components/schemas/BaseSortItemRequest'
+        - properties:
+            field:
+              enum:
+              - created_at
+              - amount
+              - seller_legal_name
+    ThemeId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the theme.
+        example: thm_4jkgtzffbf9pzem7dgfhdeztwa
+    QueryCheckoutsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - checkouts
+          filters:
+            $ref: '#/components/schemas/CheckoutsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/CheckoutsSortsRequest'
+    AccountLegalName:
+      allOf:
+      - description: The legal name of the account.
+      - $ref: '#/components/schemas/MediumString'
+    ActiveStandingInstruction:
+      allOf:
+      - description: An active standing instruction for recurring payments.
+        required:
+        - id
+        properties:
+          id:
+            $ref: '#/components/schemas/StandingInstructionId'
+      - $ref: '#/components/schemas/BaseStandingInstruction'
+    SplitsAndFeesCalculated:
+      description: 'The list of payment splits for the accounts involved in the funds flow.
+
+
+        The final split amounts and processing fees have been calculated.
+
+        '
+      type: object
+      required:
+      - type
+      - accounts
+      properties:
+        type:
+          $ref: '#/components/schemas/SplitsType'
+        accounts:
+          description: The list of accounts involved in the payment that will receive the funds.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            description: A payment split account.
+            type: object
+            required:
+            - type
+            - id
+            - version
+            - legal_name
+            - split
+            - processing_fee
+            properties:
+              type:
+                $ref: '#/components/schemas/SplitsAccountType'
+              id:
+                $ref: '#/components/schemas/AccountId'
+              version:
+                $ref: '#/components/schemas/AccountVersion'
+              legal_name:
+                $ref: '#/components/schemas/AccountLegalName'
+              split:
+                description: The amount in the payment currency to be allocated to this account.
+                oneOf:
+                - $ref: '#/components/schemas/SplitFixedAmount'
+                - $ref: '#/components/schemas/SplitPercentageAmountCalculated'
+                - $ref: '#/components/schemas/SplitRemainingAmountCalculated'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    fixed: '#/components/schemas/SplitFixedAmount'
+                    percentage: '#/components/schemas/SplitPercentageAmountCalculated'
+                    remaining: '#/components/schemas/SplitRemainingAmountCalculated'
+              processing_fee:
+                $ref: '#/components/schemas/ProcessingFeeCalculated'
+    SplitsType:
+      description: The type of payment split.
+      type: string
+      enum:
+      - per_transaction
+    CheckoutInProgress:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - expires_at
+      - is_expired
+      - amount
+      - currency
+      - flow
+      - origin
+      - payment_methods
+      - splits
+      - payments
+      - theme
+      - events
+      properties:
+        id:
+          $ref: '#/components/schemas/CheckoutId'
+        status:
+          $ref: '#/components/schemas/CheckoutStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/CheckoutExpiresAt'
+        is_expired:
+          $ref: '#/components/schemas/CheckoutIsExpired'
+        amount:
+          $ref: '#/components/schemas/AmountMinor'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          $ref: '#/components/schemas/CheckoutDescription'
+        flow:
+          $ref: '#/components/schemas/CheckoutFlow'
+        origin:
+          $ref: '#/components/schemas/CheckoutOrigin'
+        payment_methods:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsWithSelected'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculated'
+        standing_instruction:
+          $ref: '#/components/schemas/NewStandingInstruction'
+        payments:
+          $ref: '#/components/schemas/CheckoutPayments'
+        theme:
+          allOf:
+          - description: The theme used for the checkout.
+          - $ref: '#/components/schemas/ThemeRef'
+    PartyRef:
+      description: A reference to a party account involved in the transaction.
+      type: object
+      required:
+      - id
+      - type
+      - legal_name
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        type:
+          description: The type of party.
+          type: string
+          enum:
+          - platform
+          - other
+        legal_name:
+          $ref: '#/components/schemas/AccountLegalName'
+    Index:
+      description: The index of the element in the list.
+      type: integer
+      minimum: 0
+      example: 0
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    CheckoutOriginBase:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: 'The checkout origin type.
+
+
+            - `api`: The checkout was created via the API.
+
+            '
+          type: string
+          enum:
+          - api
+    CheckoutPaymentMethodsAvailable:
+      description: The payment methods of this checkout.
+      type: object
+      required:
+      - type
+      - available
+      properties:
+        type:
+          description: The available payment methods selection method.
+          type: string
+          enum:
+          - default
+          - explicit
+        available:
+          description: The list of payment methods available for this checkout.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/PaymentMethodDescriptor'
+        options:
+          $ref: '#/components/schemas/CheckoutPaymentMethodsOptions'
+    CheckoutDescription:
+      allOf:
+      - $ref: '#/components/schemas/MediumString'
+      - description: 'A description of the checkout session.
+
+          This will be visible to the buyer in the payment page but not in the bank or card statement.
+
+          '
+        example: Order 202510-0232
+    InitialStandingInstructionRequest:
+      description: Terms for a new standing instruction to gather the consent in the initial payment in a series of recurring payments.
+      type: object
+      required:
+      - terms
+      properties:
+        terms:
+          $ref: '#/components/schemas/StandingInstructionTerms'
+  responses:
+    500InternalServerError:
+      description: Internal Server Error
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    400BadRequest:
+      description: Bad Request
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    422InvalidParameters:
+      description: Invalid Parameters
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ProblemDetailsBase'
+            - type: object
+              required:
+              - errors
+              properties:
+                errors:
+                  type: object
+                  description: The JSON path of any request body fields or header names that are invalid with a description of the error
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+                  example:
+                    currency:
+                    - invalid_option
+                type:
+                  example: https://docs.getpaid.io/integration/api/responses#422---invalid-parameters
+                title:
+                  example: Invalid Parameters
+                status:
+                  example: 422
+    404NotFound:
+      description: Not Found
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ProblemDetailsBase'
+            - type: object
+              properties:
+                type:
+                  example: https://docs.getpaid.io/integration/api/responses#404---not-found
+                title:
+                  example: Not Found
+                status:
+                  example: 404
+    429TooManyRequests:
+      description: Too Many Requests
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    401Unauthorized:
+      description: Unauthorized
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+  examples:
+    CheckoutFailed:
+      summary: Checkout failed
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: failed
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:44:34.843Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: AutoZentrum Düsseldorf GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+        payments:
+        - index: 0
+          id: pay_4yd8tht4hwkpk3g14w4sey01mt
+          status: failed
+          created_at: '2025-10-10T06:44:23.387Z'
+          updated_at: '2025-10-10T06:44:34.843Z'
+          method:
+            type: card
+            display_hint: 424242******4242
+            card:
+              scheme: visa
+              holder_name: Jane Doe
+              first_digits: '424242'
+              last_digits: '4242'
+              expiry_month: 12
+              expiry_year: 2030
+        events:
+        - index: 3
+          type: failed
+          occurred_at: '2025-10-10T07:13:39.355Z'
+        - index: 2
+          type: payment_failed
+          occurred_at: '2025-10-10T06:44:34.765Z'
+          payment:
+            id: pay_4yd8tht4hwkpk3g14w4sey01mt
+            method:
+              type: card
+        - index: 1
+          type: payment_initiated
+          occurred_at: '2025-10-10T06:44:23.387Z'
+          payment:
+            id: pay_4yd8tht4hwkpk3g14w4sey01mt
+            method:
+              type: card
+        - index: 0
+          type: started
+          occurred_at: '2025-10-10T06:43:45.123Z'
+        theme:
+          id: thm_4jkgtzffbf9pzem7dgfhdeztwa
+          name: Default Titan Auto Parts GmbH
+    CheckoutInProgress:
+      summary: Checkout in progress
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: in_progress
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:44:34.843Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          selected:
+            type: card
+            scheme: visa
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        flow:
+          next_step:
+            type: redirect
+            url: https://checkout.getpaid.io/v2/cko_44678r08jtm8zbt227tzhc4nw5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: Car Garage GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+        payments:
+        - index: 0
+          id: pay_4kf9v6xp00hzc99rdwr5m97wce
+          status: in_progress
+          created_at: '2025-10-10T06:44:30.123Z'
+          updated_at: '2025-10-10T06:44:34.765Z'
+          method:
+            type: card
+            display_hint: 424242******4242
+            card:
+              scheme: visa
+              holder_name: Jane Doe
+              first_digits: '424242'
+              last_digits: '4242'
+              expiry_month: 12
+              expiry_year: 2030
+        theme:
+          id: thm_4kf9v6xp00hzc99rdwr5m97wce
+          name: Default Titan Auto Parts GmbH
+        events:
+        - index: 2
+          type: payment_initiated
+          occurred_at: '2025-10-10T06:44:30.123Z'
+          payment:
+            id: pay_4kf9v6xp00hzc99rdwr5m97wce
+            method:
+              type: card
+        - index: 1
+          type: started
+          occurred_at: '2025-10-10T06:44:34.843Z'
+        - index: 0
+          type: initiated
+          occurred_at: '2025-10-10T06:43:39.355Z'
+          amount: 1000
+          currency: EUR
+    QueryCheckouts:
+      summary: Query checkouts
+      value:
+        type: checkouts
+        filters:
+          seller_legal_name: Titan Biking
+          statuses:
+          - expired
+          - failed
+    CreateCheckout:
+      summary: Create a checkout
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: EUR
+        description: 'Order #202510-0232'
+        payment_methods:
+          type: default
+          options:
+            cards:
+              dynamic_descriptor: TITAN*202510-0232
+            sepa_direct_debit:
+              remittance_info: 'Titan Auto Parts Ord. #0232 Inv. #202500632'
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        redirect:
+          default: https://titanauto.com/checkout/complete?order=202510-0232
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CreateCheckoutExplicitMethods:
+      summary: Create a checkout setting available payment methods
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: EUR
+        description: 'Order #202510-0232'
+        payment_methods:
+          type: explicit
+          available:
+          - type: sepa_direct_debit
+          options:
+            sepa_direct_debit:
+              remittance_info: 'Titan Auto Parts Ord. #0232 Inv. #202500632'
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        redirect:
+          default: https://titanauto.com/checkout/complete?order=202510-0232
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CheckoutInitiated:
+      summary: Checkout initiated
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: initiated
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:43:39.355Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        flow:
+          next_step:
+            type: redirect
+            url: https://checkout.getpaid.io/v2/cko_44678r08jtm8zbt227tzhc4nw5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: Car Garage GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+        payments: []
+        theme:
+          id: thm_4kf9v6xp00hzc99rdwr5m97wce
+          name: Default Titan Auto Parts GmbH
+        events:
+        - index: 0
+          type: initiated
+          occurred_at: '2025-10-10T06:43:39.355Z'
+          amount: 1000
+          currency: EUR
+    CheckoutCreated:
+      summary: Checkout created successfully
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: initiated
+        reference: ORD-202510-0232
+        created_at: '2025-10-24T14:45:22.993Z'
+        updated_at: '2025-10-24T14:45:22.993Z'
+        expires_at: '2025-10-24T14:15:22.993Z'
+        flow:
+          next_step:
+            type: redirect
+            url: https://checkout.getpaid.io/v2/cko_44678r08jtm8zbt227tzhc4nw5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        payment_methods:
+          type: default
+          available:
+          - type: card
+            scheme: mastercard
+          - type: card
+            scheme: visa
+          - type: sepa_direct_debit
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: Car Garage GmbH
+            split:
+              type: fixed
+              amount: 9000
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+    CreateCheckoutCanada:
+      summary: Create a checkout for canadian seller
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: CAD
+        description: 'Order #202510-0232'
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        buyer:
+          email: markus.miller@mapleleafgarage.ca
+          address:
+            country: CA
+        redirect:
+          default: https://titanauto.com/checkout/complete?order=202510-0232
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CreateInitialRecurringCheckout:
+      summary: Create a checkout for initial recurring payment
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: EUR
+        description: 'Order #202510-0232'
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        standing_instruction:
+          terms:
+            type: recurring
+        redirect:
+          default: https://titanauto.com/checkout/complete?order=202510-0232
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CheckoutExpired:
+      summary: Checkout expired
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: expired
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:44:34.843Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: AutoZentrum Düsseldorf GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+        payments: []
+        events:
+        - index: 1
+          type: unattempted
+          occurred_at: '2025-10-10T07:13:39.355Z'
+        - index: 0
+          type: initiated
+          occurred_at: '2025-10-10T06:43:39.355Z'
+          amount: 1000
+          currency: EUR
+        theme:
+          id: thm_4jkgtzffbf9pzem7dgfhdeztwa
+          name: Default Titan Auto Parts GmbH
+    CheckoutStarted:
+      summary: Checkout started
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: started
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:44:34.843Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        flow:
+          next_step:
+            type: redirect
+            url: https://checkout.getpaid.io/v2/cko_44678r08jtm8zbt227tzhc4nw5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: Car Garage GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+        payments: []
+        theme:
+          id: thm_4kf9v6xp00hzc99rdwr5m97wce
+          name: Default Titan Auto Parts GmbH
+        events:
+        - index: 1
+          type: started
+          occurred_at: '2025-10-10T06:44:34.843Z'
+        - index: 0
+          type: initiated
+          occurred_at: '2025-10-10T06:43:39.355Z'
+          amount: 1000
+          currency: EUR
+    FilteredCheckouts:
+      summary: Filtered checkouts
+      value:
+        type: checkouts
+        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+        data:
+        - id: chk_4y7kptsvn11qq6d354g5tx735v
+          reference: ORD-202510-0232
+          status: expired
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-15T12:34:56.999Z'
+          updated_at: '2023-03-15T12:35:56.999Z'
+          expires_at: '2023-03-15T13:34:56.999Z'
+          payment_methods:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
+        - id: chk_4y7kptsvn11qq6d354g5tx736w
+          reference: ORD-202511-0133
+          status: failed
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-16T10:20:30.999Z'
+          updated_at: '2023-03-16T10:22:45.999Z'
+          expires_at: '2023-03-16T11:20:30.999Z'
+          payment_methods:
+          - type: card
+            scheme: visa
+          - type: sepa_direct_debit
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
+    CreateCheckoutBuyerDetails:
+      summary: Create a checkout pre-filling buyer details
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: EUR
+        description: 'Order #202510-0232'
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        buyer:
+          first_name: Markus
+          last_name: Keller
+          email: markus.keller@garagegermany.de
+          address:
+            line1: Immermannstraße
+            line2: Haus 2, Wohnung 3A
+            street_number: '40'
+            city: Düsseldorf
+            region: Nordrhein-Westfalen
+            postal_code: '40210'
+          nationality: DE
+          business:
+            legal_name: Garage Deutschland AG
+        redirect:
+          default: https://titanauto.com/checkout/complete?order=202510-0232
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CheckoutCompleted:
+      summary: Checkout completed
+      value:
+        id: cko_44678r08jtm8zbt227tzhc4nw5
+        status: completed
+        reference: ORD-202510-0232
+        created_at: '2025-10-10T06:43:39.355Z'
+        updated_at: '2025-10-10T06:44:34.843Z'
+        expires_at: '2025-10-10T07:13:39.355Z'
+        amount: 1000
+        currency: EUR
+        description: Order 202510-0232
+        payment_methods:
+          type: default
+          selected:
+            type: card
+            scheme: visa
+          available:
+          - type: card
+            scheme: visa
+          - type: card
+            scheme: mastercard
+          - type: sepa_direct_debit
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            version: '2'
+            legal_name: AutoZentrum Düsseldorf GmbH
+            split:
+              type: fixed
+              amount: 900
+            processing_fee:
+              percentage: 0
+              amount: 0
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            version: '0'
+            legal_name: Titan Auto Parts GmbH
+            split:
+              type: fixed
+              amount: 100
+            processing_fee:
+              percentage: 100
+              amount: 45
+        payments:
+        - index: 0
+          id: pay_4yd8tht4hwkpk3g14w4sey01mt
+          status: succeeded
+          created_at: '2025-10-10T06:44:23.387Z'
+          updated_at: '2025-10-10T06:44:34.843Z'
+          method:
+            type: card
+            display_hint: 424242******4242
+            card:
+              scheme: visa
+              holder_name: Jane Doe
+              first_digits: '424242'
+              last_digits: '4242'
+              expiry_month: 12
+              expiry_year: 2030
+        theme:
+          id: thm_4jkgtzffbf9pzem7dgfhdeztwa
+          name: Default Titan Auto Parts GmbH
+        events:
+        - index: 3
+          type: completed
+          occurred_at: '2025-10-10T06:44:34.843Z'
+        - index: 2
+          type: payment_succeeded
+          occurred_at: '2025-10-10T06:44:34.765Z'
+          payment:
+            id: pay_4yd8tht4hwkpk3g14w4sey01mt
+            method:
+              type: card
+        - index: 1
+          type: payment_initiated
+          occurred_at: '2025-10-10T06:44:23.387Z'
+          payment:
+            id: pay_4yd8tht4hwkpk3g14w4sey01mt
+            method:
+              type: card
+        - index: 0
+          type: started
+          occurred_at: '2025-10-10T06:43:45.123Z'
+  parameters:
+    GetpaidIdempotencyKey:
+      name: Getpaid-Idempotency-Key
+      in: header
+      description: 'A unique idempotency key to allow safe retrying.
+
+        See [Getpaid API idempotency](/integration/api/idempotency) for more details.
+
+        '
+      schema:
+        type: string
+        minLength: 10
+        maxLength: 100
+        pattern: ^[a-zA-Z0-9_-]{10,100}$
+        example: 5c255194-30ec-11ed-a261-0242ac120002
+  headers:
+    GetpaidTraceId:
+      description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests
+      schema:
+        type: string
+        example: 96ce50247f87f540bb2d86771b3728b8
+  securitySchemes:
+    OAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.getpaid.io/oauth/token
+          scopes:
+            accounts:read: Allows to read accounts and onboarding applications.
+            accounts:read_write: Allows to read, create and/or operate accounts and onboarding applications.
+            payments:read: Allows to read payments and checkouts.
+            payments:read_write: Allows to read, create and/or operate payments and checkouts.
+x-tagGroups:
+- name: General
+  tags:
+  - Authentication
+  - Documents
+- name: Accept payments
+  tags:
+  - Checkouts
+  - Payments
+  - Accept payments webhooks
+- name: Onboard sellers
+  tags:
+  - Accounts
+  - Applications
+  - Onboard sellers webhooks
+- name: Operate
+  tags:
+  - Queries
+  - Exports
+  - Analytics
+  - Operate webhooks

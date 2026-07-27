@@ -1,0 +1,44 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/getpaid-openapi-original.yml
+format: rfc7807
+envelope:
+  media_type: application/problem+json
+  schema: ProblemDetailsBase
+  fields:
+  - type      # URI reference identifying the problem type (default about:blank)
+  - title     # short human-readable summary
+  - status    # HTTP status code
+  - detail    # human-readable explanation specific to this occurrence
+  - instance  # URI reference identifying the specific occurrence
+  type_base_uri: https://docs.getpaid.io/ref/error-types
+problems:
+- status: 400
+  title: Bad Request
+  description: The request was malformed or failed validation.
+  media_type: application/problem+json
+- status: 401
+  title: Unauthorized
+  description: Missing, invalid, or expired OAuth 2.0 bearer token.
+- status: 404
+  title: Not Found
+  description: The referenced resource (checkout, payment, application, account) does not exist.
+- status: 409
+  title: Conflict
+  description: The request conflicts with current state (e.g. duplicate idempotency key with a differing payload, or an operation not valid for the resource's current status).
+- status: 422
+  title: Unprocessable Entity
+  description: The request was well-formed but semantically invalid for the operation.
+- status: 429
+  title: Too Many Requests
+  description: Rate limit exceeded.
+- status: 500
+  title: Internal Server Error
+  description: An unexpected server error occurred; retry with the same Getpaid-Idempotency-Key.
+notes: >-
+  Derived from the 4xx/5xx responses across all 16 operations. Every JSON error
+  body conforms to RFC 7807 Problem Details (components.schemas.ProblemDetailsBase);
+  the `type` URI points into https://docs.getpaid.io/ref/error-types. The spec
+  does not enumerate a fixed registry of problem `type` slugs beyond the base
+  example (#problem), so specific type URIs are resolved at the docs error-types
+  reference rather than in-spec.

@@ -1,0 +1,45 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/getpaid-openapi-original.yml; https://docs.getpaid.io/integration/api/idempotency
+authentication:
+  style: oauth2
+  flow: clientCredentials
+  token_url: https://auth.getpaid.io/oauth/token
+  audience_required: true
+  scopes: [accounts:read, accounts:read_write, payments:read, payments:read_write]
+  detail: authentication/getpaid-authentication.yml
+idempotency:
+  supported: true
+  header: Getpaid-Idempotency-Key
+  scope: mutating POST operations (checkouts, payments, refunds, applications, queries)
+  key_format: "^[a-zA-Z0-9_-]{10,100}$ (10-100 chars)"
+  behavior: safe retries return the original result; a reused key with a differing payload yields 409 Conflict
+  docs: https://docs.getpaid.io/integration/api/idempotency
+pagination:
+  style: cursor
+  request_param: cursor
+  response_field: cursor
+  envelope: "{ type, cursor, data[] }"
+  page_semantics: an empty/absent response cursor means there are no more elements
+  cursor_max_length: 250
+request_tracing:
+  header: Getpaid-Trace-Id
+  required: true
+  detail: opaque trace identifier; log it and include with support requests
+field_formats:
+  amount: amount-minor (integer minor units, e.g. 100 = 1.00 EUR)
+  country: ISO 3166-1 alpha-2 uppercase
+  currency: ISO 4217 uppercase
+versioning:
+  scheme: uri-path
+  current: v2
+  detail: lifecycle/getpaid-lifecycle.yml
+error_envelope:
+  format: rfc7807
+  media_type: application/problem+json
+  detail: errors/getpaid-problem-types.yml
+rate_limiting:
+  signaled_via: 429 Too Many Requests
+  detail: no documented X-RateLimit-* headers in the spec
+webhooks:
+  detail: asyncapi/getpaid-webhooks.yml

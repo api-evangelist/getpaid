@@ -1,0 +1,12 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.getpaid.io/release-notes
+scheme: dated-release-notes
+current_version: v2
+url: https://docs.getpaid.io/release-notes
+entries: []
+notes: >-
+  Getpaid publishes a dated Release Notes page as its changelog surface. The
+  page is captured as a pointer; individual dated entries were not harvested in
+  this pass (the live release-notes page is the source of truth). The API itself
+  is versioned v2 via the URI path.

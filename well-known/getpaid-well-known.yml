@@ -1,0 +1,45 @@
+generated: '2026-07-19'
+method: searched
+source: probed /.well-known/ across api.getpaid.io, auth.getpaid.io, docs.getpaid.io, www.getpaid.io
+hosts:
+- host: https://auth.getpaid.io
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: getpaid-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: getpaid-oauth-authorization-server.json
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://api.getpaid.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+- host: https://docs.getpaid.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: https://www.getpaid.io
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+notes: >-
+  The OAuth/OIDC identity layer is fronted by Auth0 (auth.getpaid.io). Both the
+  OIDC discovery and RFC 8414 authorization-server metadata documents resolve
+  200. No security.txt is published on any host. The API host (api.getpaid.io)
+  returns 403 for all /.well-known/ probes (WAF).

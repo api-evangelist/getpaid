@@ -1,0 +1,19 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/getpaid-openapi-original.yml; https://docs.getpaid.io/release-notes
+versioning:
+  scheme: uri-path
+  current: v2
+  detail: all resource paths are prefixed /v2/ (checkouts, payments, applications, accounts)
+release_notes: https://docs.getpaid.io/release-notes
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: no published deprecation policy or RFC 8594 Sunset/Deprecation header support found
+sla:
+  url: null
+  note: "/compliance references continuous uptime monitoring; no public SLA/uptime target published"
+status_page:
+  url: null
+  note: status.getpaid.io does not resolve (no public status page found)
+deprecated_operations: []

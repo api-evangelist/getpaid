@@ -1,0 +1,45 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/getpaid-openapi-original.yml; https://getpaid.io/compliance; https://www.getpaid.io
+standards:
+- id: oauth2
+  conforms: true
+  evidence: openapi securitySchemes declares oauth2 clientCredentials flow (tokenUrl https://auth.getpaid.io/oauth/token)
+- id: oidc
+  conforms: true
+  evidence: /.well-known/openid-configuration resolves 200 at auth.getpaid.io (Auth0-backed identity)
+- id: rfc7807-problem-details
+  conforms: true
+  evidence: all 4xx/5xx JSON responses use components.schemas.ProblemDetailsBase (RFC 7807 Problem Details)
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: spec references RFC 7807 explicitly, not the RFC 9457 successor
+- id: cursor-pagination
+  conforms: true
+  evidence: query endpoints return an opaque cursor (PaginationCursor) plus data[] envelope
+- id: idempotency
+  conforms: true
+  evidence: mutating operations accept a Getpaid-Idempotency-Key header (10-100 chars) for safe retries
+- id: pci-dss
+  conforms: true
+  evidence: "homepage states PCI-DSS Level 1; /compliance states card data is processed on PCI-DSS compliant infrastructure"
+- id: psd2-sca
+  conforms: true
+  evidence: "3-D Secure / Strong Customer Authentication supported (3DS frictionless + challenge test flows documented)"
+- id: gdpr
+  conforms: true
+  evidence: "/compliance states data is hosted in the EU and processed in line with GDPR"
+- id: licensed-payment-institution
+  conforms: true
+  evidence: "licensed payment institution in the EEA (hubs in Germany, Spain, Finland)"
+- id: sepa-direct-debit
+  conforms: true
+  evidence: subscriptions/invoicing support SEPA Direct Debit
+compliance_program:
+  published: true
+  url: https://getpaid.io/compliance
+  certifications:
+  - PCI-DSS Level 1
+  - GDPR
+  - PSD2 / SCA (3-D Secure)
+  - EEA licensed payment institution

@@ -1,0 +1,71 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/getpaid-openapi-original.yml
+entities:
+- name: Account
+  id: AccountId
+  description: A seller/merchant account onboarded onto the platform.
+- name: Application
+  id: ApplicationId
+  description: An onboarding application that, once completed, provisions an Account.
+- name: Checkout
+  id: CheckoutId
+  description: A hosted or API checkout session that collects a payment for a seller.
+- name: Payment
+  id: PaymentId
+  description: A payment attempt/transaction created from a checkout.
+- name: Capture
+  id: CaptureId
+  description: A capture of an authorized payment.
+- name: Refund
+  id: RefundId
+  description: A refund issued against a captured payment.
+- name: Theme
+  id: ThemeId
+  description: Branding/theme applied to an account's hosted experiences.
+- name: StandingInstruction
+  id: StandingInstructionId
+  description: A stored mandate/instruction for recurring or repeat payments.
+- name: Document
+  id: DocumentId
+  description: A document attached to onboarding/compliance.
+- name: Event
+  id: EventId
+  description: A webhook event emitted by the platform.
+relationships:
+- from: Application
+  type: has_one
+  to: Account
+  via: application completion provisions the account
+- from: Account
+  type: has_many
+  to: Theme
+  via: /v2/accounts/{account_id}/themes
+- from: Checkout
+  type: has_many
+  to: Payment
+  via: a checkout yields one or more payment attempts
+- from: Payment
+  type: belongs_to
+  to: Checkout
+  via: checkout_id
+- from: Payment
+  type: has_many
+  to: Refund
+  via: /v2/payments/{payment_id}/refunds
+- from: Payment
+  type: has_many
+  to: Capture
+  via: capture of authorized funds
+- from: Checkout
+  type: has_many
+  to: Party
+  via: parties[] (split settlement across seller, platform, agents)
+- from: Payment
+  type: has_many
+  to: Party
+  via: parties[] (atomic split settlement)
+notes: >-
+  Derived from the 199 component schemas and the *Id reference types. Split
+  settlement is modelled as a parties[] array on both Checkout and Payment,
+  distributing a single transaction across seller, platform and agents.

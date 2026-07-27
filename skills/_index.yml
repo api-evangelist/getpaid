@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+api: openapi/getpaid-openapi-original.yml
+skills:
+- file: getpaid-accept-a-payment.md
+  name: Accept a payment with a hosted checkout
+  api: openapi/getpaid-openapi-original.yml
+  operations: [create_checkout, get_checkout, get_payment]
+- file: getpaid-refund-a-payment.md
+  name: Refund a captured payment
+  api: openapi/getpaid-openapi-original.yml
+  operations: [query_payments, get_payment, refund_payment]
+- file: getpaid-onboard-a-seller.md
+  name: Onboard a seller
+  api: openapi/getpaid-openapi-original.yml
+  operations: [create_application, get_application, refresh_application, query_accounts]

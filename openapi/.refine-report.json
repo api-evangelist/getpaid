@@ -1,0 +1,24 @@
+{
+  "provider": "getpaid",
+  "sources": [
+    "getpaid-accounts-api-openapi.yml",
+    "getpaid-applications-api-openapi.yml",
+    "getpaid-authentication-api-openapi.yml",
+    "getpaid-checkouts-api-openapi.yml",
+    "getpaid-payments-api-openapi.yml",
+    "getpaid-queries-api-openapi.yml"
+  ],
+  "outputs": [
+    "getpaid-accounts-api-openapi.yml",
+    "getpaid-applications-api-openapi.yml",
+    "getpaid-authentication-api-openapi.yml",
+    "getpaid-checkouts-api-openapi.yml",
+    "getpaid-payments-api-openapi.yml",
+    "getpaid-queries-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

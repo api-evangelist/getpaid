@@ -1,0 +1,23 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/getpaid-openapi-original.yml (OpenAPI 3.1 webhooks section)
+spec_type: Webhooks
+transport: HTTP POST callbacks
+events:
+  payments:
+  - checkout_completed
+  - checkout_failed
+  - checkout_in_progress
+  - checkout_unattempted
+  - payment_captured
+  - payment_failed
+  - payment_refunded
+  - payment_refund_failed
+  onboarding:
+  - application_submitted
+  - application_completed
+notes: >-
+  Getpaid declares 10 webhook events in the OpenAPI 3.1 `webhooks` object
+  (two families: Accept-payments webhooks and Onboard-sellers webhooks). Each
+  event is delivered as an HTTP POST callback. No standalone AsyncAPI document
+  is published; this catalog is derived from the OpenAPI webhooks section.

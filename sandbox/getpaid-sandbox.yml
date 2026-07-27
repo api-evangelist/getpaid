@@ -1,0 +1,52 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.getpaid.io/integration/testing; https://docs.getpaid.io/integration/testing/payments/card-payments
+environments:
+  live:
+    base_url: https://api.getpaid.io
+    auth_token_url: https://auth.getpaid.io/oauth/token
+  sandbox:
+    base_url: https://api.sandbox.getpaid.io
+    auth_token_url: https://auth.getpaid.io/oauth/token
+    detail: >-
+      Sandbox uses mock onboarding procedures (no real KYC/KYB checks) and mock
+      payments that do not move real funds.
+test_cards:
+  eur:
+  - brand: Mastercard Debit (Consumer)
+    number: '5102589999999913'
+  - brand: Mastercard Credit (Consumer)
+    number: '5436031030606378'
+  - brand: Mastercard Credit (Business)
+    number: '5199770000000008'
+  - brand: Visa Debit (Consumer)
+    number: '4111111111111111'
+  - brand: Visa Credit (Consumer)
+    number: '4242424242424242'
+  - brand: Visa Credit (Business)
+    number: '4917610000000000'
+  cad:
+  - brand: Visa (3DS Frictionless)
+    number: '4000020951595032'
+    amount: 150.00 CAD
+    cardholder: FL-BRW1
+  - brand: Mastercard (3DS Challenge)
+    number: '2221008123677736'
+    amount: 151.00 CAD
+    cardholder: CL-BRW2
+  - brand: Visa (Non-3DS)
+    number: '4000027891380961'
+    amount: 10.00 CAD
+    cardholder: Jane Smith
+test_card_rules:
+  expiry: any future expiration date
+  cvv: any CVV
+  cardholder: any cardholder name (except CAD scenarios which require the specific cardholder names above)
+threeds_triggers_eur:
+  card: '4242424242424242'
+  frictionless: amount between 900.00 and 1000.00 EUR
+  challenge: amount over 1000.00 EUR
+notes: >-
+  Test values captured verbatim from the Getpaid testing docs. Sandbox is a
+  distinct host (api.sandbox.getpaid.io); credentials are retrieved from the
+  Getpaid dashboard.

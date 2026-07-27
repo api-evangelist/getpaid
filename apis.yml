@@ -1,7 +1,30 @@
 aid: getpaid
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/getpaid.png
 name: GetPaid
-description: GetPaid is a company surfaced as a portfolio company of insight-partners and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Getpaid is a licensed European (EEA) embedded-payments platform that lets
+  software platforms and marketplaces process payments while keeping the merchant
+  relationship and capturing the transaction margin. It provides white-labeled
+  hosted checkout across 30+ payment methods, atomic real-time split settlement
+  that distributes a single transaction across sellers, the platform and agents,
+  seller onboarding with KYC/KYB, subscriptions and invoicing with SEPA Direct
+  Debit, and an AI-native agent-payments API with scoped authority tokens and
+  spending limits. The v2 REST API uses OAuth 2.0 client-credentials auth,
+  cursor pagination, RFC 7807 problem-details errors, an idempotency-key header,
+  and 10 webhook events. Getpaid is a PCI-DSS Level 1, GDPR- and PSD2/SCA-aligned
+  licensed payment institution with hubs in Germany, Spain and Finland.
 url: https://raw.githubusercontent.com/api-evangelist/getpaid/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,12 +34,176 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Payments
+- Embedded Payments
+- Split Settlement
+- Checkout
+- Marketplace
+- Onboarding
+- Subscriptions
+- Agent Payments
+- Europe
+apis:
+- aid: getpaid:getpaid-accounts-api
+  name: GetPaid Accounts API
+  description: >-
+    Getpaid accounts created for sellers so they can start accepting payments and receiving payouts.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-applications-api
+  name: GetPaid Applications API
+  description: >-
+    Onboarding applications to collect the necessary information from sellers to create their Getpaid
+    accounts and start accepting payments.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Applications
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-applications-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-authentication-api
+  name: GetPaid Authentication API
+  description: >-
+    <!-- markdownlint-disable link-fragments -->
+
+    In order to authenticate with Getpaid API you need to request an OAuth 2.0 access token using your
+    client ID and secret
+
+    by calling the [Request access token endpoint](#tag/Authentication/operation/request_access_token).
+
+    <!-- markdownlint-enable link-fragments -->
+
+
+    Check full details on [how API authentication and authorization works](/integration/api/authentication/)
+    and [how to get
+
+    your client credentials](/integration/api/authentication/client-credentials).
+
+
+    <!-- ReDoc-Inject: <security-definitions> -->
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-authentication-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-checkouts-api
+  name: GetPaid Checkouts API
+  description: >-
+    Payment checkout sessions for one-time payments that the buyer can complete using Getpaid hosted checkout.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Checkouts
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-checkouts-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-payments-api
+  name: GetPaid Payments API
+  description: >-
+    Create and manage payments initiated by the platform on behalf of the buyer.
+
+
+    For recurring and unscheduled payments based on a previous standing instruction.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-payments-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-queries-api
+  name: GetPaid Queries API
+  description: List resources filtering and sorting them as needed.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Queries
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-queries-api-openapi.yml
+  - type: APIReference
+    url: https://docs.getpaid.io/api
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DeveloperPortal
+  url: https://docs.getpaid.io
+- type: Documentation
+  url: https://docs.getpaid.io
+- type: APIReference
+  url: https://docs.getpaid.io/api
+- type: Quickstart
+  url: https://docs.getpaid.io/integration/api
+- type: SignUp
+  url: https://dashboard.getpaid.io
+- type: Support
+  url: mailto:support@getpaid.io
+- type: PrivacyPolicy
+  url: https://www.getpaid.io/privacy-policy
+- type: Postman
+  url: https://docs.getpaid.io/integration/api/postman
+- type: ChangeLog
+  url: changelog/getpaid-changelog.yml
+- type: Authentication
+  url: authentication/getpaid-authentication.yml
+- type: OAuthScopes
+  url: scopes/getpaid-scopes.yml
+- type: AgenticAccess
+  url: agentic-access/getpaid-agentic-access.yml
+- type: DomainSecurity
+  url: security/getpaid-domain-security.yml
+- type: WellKnown
+  url: well-known/getpaid-well-known.yml
+- type: Conventions
+  url: conventions/getpaid-conventions.yml
+- type: Idempotency
+  url: conventions/getpaid-conventions.yml
+- type: ErrorCatalog
+  url: errors/getpaid-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/getpaid-lifecycle.yml
+- type: Sandbox
+  url: sandbox/getpaid-sandbox.yml
+- type: DataModel
+  url: data-model/getpaid-data-model.yml
+- type: Webhooks
+  url: asyncapi/getpaid-webhooks.yml
+- type: MCPServer
+  url: mcp/getpaid-mcp.yml
+- type: LLMsTxt
+  url: llms/getpaid-llms.txt
+- type: Conformance
+  url: conformance/getpaid-conformance.yml
+- type: Compliance
+  url: https://getpaid.io/compliance
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

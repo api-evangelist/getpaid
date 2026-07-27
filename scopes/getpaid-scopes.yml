@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/getpaid-openapi-original.yml
+schemes:
+- name: OAuth
+  source: openapi/getpaid-openapi-original.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.getpaid.io/oauth/token
+scopes:
+- scope: accounts:read
+  description: Allows to read accounts and onboarding applications.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/getpaid-openapi-original.yml
+- scope: accounts:read_write
+  description: Allows to read, create and/or operate accounts and onboarding applications.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/getpaid-openapi-original.yml
+- scope: payments:read
+  description: Allows to read payments and checkouts.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/getpaid-openapi-original.yml
+- scope: payments:read_write
+  description: Allows to read, create and/or operate payments and checkouts.
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/getpaid-openapi-original.yml

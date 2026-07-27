@@ -1,0 +1,37 @@
+# Getpaid
+
+> Getpaid is a licensed European (EEA) embedded-payments platform that lets software platforms process payments while keeping the merchant relationship and the transaction margin. Core capabilities: embedded/hosted checkout across 30+ payment methods, atomic real-time split settlement across multiple parties, seller onboarding (KYC/KYB), subscriptions/invoicing with SEPA Direct Debit, and an AI-native agent-payments API with scoped authority tokens. PCI-DSS Level 1, GDPR, PSD2/SCA.
+
+## APIs
+
+- [Getpaid API v2](https://docs.getpaid.io/api): OAuth 2.0 client-credentials REST API. Live https://api.getpaid.io, Sandbox https://api.sandbox.getpaid.io. Checkouts, Payments, Refunds, Applications (onboarding), Accounts.
+
+## Specs
+
+- [OpenAPI 3.1 (v2)](https://docs.getpaid.io/specs/api.yaml): 16 operations, 199 schemas, 10 webhook events, RFC 7807 errors.
+
+## Docs
+
+- [Documentation home](https://docs.getpaid.io)
+- [API reference](https://docs.getpaid.io/api)
+- [Hosted checkout](https://docs.getpaid.io/payments/checkouts)
+- [Splits (split settlement)](https://docs.getpaid.io/monetize/splits)
+- [Seller onboarding applications](https://docs.getpaid.io/onboard-sellers/applications)
+- [Idempotency](https://docs.getpaid.io/integration/api/idempotency)
+- [Testing / sandbox](https://docs.getpaid.io/integration/testing)
+- [Postman collection](https://docs.getpaid.io/integration/api/postman)
+- [Release notes](https://docs.getpaid.io/release-notes)
+- [Compliance & security](https://getpaid.io/compliance)
+- [Dashboard](https://dashboard.getpaid.io)
+
+## Auth
+
+- OAuth 2.0 client-credentials grant. Token endpoint: https://auth.getpaid.io/oauth/token (audience parameter required).
+- Scopes: accounts:read, accounts:read_write, payments:read, payments:read_write.
+
+## Conventions
+
+- Idempotency: Getpaid-Idempotency-Key header on mutating requests.
+- Tracing: Getpaid-Trace-Id header (required).
+- Pagination: opaque cursor.
+- Amounts: minor units; ISO 3166-1 alpha-2 countries; ISO 4217 currencies.

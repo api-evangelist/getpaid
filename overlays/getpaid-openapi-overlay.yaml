@@ -1,0 +1,30 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Getpaid API
+  version: 1.0.0
+extends: openapi/getpaid-openapi-original.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-19'
+    x-apievangelist-provider: getpaid
+    x-apievangelist-category: payments
+    x-apievangelist-conventions: conventions/getpaid-conventions.yml
+    x-apievangelist-errors: errors/getpaid-problem-types.yml
+    x-apievangelist-authentication: authentication/getpaid-authentication.yml
+    x-apievangelist-scopes: scopes/getpaid-scopes.yml
+    x-apievangelist-webhooks: asyncapi/getpaid-webhooks.yml
+    x-apievangelist-sandbox: sandbox/getpaid-sandbox.yml
+    x-apievangelist-data-model: data-model/getpaid-data-model.yml
+- target: $.info
+  update:
+    x-apievangelist-idempotency:
+      header: Getpaid-Idempotency-Key
+      docs: https://docs.getpaid.io/integration/api/idempotency
+    x-apievangelist-pagination:
+      style: cursor
+      request_param: cursor
+      response_field: cursor
+notes: >-
+  This overlay records API Evangelist enrichment metadata over the harvested,
+  unmodified Getpaid OpenAPI. It never mutates the original specification.

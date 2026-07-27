@@ -1,0 +1,60 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/getpaid-openapi-original.yml
+server:
+  name: getpaid
+  transport: http
+  url: null
+notes: >-
+  No official hosted/remote Getpaid MCP server was found. This is a candidate
+  tool list derived one-to-one from the OpenAPI v2 operations (excluding the raw
+  OAuth token endpoint, which the MCP host handles as auth). Payments-mutating
+  tools should be gated behind the payments:read_write scope and carry a
+  Getpaid-Idempotency-Key.
+tools:
+- name: create_checkout
+  description: Create a checkout
+  source_operation: openapi/getpaid-openapi-original.yml#create_checkout
+- name: get_checkout
+  description: Get a checkout
+  source_operation: openapi/getpaid-openapi-original.yml#get_checkout
+- name: query_checkouts
+  description: Query checkouts
+  source_operation: openapi/getpaid-openapi-original.yml#query_checkouts
+- name: create_payment
+  description: Create a payment
+  source_operation: openapi/getpaid-openapi-original.yml#create_payment
+- name: get_payment
+  description: Get a payment
+  source_operation: openapi/getpaid-openapi-original.yml#get_payment
+- name: refund_payment
+  description: Refund a payment
+  source_operation: openapi/getpaid-openapi-original.yml#refund_payment
+- name: query_payments
+  description: Query payments
+  source_operation: openapi/getpaid-openapi-original.yml#query_payments
+- name: create_application
+  description: Create an onboarding application
+  source_operation: openapi/getpaid-openapi-original.yml#create_application
+- name: get_application
+  description: Get an application
+  source_operation: openapi/getpaid-openapi-original.yml#get_application
+- name: refresh_application
+  description: Refresh (extend) an application
+  source_operation: openapi/getpaid-openapi-original.yml#refresh_application
+- name: cancel_application
+  description: Cancel an application
+  source_operation: openapi/getpaid-openapi-original.yml#cancel_application
+- name: query_applications
+  description: Query applications
+  source_operation: openapi/getpaid-openapi-original.yml#query_applications
+- name: query_accounts
+  description: Query accounts
+  source_operation: openapi/getpaid-openapi-original.yml#query_accounts
+- name: get_account_themes
+  description: Get account themes
+  source_operation: openapi/getpaid-openapi-original.yml#get_account_themes
+- name: query_resources
+  description: Query resources (checkouts or payments) by type
+  source_operation: openapi/getpaid-openapi-original.yml#query_resources

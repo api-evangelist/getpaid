@@ -1,0 +1,143 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Getpaid Accounts Payments API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/payments",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a payment initiated by the platform on behalf of a buyer.\n\nRelated webhooks:\n\n- [`payment_captured`](#tag/Accept-payments-webhooks/operation/payment_captured): sent when the payment funds are captured and secured.\n- [`payment_failed`](#tag/Accept-payments-webhooks/operation/payment_failed): sent when a payment fails due to business (decline) or technical issues.\n"
+        },
+        {
+          "info": {
+            "name": "Get a payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getpaid.io/v2/payments/:payment_id",
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve a payment."
+        },
+        {
+          "info": {
+            "name": "Refund a payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/payments/:payment_id/refunds",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment to refund."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Refund a captured payment fully or partially.\n\nRelated webhooks:\n\n- [`payment_refunded`](#tag/Accept-payments-webhooks/operation/payment_refunded): sent when the funds are returned to the buyer.\n- [`payment_refund_failed`](#tag/Accept-payments-webhooks/operation/payment_refund_failed): sent when a refund process fails due to business or technical issues.\n"
+        },
+        {
+          "info": {
+            "name": "Query payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/payments/query",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Query payments filtering, and sorting and paginating results.\n\nSee [Query resources](#tag/Queries/operation/query_resources) for more examples and details\nabout other resources, pagination and everything related to operate the Getpaid solution.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

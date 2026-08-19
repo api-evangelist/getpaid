@@ -1,0 +1,178 @@
+{
+  "item": [
+    {
+      "id": "f04fcf59-b5ff-4100-a0e4-92061260c747",
+      "name": "Authentication",
+      "description": {
+        "content": "<!-- markdownlint-disable link-fragments -->\nIn order to authenticate with Getpaid API you need to request an OAuth 2.0 access token using your client ID and secret\nby calling the [Request access token endpoint](#tag/Authentication/operation/request_access_token).\n<!-- markdownlint-enable link-fragments -->\n\nCheck full details on [how API authentication and authorization works](/integration/api/authentication/) and [how to get\nyour client credentials](/integration/api/authentication/client-credentials).\n\n<!-- ReDoc-Inject: <security-definitions> -->\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6dc22edc-b5ea-497b-9f4c-3bad72e4e252",
+          "name": "Request access token",
+          "request": {
+            "name": "Request access token",
+            "description": {
+              "content": "Obtain an OAuth 2.0 access token to authenticate API requests",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "auth",
+                "getpaid",
+                "io"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"audience\": \"<uri>\",\n  \"grant_type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1fbeb148-0464-47a6-942e-ce8e74eaaf15",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "auth",
+                    "getpaid",
+                    "io"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"g6gWu46zeP0HH4jkW3i22yJ2shDrNxJ8\",\n  \"client_secret\": \"VJG133mOfuHhSfkIS6gozTXzr7FBm-0HS42OZ0cmxJkcHyGrVZMLGJtyruTA4CQv\",\n  \"audience\": \"https://api.getpaid.io\",\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\",\n  \"scope\": \"accounts:read documents:read_write payments:read\",\n  \"expires_in\": 86400,\n  \"token_type\": \"Bearer\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14f6bf6c-533d-4ed3-ad8a-a6c42f4ad67d",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "auth",
+                    "getpaid",
+                    "io"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"g6gWu46zeP0HH4jkW3i22yJ2shDrNxJ8\",\n  \"client_secret\": \"VJG133mOfuHhSfkIS6gozTXzr7FBm-0HS42OZ0cmxJkcHyGrVZMLGJtyruTA4CQv\",\n  \"audience\": \"https://api.getpaid.io\",\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.getpaid.io/ref/error-types#problem\",\n  \"title\": \"Invalid Request\",\n  \"status\": 545,\n  \"detail\": \"The request body was invalid\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getpaid.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "eb4a7d45-7e81-4bc9-8c3a-c9d04c260853",
+    "name": "Getpaid Accounts Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Getting started\n\nOur APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all\nresources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage\nof the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of\nthis Getpaid API.\n\nTo get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid\ndashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to\nauthenticate with Getpaid API.\n\n## Postman\n\nGetpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and\nthe environments](/integration/api/postman) to start testing the Getpaid API.\n\n## Fields formats\n\n| Type | Format |\n| :- | :- |\n| `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |\n| `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |\n| `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |\n| `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |\n| `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |\n| `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |\n| `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |\n| `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |\n| `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |\n| `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |\n| `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |\n\n\nContact Support:\n Email: support@getpaid.io",
+      "type": "text/plain"
+    }
+  }
+}

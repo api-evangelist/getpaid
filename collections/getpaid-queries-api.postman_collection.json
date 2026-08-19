@@ -1,0 +1,492 @@
+{
+  "item": [
+    {
+      "id": "cb214936-4924-481c-b281-c585f7628cd6",
+      "name": "Queries",
+      "description": {
+        "content": "List resources filtering and sorting them as needed.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9fe063fe-178b-4377-b060-0089cdb674fc",
+          "name": "Query resources",
+          "request": {
+            "name": "Query resources",
+            "description": {
+              "content": "Query Getpaid solution resources obtaining specific data by filtering and retrieving each resource type:\n\n- `checkouts` - [Query checkouts](#tag/Checkouts/operation/query_checkouts)\n- `payments` - [Query payments](#tag/Payments/operation/query_payments)\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                ":resource_type",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "resource_type",
+                  "description": "(Required) The type of the resources to query."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"<string>\",\n  \"first\": 20,\n  \"after\": \"<string>\",\n  \"filters\": {\n    \"id\": {\n      \"description\": \"The checkout identifier to filter by using an exact match operation.\",\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\",\n      \"example\": \"cko_4kf9v6xp00hzc99rdwr5m97wce\"\n    },\n    \"reference\": \"<string>\",\n    \"seller_legal_name\": \"<string>\",\n    \"statuses\": [\n      \"<string>\"\n    ]\n  },\n  \"sorts\": [\n    {\n      \"field\": \"<string>\",\n      \"direction\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "00bafc34-6943-407d-89de-4f393285051c",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"payments\",\n  \"cursor\": \"Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==\",\n  \"data\": [\n    {\n      \"id\": \"pay_4y7kptsvn11qq6d354g5tx735v\",\n      \"reference\": \"ORD-202510-0232\",\n      \"status\": \"captured\",\n      \"amount\": 1000,\n      \"currency\": \"EUR\",\n      \"created_at\": \"2023-03-15T12:34:56.999Z\",\n      \"updated_at\": \"2023-03-15T12:34:56.999Z\",\n      \"method\": {\n        \"type\": \"card\",\n        \"scheme\": \"visa\",\n        \"display_hint\": \"424242******4242\"\n      },\n      \"seller\": {\n        \"id\": \"acc_44678r08jtm8zbt227tzhc4nw5\",\n        \"legal_name\": \"Titan Biking\"\n      },\n      \"parties\": [\n        {\n          \"id\": \"acc_5y789s19kum9act338uaic5ox6\",\n          \"type\": \"platform\",\n          \"legal_name\": \"Titan Auto Parts GmbH\"\n        }\n      ]\n    },\n    {\n      \"id\": \"pay_4y7kptsvn11qq6d354g5tx736w\",\n      \"reference\": \"ORD-202511-0133\",\n      \"status\": \"captured\",\n      \"amount\": 1000,\n      \"currency\": \"EUR\",\n      \"created_at\": \"2023-03-15T12:34:56.999Z\",\n      \"updated_at\": \"2023-03-15T12:34:56.999Z\",\n      \"method\": {\n        \"type\": \"card\",\n        \"scheme\": \"visa\",\n        \"display_hint\": \"411111******1111\"\n      },\n      \"seller\": {\n        \"id\": \"acc_44678r08jtm8zbt227tzhc4nw5\",\n        \"legal_name\": \"Titan Biking\"\n      },\n      \"parties\": [\n        {\n          \"id\": \"acc_5y789s19kum9act338uaic5ox6\",\n          \"type\": \"platform\",\n          \"legal_name\": \"Titan Auto Parts GmbH\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fba846c8-181e-4644-8380-0e8ac9989bba",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5e3c6364-8b98-42fa-9604-3ac875685919",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f863a89c-10cc-460b-b355-3c0c36dee937",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1673f712-f812-485f-aca0-5de677484c9b",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2ae152f7-c7a5-4bf1-814d-8c2782c578d0",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    ":resource_type",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "resource_type",
+                      "description": "(Required) The type of the resources to query."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getpaid.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5b6fc057-b57c-4f8e-9576-2bf6e2de3d32",
+    "name": "Getpaid Accounts Queries API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Getting started\n\nOur APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all\nresources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage\nof the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of\nthis Getpaid API.\n\nTo get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid\ndashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to\nauthenticate with Getpaid API.\n\n## Postman\n\nGetpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and\nthe environments](/integration/api/postman) to start testing the Getpaid API.\n\n## Fields formats\n\n| Type | Format |\n| :- | :- |\n| `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |\n| `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |\n| `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |\n| `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |\n| `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |\n| `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |\n| `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |\n| `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |\n| `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |\n| `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |\n| `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |\n\n\nContact Support:\n Email: support@getpaid.io",
+      "type": "text/plain"
+    }
+  }
+}

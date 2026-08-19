@@ -1,0 +1,76 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Getpaid Accounts API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/accounts/query",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Query accounts filtering, sorting and paginating results.\n\nSee [Queries](/operate/queries) for more examples and details about pagination and common query patterns.\n"
+        },
+        {
+          "info": {
+            "name": "Get account themes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getpaid.io/v2/accounts/:account_id/themes",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the account whose themes should be retrieved."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve the themes configured for an account.\n\nSellers can retrieve themes they own. Platforms can retrieve themes for sellers they own.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

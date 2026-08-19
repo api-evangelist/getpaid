@@ -1,0 +1,105 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Getpaid Accounts Checkouts API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Checkouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/checkouts",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Create a payment checkout session.\n\nRelated webhooks:\n\n- [`checkout_completed`](#tag/Accept-payments-webhooks/operation/checkout_completed): sent when the checkout process is completed with a successful payment.\n- [`checkout_failed`](#tag/Accept-payments-webhooks/operation/checkout_failed): sent when the checkout lifetime is reached without a successful payment attempt, and at least one payment was attempted but none were successful.\n- [`checkout_in_progress`](#tag/Accept-payments-webhooks/opera"
+        },
+        {
+          "info": {
+            "name": "Get a checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getpaid.io/v2/checkouts/:checkout_id",
+            "params": [
+              {
+                "name": "checkout_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieve a payment checkout session."
+        },
+        {
+          "info": {
+            "name": "Query checkouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/v2/checkouts/query",
+            "headers": [
+              {
+                "name": "Getpaid-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://auth.getpaid.io/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Query checkouts filtering, and sorting and paginating results.\n\nSee [Query resources](#tag/Queries/operation/query_resources) for more examples and details\nabout other resources, pagination and everything related to operate the Getpaid solution.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

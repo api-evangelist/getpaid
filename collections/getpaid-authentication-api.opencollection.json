@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Getpaid Accounts Authentication API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Request access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getpaid.io/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Obtain an OAuth 2.0 access token to authenticate API requests"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

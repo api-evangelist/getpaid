@@ -1,0 +1,1320 @@
+{
+  "item": [
+    {
+      "id": "f05364bc-4a58-425c-8882-8a977d451b85",
+      "name": "Checkouts",
+      "description": {
+        "content": "Payment checkout sessions for one-time payments that the buyer can complete using Getpaid hosted checkout.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "16199a03-c90f-4cd3-984f-40be579a0471",
+          "name": "Create a checkout",
+          "request": {
+            "name": "Create a checkout",
+            "description": {
+              "content": "Create a payment checkout session.\n\nRelated webhooks:\n\n- [`checkout_completed`](#tag/Accept-payments-webhooks/operation/checkout_completed): sent when the checkout process is completed with a successful payment.\n- [`checkout_failed`](#tag/Accept-payments-webhooks/operation/checkout_failed): sent when the checkout lifetime is reached without a successful payment attempt, and at least one payment was attempted but none were successful.\n- [`checkout_in_progress`](#tag/Accept-payments-webhooks/operation/checkout_in_progress): sent when the checkout lifetime reaches its expiration, but a payment attempt is still in progress.\n- [`checkout_unattempted`](#tag/Accept-payments-webhooks/operation/checkout_unattempted): sent when the checkout lifetime is reached without a payment.\n- For each payment attempt:\n  - [`payment_captured`](#tag/Accept-payments-webhooks/operation/payment_captured): sent when the payment funds are captured and secured.\n  - [`payment_failed`](#tag/Accept-payments-webhooks/operation/payment_failed): sent when a payment fails due to business (decline) or technical issues.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "checkouts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"<string>\",\n  \"amount\": \"<amount-minor>\",\n  \"currency\": \"<currency>\",\n  \"description\": \"<string>\",\n  \"splits\": {\n    \"type\": \"<string>\",\n    \"accounts\": [\n      {\n        \"type\": \"<string>\",\n        \"id\": \"<id>\",\n        \"split\": {\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"processing_fee\": {\n          \"percentage\": \"<float>\"\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"<uri>\",\n    \"completed\": \"<uri>\",\n    \"failed\": \"<uri>\"\n  },\n  \"expires_in\": \"<string>\",\n  \"payment_methods\": {\n    \"type\": \"<string>\",\n    \"available\": [\n      {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    ],\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  },\n  \"buyer\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"email\": \"<email>\",\n    \"address\": {\n      \"line1\": \"<string>\",\n      \"line2\": \"<string>\",\n      \"street_number\": \"<string>\",\n      \"city\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<country>\"\n    },\n    \"nationality\": \"<country>\",\n    \"business\": {\n      \"legal_name\": \"<string>\"\n    }\n  },\n  \"standing_instruction\": {\n    \"terms\": {\n      \"type\": \"<string>\"\n    }\n  },\n  \"webhooks\": {\n    \"url\": \"<uri>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "20e6b0a9-a893-48e4-811e-48fdbcabbe71",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"cko_44678r08jtm8zbt227tzhc4nw5\",\n  \"status\": \"initiated\",\n  \"reference\": \"ORD-202510-0232\",\n  \"created_at\": \"2025-10-24T14:45:22.993Z\",\n  \"updated_at\": \"2025-10-24T14:45:22.993Z\",\n  \"expires_at\": \"2025-10-24T14:15:22.993Z\",\n  \"flow\": {\n    \"next_step\": {\n      \"type\": \"redirect\",\n      \"url\": \"https://checkout.getpaid.io/v2/cko_44678r08jtm8zbt227tzhc4nw5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n    }\n  },\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"available\": [\n      {\n        \"type\": \"card\",\n        \"scheme\": \"mastercard\"\n      },\n      {\n        \"type\": \"card\",\n        \"scheme\": \"visa\"\n      },\n      {\n        \"type\": \"sepa_direct_debit\"\n      }\n    ]\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"version\": \"2\",\n        \"legal_name\": \"Car Garage GmbH\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        },\n        \"processing_fee\": {\n          \"percentage\": 0\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"version\": \"0\",\n        \"legal_name\": \"Titan Auto Parts GmbH\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5d1a7754-1ecd-4dcd-b8c3-5c9fdd87ffd6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cab439dc-fb41-478e-bbdf-748b596ca364",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9b6a9a6f-36af-4f7c-967a-1b4e02929a42",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "99be1793-536c-40dd-a04a-114e50221222",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a5364209-8f36-47b2-8860-dbfd93515617",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference\": \"ORD-202510-0232\",\n  \"amount\": 10000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order #202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"options\": {\n      \"cards\": {\n        \"dynamic_descriptor\": \"TITAN*202510-0232\"\n      },\n      \"sepa_direct_debit\": {\n        \"remittance_info\": \"Titan Auto Parts Ord. #0232 Inv. #202500632\"\n      }\n    }\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 9000\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 1000\n        },\n        \"processing_fee\": {\n          \"percentage\": 100\n        }\n      }\n    ]\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/checkout/complete?order=202510-0232\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1ed096ea-4a53-44e2-879d-ea363892552f",
+          "name": "Get a checkout",
+          "request": {
+            "name": "Get a checkout",
+            "description": {
+              "content": "Retrieve a payment checkout session.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "checkouts",
+                ":checkout_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<id>",
+                  "key": "checkout_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6bc72bc1-bb99-436c-a8a5-9ff6ed67ccce",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"cko_44678r08jtm8zbt227tzhc4nw5\",\n  \"status\": \"completed\",\n  \"reference\": \"ORD-202510-0232\",\n  \"created_at\": \"2025-10-10T06:43:39.355Z\",\n  \"updated_at\": \"2025-10-10T06:44:34.843Z\",\n  \"expires_at\": \"2025-10-10T07:13:39.355Z\",\n  \"amount\": 1000,\n  \"currency\": \"EUR\",\n  \"description\": \"Order 202510-0232\",\n  \"payment_methods\": {\n    \"type\": \"default\",\n    \"selected\": {\n      \"type\": \"card\",\n      \"scheme\": \"visa\"\n    },\n    \"available\": [\n      {\n        \"type\": \"card\",\n        \"scheme\": \"visa\"\n      },\n      {\n        \"type\": \"card\",\n        \"scheme\": \"mastercard\"\n      },\n      {\n        \"type\": \"sepa_direct_debit\"\n      }\n    ]\n  },\n  \"splits\": {\n    \"type\": \"per_transaction\",\n    \"accounts\": [\n      {\n        \"type\": \"seller\",\n        \"id\": \"acc_4f5zanqzxfg9w9jj5e81bm6bc9\",\n        \"version\": \"2\",\n        \"legal_name\": \"AutoZentrum Düsseldorf GmbH\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 900\n        },\n        \"processing_fee\": {\n          \"percentage\": 0,\n          \"amount\": 0\n        }\n      },\n      {\n        \"type\": \"platform\",\n        \"id\": \"acc_4q90qx2kdczs59yqfq34p09qx6\",\n        \"version\": \"0\",\n        \"legal_name\": \"Titan Auto Parts GmbH\",\n        \"split\": {\n          \"type\": \"fixed\",\n          \"amount\": 100\n        },\n        \"processing_fee\": {\n          \"percentage\": 100,\n          \"amount\": 45\n        }\n      }\n    ]\n  },\n  \"payments\": [\n    {\n      \"index\": 0,\n      \"id\": \"pay_4yd8tht4hwkpk3g14w4sey01mt\",\n      \"status\": \"succeeded\",\n      \"created_at\": \"2025-10-10T06:44:23.387Z\",\n      \"updated_at\": \"2025-10-10T06:44:34.843Z\",\n      \"method\": {\n        \"type\": \"card\",\n        \"display_hint\": \"424242******4242\",\n        \"card\": {\n          \"scheme\": \"visa\",\n          \"holder_name\": \"Jane Doe\",\n          \"first_digits\": \"424242\",\n          \"last_digits\": \"4242\",\n          \"expiry_month\": 12,\n          \"expiry_year\": 2030\n        }\n      }\n    }\n  ],\n  \"theme\": {\n    \"id\": \"thm_4jkgtzffbf9pzem7dgfhdeztwa\",\n    \"name\": \"Default Titan Auto Parts GmbH\"\n  },\n  \"events\": [\n    {\n      \"index\": 3,\n      \"type\": \"completed\",\n      \"occurred_at\": \"2025-10-10T06:44:34.843Z\"\n    },\n    {\n      \"index\": 2,\n      \"type\": \"payment_succeeded\",\n      \"occurred_at\": \"2025-10-10T06:44:34.765Z\",\n      \"payment\": {\n        \"id\": \"pay_4yd8tht4hwkpk3g14w4sey01mt\",\n        \"method\": {\n          \"type\": \"card\"\n        }\n      }\n    },\n    {\n      \"index\": 1,\n      \"type\": \"payment_initiated\",\n      \"occurred_at\": \"2025-10-10T06:44:23.387Z\",\n      \"payment\": {\n        \"id\": \"pay_4yd8tht4hwkpk3g14w4sey01mt\",\n        \"method\": {\n          \"type\": \"card\"\n        }\n      }\n    },\n    {\n      \"index\": 0,\n      \"type\": \"started\",\n      \"occurred_at\": \"2025-10-10T06:43:45.123Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b2659a98-ee05-405a-af50-43a3576f2b45",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "3975dff1-72e6-4723-9e33-05fa471d8a05",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de15ba25-2614-4e88-bbc2-3ecb62a9ace1",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65227dbe-e444-42a1-9990-efd3eb49d282",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "76930a8c-5124-4733-9d83-41d01ef8a423",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    ":checkout_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "checkout_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "be8bd285-9991-4d9f-baca-ca06a8ba97bb",
+          "name": "Query checkouts",
+          "request": {
+            "name": "Query checkouts",
+            "description": {
+              "content": "Query checkouts filtering, and sorting and paginating results.\n\nSee [Query resources](#tag/Queries/operation/query_resources) for more examples and details\nabout other resources, pagination and everything related to operate the Getpaid solution.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "checkouts",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"<string>\",\n  \"first\": 20,\n  \"after\": \"<string>\",\n  \"filters\": {\n    \"id\": \"<id>\",\n    \"reference\": \"<string>\",\n    \"seller_legal_name\": \"<string>\",\n    \"statuses\": [\n      \"<string>\"\n    ]\n  },\n  \"sorts\": [\n    {\n      \"field\": \"<string>\",\n      \"direction\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9b0907ee-2047-4ec9-8fb5-a98310459121",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"checkouts\",\n  \"cursor\": \"Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==\",\n  \"data\": [\n    {\n      \"id\": \"chk_4y7kptsvn11qq6d354g5tx735v\",\n      \"reference\": \"ORD-202510-0232\",\n      \"status\": \"expired\",\n      \"amount\": 1000,\n      \"currency\": \"EUR\",\n      \"created_at\": \"2023-03-15T12:34:56.999Z\",\n      \"updated_at\": \"2023-03-15T12:35:56.999Z\",\n      \"expires_at\": \"2023-03-15T13:34:56.999Z\",\n      \"payment_methods\": [\n        {\n          \"type\": \"card\",\n          \"scheme\": \"visa\"\n        },\n        {\n          \"type\": \"card\",\n          \"scheme\": \"mastercard\"\n        },\n        {\n          \"type\": \"sepa_direct_debit\"\n        }\n      ],\n      \"seller\": {\n        \"id\": \"acc_44678r08jtm8zbt227tzhc4nw5\",\n        \"legal_name\": \"Titan Biking\"\n      },\n      \"parties\": [\n        {\n          \"id\": \"acc_5y789s19kum9act338uaic5ox6\",\n          \"type\": \"platform\",\n          \"legal_name\": \"Titan Auto Parts GmbH\"\n        }\n      ]\n    },\n    {\n      \"id\": \"chk_4y7kptsvn11qq6d354g5tx736w\",\n      \"reference\": \"ORD-202511-0133\",\n      \"status\": \"failed\",\n      \"amount\": 1000,\n      \"currency\": \"EUR\",\n      \"created_at\": \"2023-03-16T10:20:30.999Z\",\n      \"updated_at\": \"2023-03-16T10:22:45.999Z\",\n      \"expires_at\": \"2023-03-16T11:20:30.999Z\",\n      \"payment_methods\": [\n        {\n          \"type\": \"card\",\n          \"scheme\": \"visa\"\n        },\n        {\n          \"type\": \"sepa_direct_debit\"\n        }\n      ],\n      \"seller\": {\n        \"id\": \"acc_44678r08jtm8zbt227tzhc4nw5\",\n        \"legal_name\": \"Titan Biking\"\n      },\n      \"parties\": [\n        {\n          \"id\": \"acc_5y789s19kum9act338uaic5ox6\",\n          \"type\": \"platform\",\n          \"legal_name\": \"Titan Auto Parts GmbH\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d328b197-38ca-4572-8667-f2ce7c0bde4e",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bab78b4d-7ac3-4252-b3d7-e445ae33c8ef",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "e555c23c-daa7-4593-a812-cc275a0d6431",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4e2bad68-21e0-4dde-a4ee-4d6807c1fb39",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a74215c8-d931-4d2b-8fa3-ae3bde523a56",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "checkouts",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"checkouts\",\n  \"filters\": {\n    \"seller_legal_name\": \"Titan Biking\",\n    \"statuses\": [\n      \"expired\",\n      \"failed\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getpaid.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ab275e19-71bf-4f2d-a153-45c8a6876c79",
+    "name": "Getpaid Accounts Checkouts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Getting started\n\nOur APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all\nresources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage\nof the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of\nthis Getpaid API.\n\nTo get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid\ndashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to\nauthenticate with Getpaid API.\n\n## Postman\n\nGetpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and\nthe environments](/integration/api/postman) to start testing the Getpaid API.\n\n## Fields formats\n\n| Type | Format |\n| :- | :- |\n| `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |\n| `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |\n| `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |\n| `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |\n| `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |\n| `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |\n| `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |\n| `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |\n| `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |\n| `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |\n| `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |\n\n\nContact Support:\n Email: support@getpaid.io",
+      "type": "text/plain"
+    }
+  }
+}

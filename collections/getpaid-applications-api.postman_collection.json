@@ -1,0 +1,2476 @@
+{
+  "item": [
+    {
+      "id": "aaf95771-bd19-44c4-8462-202bf267dbc6",
+      "name": "Applications",
+      "description": {
+        "content": "Onboarding applications to collect the necessary information from sellers to create their Getpaid accounts and start accepting payments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f6ba813d-1e16-4a7a-b6f9-6c8b3bd6c135",
+          "name": "Create an application",
+          "request": {
+            "name": "Create an application",
+            "description": {
+              "content": "Create an application initiated by the platform so the seller can start submitting their information. It can be:\n\n- `onboarding`: to create a new account for the seller and start accepting payments.\n- `change_request`: to update an existing seller account with new information.\n\nRelated webhooks:\n\n- [`application_submitted`](#tag/Onboard-sellers-webhooks/operation/application_submitted): sent when an application is submitted by a seller for review.\n- [`application_completed`](#tag/Onboard-sellers-webhooks/operation/application_completed): sent when the application is approved and completed.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "applications"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicant\": {\n    \"email\": \"<email>\",\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\"\n  },\n  \"business\": {\n    \"legal_name\": \"<string>\",\n    \"country\": \"<country>\",\n    \"legal_structure\": \"<string>\",\n    \"registered_address\": {\n      \"line1\": 795.7679201554569,\n      \"street_number\": false,\n      \"city\": \"string\",\n      \"postal_code\": \"string\"\n    },\n    \"registration_number\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"value\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  },\n  \"redirect\": {\n    \"default\": \"<uri>\"\n  },\n  \"reference\": \"<string>\",\n  \"type\": \"<string>\",\n  \"webhooks\": {\n    \"url\": \"<uri>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ac3d8a92-35b0-4388-94dc-b15320dbe7fd",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"app_4fekhxdpss1et7rjp8t7rdpnw4\",\n  \"status\": \"initiated\",\n  \"reference\": \"53426\",\n  \"created_at\": \"2025-10-24T14:45:22.993Z\",\n  \"updated_at\": \"2025-10-24T14:45:22.993Z\",\n  \"expires_at\": \"2025-10-24T14:15:22.993Z\",\n  \"account\": {\n    \"id\": \"acc_4fekhxdpss1et7rjp8t7rdpnw4\"\n  },\n  \"flow\": {\n    \"next_step\": {\n      \"type\": \"redirect\",\n      \"url\": \"https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3cf54c55-0adf-44ef-ae29-10990b7488b0",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b0682d08-c105-4018-874c-856c0d50b631",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6e53e677-723a-40b6-985b-58d89f89ce6f",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ae0c199b-066f-4ff2-946d-c695e5c4c4d2",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "79d7cfcf-7fb3-45b9-b9da-a6da2bee9a24",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"onboarding\",\n  \"reference\": \"53426\",\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\"\n  },\n  \"business\": {\n    \"legal_name\": \"Garage Deutschland AG\",\n    \"country\": \"DE\"\n  },\n  \"redirect\": {\n    \"default\": \"https://titanauto.com/onboarding/complete?customer=53426\"\n  },\n  \"webhooks\": {\n    \"url\": \"https://webhooks.titanauto.com/getpaid\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0577ab6c-93b8-48ca-af70-477655160c8a",
+          "name": "Get an application",
+          "request": {
+            "name": "Get an application",
+            "description": {
+              "content": "Retrieve details of an application by its ID. Both `onboarding` and `change_request` applications can be retrieved.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "applications",
+                ":application_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<id>",
+                  "key": "application_id",
+                  "description": "(Required) The ID of the application to retrieve."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c1d663ef-96d7-445c-939c-14916829dc8f",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"app_4fekhxdpss1et7rjp8t7rdpnw4\",\n  \"status\": \"initiated\",\n  \"reference\": \"456126\",\n  \"account\": {\n    \"id\": \"acc_f6m9n2q3ps8et4rjk7d1xbvw5c\"\n  },\n  \"business\": {\n    \"legal_name\": \"Test Company GmbH\",\n    \"country\": \"DE\"\n  },\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\",\n    \"first_name\": \"Markus\",\n    \"last_name\": \"Keller\"\n  },\n  \"flow\": {\n    \"next_step\": {\n      \"type\": \"redirect\",\n      \"url\": \"https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n    }\n  },\n  \"created_at\": \"2026-02-03T10:00:00.000Z\",\n  \"updated_at\": \"2026-02-03T10:00:00.000Z\",\n  \"expires_at\": \"2026-02-18T10:00:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3e89cd9-b8c6-4017-ac71-4511c73d43af",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "0539b356-ea13-4ef0-af85-fa8c2eab7052",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8abdc5ff-c6d1-4c10-938c-d54f41ffb992",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d2f9176c-83e6-4181-b5cb-0100cfe7bda4",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2efe3e16-b821-4f87-a449-4e8347e5151d",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ec045192-d319-49a9-9c22-3443123e4f58",
+          "name": "Refresh an application",
+          "request": {
+            "name": "Refresh an application",
+            "description": {
+              "content": "Extends the lifespan of an application so the seller can continue submitting their information. Both `onboarding` and `change_request` applications can be refreshed.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "applications",
+                ":application_id",
+                "refresh"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<id>",
+                  "key": "application_id",
+                  "description": "(Required) The ID of the application to refresh."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cf8ed210-3c2e-4595-9cb2-8fd9adca444e",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"app_4fekhxdpss1et7rjp8t7rdpnw4\",\n  \"updated_at\": \"2025-10-24T14:45:22.993Z\",\n  \"expires_at\": \"2025-11-09T14:15:22.993Z\",\n  \"flow\": {\n    \"next_step\": {\n      \"type\": \"redirect\",\n      \"url\": \"https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc2b6354-36a3-483e-a6c1-cb329d393ebb",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a517a1e8-3377-48f4-9854-7288e247f224",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9e3cf2bf-d43f-4653-b5ed-720e395fcfe0",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "064f7fc0-9c2b-460f-b7d9-aa256b04a048",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba275a10-1b3a-4fbe-b423-faafb89c3a54",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1a17c00f-f4f7-4c3b-b6f0-fda007758a59",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1dc0d7bd-d010-45ca-a507-9f7f60f9657f",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to refresh."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "783a0236-e4b8-4e2d-b27c-72e392d0dc5a",
+          "name": "Cancel an application",
+          "request": {
+            "name": "Cancel an application",
+            "description": {
+              "content": "Cancels a duplicate or abandoned application. Both `onboarding` and `change_request` applications can be cancelled.\n\nApplications in `approved`, `completed`, or already `cancelled` status cannot be cancelled and return a validation error.\n\nThe response returns the updated application with `status` set to `cancelled` and the hosted flow cleared. For change requests, cancellation closes the open workflow so a new change request can be created for the same seller account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "applications",
+                ":application_id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<id>",
+                  "key": "application_id",
+                  "description": "(Required) The ID of the application to cancel."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "97622536-33f1-45ae-b1e4-0bc1e3eae2c8",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"app_4fekhxdpss1et7rjp8t7rdpnw4\",\n  \"status\": \"cancelled\",\n  \"reference\": \"456126\",\n  \"account\": {\n    \"id\": \"acc_f6m9n2q3ps8et4rjk7d1xbvw5c\"\n  },\n  \"business\": {\n    \"legal_name\": \"Test Company GmbH\",\n    \"country\": \"DE\"\n  },\n  \"applicant\": {\n    \"email\": \"markus.keller@garagegermany.de\",\n    \"first_name\": \"Markus\",\n    \"last_name\": \"Keller\"\n  },\n  \"created_at\": \"2026-02-03T10:00:00.000Z\",\n  \"updated_at\": \"2026-02-03T11:15:00.000Z\",\n  \"expires_at\": \"2026-02-18T10:00:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe132e58-d17f-4414-924d-a2a2f55cf118",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d95c69c0-5f79-431a-8d76-63c470e6bc99",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "175552c0-6c45-449c-842e-530000c25cc3",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7f39ef77-b3a0-48a9-b1c3-5f52d15f5475",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "448ad679-fca9-40ac-9048-0bdd705d308a",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4146fa1c-9010-43fd-a472-afe81f22faed",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "3a4f521c-b142-4499-8aa3-1d9e45d29e7f",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    ":application_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<id>",
+                      "key": "application_id",
+                      "description": "(Required) The ID of the application to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8dcc9317-a8fd-49f2-88c2-a9f87a1e962f",
+          "name": "Query applications",
+          "request": {
+            "name": "Query applications",
+            "description": {
+              "content": "Query applications filtering, sorting and paginating results. Both `onboarding` and `change_request` applications are returned.\n\nSee [Queries](/operate/queries) for more examples and details about pagination and common query patterns.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "applications",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                "key": "Getpaid-Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "accounts:read accounts:read_write payments:read payments:read_write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://auth.getpaid.io/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"<string>\",\n  \"first\": 20,\n  \"after\": \"<string>\",\n  \"filters\": {\n    \"id\": \"<id>\",\n    \"statuses\": [\n      \"<string>\"\n    ],\n    \"legal_name\": \"<string>\",\n    \"reference\": \"<string>\",\n    \"country\": \"<country>\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"<string>\",\n      \"direction\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e97dce10-4550-494c-b592-faeea287ff63",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"applications\",\n  \"cursor\": \"Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==\",\n  \"data\": [\n    {\n      \"id\": \"app_4fekhxdpss1et7rjp8t7rdpnw4\",\n      \"status\": \"submitted\",\n      \"reference\": \"53426\",\n      \"legal_name\": \"Garage Deutschland AG\",\n      \"country\": \"DE\",\n      \"applicant_email\": \"markus.keller@garagegermany.de\",\n      \"created_at\": \"2026-01-14T14:45:22.993Z\",\n      \"expires_at\": \"2026-01-28T14:45:22.993Z\"\n    },\n    {\n      \"id\": \"app_8xwmn5d3pq2rt9kjm7v4cdpbz6\",\n      \"status\": \"completed\",\n      \"reference\": \"82714\",\n      \"legal_name\": \"Titan Auto Parts GmbH\",\n      \"country\": \"DE\",\n      \"applicant_email\": \"lena.schmidt@titanauto.de\",\n      \"created_at\": \"2026-01-10T09:12:41.380Z\",\n      \"expires_at\": \"2026-01-24T09:12:41.380Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "540194d0-e5c0-48b0-8e22-61e9e221f988",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f9d19fdb-9b8a-47eb-9e4f-833fb86f49d5",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "59945008-4005-4852-8373-60799e034ac1",
+              "name": "Invalid Parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68d3a218-1c84-42c1-8760-eece6b810fbb",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "973848ee-9afb-43b3-b892-5027de3c6d14",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "applications",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "A unique idempotency key to allow safe retrying.\nSee [Getpaid API idempotency](/integration/api/idempotency) for more details.\n",
+                    "key": "Getpaid-Idempotency-Key",
+                    "value": "5c255194-30ec-11ed-a261-0242ac120002"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"applications\",\n  \"filters\": {\n    \"statuses\": [\n      \"submitted\",\n      \"completed\"\n    ],\n    \"country\": \"DE\",\n    \"legal_name\": \"Garage\"\n  },\n  \"sorts\": [\n    {\n      \"field\": \"created_at\",\n      \"direction\": \"descending\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The trace identifier for the request. It is a good idea to log this and provide it with any support requests",
+                  "key": "Getpaid-Trace-Id",
+                  "value": "96ce50247f87f540bb2d86771b3728b8"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getpaid.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "38904fef-af8c-4227-b828-d41586009e9d",
+    "name": "Getpaid Accounts Applications API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Getting started\n\nOur APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all\nresources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage\nof the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of\nthis Getpaid API.\n\nTo get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid\ndashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to\nauthenticate with Getpaid API.\n\n## Postman\n\nGetpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and\nthe environments](/integration/api/postman) to start testing the Getpaid API.\n\n## Fields formats\n\n| Type | Format |\n| :- | :- |\n| `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |\n| `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |\n| `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |\n| `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |\n| `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |\n| `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |\n| `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |\n| `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |\n| `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |\n| `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |\n| `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |\n\n\nContact Support:\n Email: support@getpaid.io",
+      "type": "text/plain"
+    }
+  }
+}

@@ -6,12 +6,9 @@ server:
   name: getpaid
   transport: http
   url: null
-notes: >-
-  No official hosted/remote Getpaid MCP server was found. This is a candidate
-  tool list derived one-to-one from the OpenAPI v2 operations (excluding the raw
-  OAuth token endpoint, which the MCP host handles as auth). Payments-mutating
-  tools should be gated behind the payments:read_write scope and carry a
-  Getpaid-Idempotency-Key.
+notes: No official hosted/remote Getpaid MCP server was found. This is a candidate tool list derived one-to-one
+  from the OpenAPI v2 operations (excluding the raw OAuth token endpoint, which the MCP host handles as
+  auth). Payments-mutating tools should be gated behind the payments:read_write scope and carry a Getpaid-Idempotency-Key.
 tools:
 - name: create_checkout
   description: Create a checkout
@@ -58,3 +55,9 @@ tools:
 - name: query_resources
   description: Query resources (checkouts or payments) by type
   source_operation: openapi/getpaid-openapi-original.yml#query_resources
+deployment:
+  mode: none
+  verified: derived
+  tools: 15
+  checked: '2026-08-12'
+  source: catalog MCP census

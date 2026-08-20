@@ -43,6 +43,17 @@ tags:
 - Checkout
 - Marketplace
 - Onboarding
+- Subscription
+- Agent Payments
+- Europe
+tags_raw:
+- Company
+- Payments
+- Embedded Payments
+- Split Settlement
+- Checkout
+- Marketplace
+- Onboarding
 - Subscriptions
 - Agent Payments
 - Europe
@@ -54,6 +65,8 @@ apis:
   humanURL: https://docs.getpaid.io/api
   baseURL: https://api.getpaid.io
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -68,6 +81,8 @@ apis:
   humanURL: https://docs.getpaid.io/api
   baseURL: https://api.getpaid.io
   tags:
+  - Application
+  tags_raw:
   - Applications
   properties:
   - type: OpenAPI
@@ -138,6 +153,8 @@ apis:
   humanURL: https://docs.getpaid.io/api
   baseURL: https://api.getpaid.io
   tags:
+  - Query
+  tags_raw:
   - Queries
   properties:
   - type: OpenAPI

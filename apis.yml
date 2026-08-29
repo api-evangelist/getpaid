@@ -173,6 +173,26 @@ apis:
     url: openapi/getpaid-queries-api-openapi.yml
   - type: APIReference
     url: https://docs.getpaid.io/api
+- aid: getpaid:getpaid-accept-payments-webhooks-api
+  name: GetPaid Accept payments webhooks API
+  description: Webhooks related to accepting payment events.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Accept payments webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-accept-payments-webhooks-api-openapi.yml
+- aid: getpaid:getpaid-onboard-sellers-webhooks-api
+  name: GetPaid Onboard sellers webhooks API
+  description: Webhooks related to onboarding and accounts events.
+  humanURL: https://docs.getpaid.io/api
+  baseURL: https://api.getpaid.io
+  tags:
+  - Onboard sellers webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/getpaid-onboard-sellers-webhooks-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

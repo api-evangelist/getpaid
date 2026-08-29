@@ -1,0 +1,252 @@
+openapi: 3.2.0
+info:
+  title: Getpaid Onboard sellers webhooks API
+  version: v2
+  contact:
+    email: support@getpaid.io
+  description: '# Getting started
+
+
+    Our APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all
+
+    resources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage
+
+    of the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of
+
+    this Getpaid API.
+
+
+    To get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid
+
+    dashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to
+
+    authenticate with Getpaid API.
+
+
+    ## Postman
+
+
+    Getpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and
+
+    the environments](/integration/api/postman) to start testing the Getpaid API.
+
+
+    ## Fields formats
+
+
+    | Type | Format |
+
+    | :- | :- |
+
+    | `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |
+
+    | `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |
+
+    | `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |
+
+    | `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |
+
+    | `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |
+
+    | `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |
+
+    | `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |
+
+    | `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |
+
+    | `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |
+
+    | `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |
+
+    | `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |
+
+    '
+servers:
+- url: https://api.getpaid.io
+  description: Live
+- url: https://api.sandbox.getpaid.io
+  description: Sandbox
+tags:
+- name: Onboard sellers webhooks
+  description: Webhooks related to onboarding and accounts events.
+paths: {}
+webhooks:
+  application_submitted:
+    post:
+      summary: application_submitted
+      operationId: application_submitted
+      description: The `application_submitted` webhook is sent when an onboarding application is submitted by a seller for review.
+      tags:
+      - Onboard sellers webhooks
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/GetpaidTraceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/WebhookBaseRequest'
+              - properties:
+                  type:
+                    const: application_submitted
+                  data:
+                    type: object
+                    required:
+                    - id
+                    - reference
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/ApplicationId'
+                      reference:
+                        $ref: '#/components/schemas/Reference'
+      responses:
+        '429':
+          description: The webhook action will be retried according to the workflow retry schedule
+        2XX:
+          description: Indicate success, the webhook will not be retried
+        4XX:
+          description: The webhook action will be disabled
+        5XX:
+          description: The webhook action will be retried according to the workflow retry schedule
+  application_completed:
+    post:
+      summary: application_completed
+      operationId: application_completed
+      description: The `application_completed` webhook is sent when the onboarding application is approved and completed.
+      tags:
+      - Onboard sellers webhooks
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/GetpaidTraceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/WebhookBaseRequest'
+              - properties:
+                  type:
+                    const: application_completed
+                  data:
+                    type: object
+                    required:
+                    - id
+                    - reference
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/ApplicationId'
+                      reference:
+                        $ref: '#/components/schemas/Reference'
+      responses:
+        '429':
+          description: The webhook action will be retried according to the workflow retry schedule
+        2XX:
+          description: Indicate success, the webhook will not be retried
+        4XX:
+          description: The webhook action will be disabled
+        5XX:
+          description: The webhook action will be retried according to the workflow retry schedule
+components:
+  schemas:
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
+      type: string
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    EventId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the event.
+        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
+    ApplicationId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the onboarding application.
+        example: app_4fekhxdpss1et7rjp8t7rdpnw4
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    WebhookBaseRequest:
+      type: object
+      required:
+      - id
+      - type
+      - version
+      - occurred_at
+      - data
+      properties:
+        id:
+          $ref: '#/components/schemas/EventId'
+        type:
+          description: The type of event.
+          type: string
+        version:
+          description: The version of the event type.
+          type: string
+          const: v2
+          example: v2
+        occurred_at:
+          $ref: '#/components/schemas/DateTime'
+          description: The UTC date and time at which the event occurred.
+        data:
+          description: The event data specific to each event type and version.
+          type: object
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+  parameters:
+    GetpaidTraceId:
+      name: Getpaid-Trace-Id
+      in: header
+      description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests
+      required: true
+      schema:
+        type: string
+        example: 96ce50247f87f540bb2d86771b3728b8
+  securitySchemes:
+    OAuth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.getpaid.io/oauth/token
+          scopes:
+            accounts:read: Allows to read accounts and onboarding applications.
+            accounts:read_write: Allows to read, create and/or operate accounts and onboarding applications.
+            payments:read: Allows to read payments and checkouts.
+            payments:read_write: Allows to read, create and/or operate payments and checkouts.
+x-tagGroups:
+- name: General
+  tags:
+  - Authentication
+  - Documents
+- name: Accept payments
+  tags:
+  - Checkouts
+  - Payments
+  - Accept payments webhooks
+- name: Onboard sellers
+  tags:
+  - Accounts
+  - Applications
+  - Onboard sellers webhooks
+- name: Operate
+  tags:
+  - Queries
+  - Exports
+  - Analytics
+  - Operate webhooks

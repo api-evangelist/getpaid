@@ -1,24 +1,31 @@
 {
   "provider": "getpaid",
   "sources": [
-    "getpaid-accounts-api-openapi.yml",
-    "getpaid-applications-api-openapi.yml",
-    "getpaid-authentication-api-openapi.yml",
-    "getpaid-checkouts-api-openapi.yml",
-    "getpaid-payments-api-openapi.yml",
-    "getpaid-queries-api-openapi.yml"
+    "_original/getpaid-openapi-original.yml"
   ],
   "outputs": [
+    "getpaid-accept-payments-webhooks-api-openapi.yml",
     "getpaid-accounts-api-openapi.yml",
     "getpaid-applications-api-openapi.yml",
     "getpaid-authentication-api-openapi.yml",
     "getpaid-checkouts-api-openapi.yml",
+    "getpaid-onboard-sellers-webhooks-api-openapi.yml",
     "getpaid-payments-api-openapi.yml",
     "getpaid-queries-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "getpaid-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "getpaid-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-applications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-checkouts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-payments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-queries-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

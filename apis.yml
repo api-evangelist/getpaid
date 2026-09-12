@@ -199,6 +199,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Website
+  url: https://www.getpaid.io/
 - type: Overlay
   url: overlays/getpaid-openapi-overlay.yaml
 - type: DeveloperPortal

@@ -137,6 +137,8 @@ apis:
   humanURL: https://docs.getpaid.io/api
   baseURL: https://api.getpaid.io
   tags:
+  - Checkout
+  tags_raw:
   - Checkouts
   properties:
   - type: OpenAPI

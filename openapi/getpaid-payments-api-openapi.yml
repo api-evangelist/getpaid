@@ -7,60 +7,7 @@ info:
   description: '# Getting started
 
 
-    Our APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all
-
-    resources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage
-
-    of the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of
-
-    this Getpaid API.
-
-
-    To get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid
-
-    dashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to
-
-    authenticate with Getpaid API.
-
-
-    ## Postman
-
-
-    Getpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and
-
-    the environments](/integration/api/postman) to start testing the Getpaid API.
-
-
-    ## Fields formats
-
-
-    | Type | Format |
-
-    | :- | :- |
-
-    | `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |
-
-    | `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |
-
-    | `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |
-
-    | `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |
-
-    | `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |
-
-    | `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |
-
-    | `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |
-
-    | `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |
-
-    | `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |
-
-    | `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |
-
-    | `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |
-
-    '
+    Our APIs provide programmatic access to the Getpaid solution.'
 servers:
 - url: https://api.getpaid.io
   description: Live
@@ -71,9 +18,7 @@ tags:
   description: 'Create and manage payments initiated by the platform on behalf of the buyer.
 
 
-    For recurring and unscheduled payments based on a previous standing instruction.
-
-    '
+    For recurring and unscheduled payments based on a previous standing instruction.'
 paths:
   /v2/payments:
     post:
@@ -86,11 +31,9 @@ paths:
         Related webhooks:
 
 
-        - [`payment_captured`](#tag/Accept-payments-webhooks/operation/payment_captured): sent when the payment funds are captured and secured.
+        - `payment_captured`: sent when the payment funds are captured and secured.
 
-        - [`payment_failed`](#tag/Accept-payments-webhooks/operation/payment_failed): sent when a payment fails due to business (decline) or technical issues.
-
-        '
+        - `payment_failed`: sent when a payment fails due to business (decline) or technical issues.'
       operationId: create_payment
       security:
       - OAuth:
@@ -184,11 +127,9 @@ paths:
         Related webhooks:
 
 
-        - [`payment_refunded`](#tag/Accept-payments-webhooks/operation/payment_refunded): sent when the funds are returned to the buyer.
+        - `payment_refunded`: sent when the funds are returned to the buyer.
 
-        - [`payment_refund_failed`](#tag/Accept-payments-webhooks/operation/payment_refund_failed): sent when a refund process fails due to business or technical issues.
-
-        '
+        - `payment_refund_failed`: sent when a refund process fails due to business or technical issues.'
       operationId: refund_payment
       security:
       - OAuth:
@@ -247,11 +188,9 @@ paths:
       description: 'Query payments filtering, and sorting and paginating results.
 
 
-        See [Query resources](#tag/Queries/operation/query_resources) for more examples and details
+        See Query resources for more examples and details
 
-        about other resources, pagination and everything related to operate the Getpaid solution.
-
-        '
+        about other resources, pagination and everything related to operate the Getpaid solution.'
       operationId: query_payments
       security:
       - OAuth:
@@ -294,143 +233,46 @@ paths:
           $ref: '#/components/responses/500InternalServerError'
 components:
   schemas:
-    SplitPercentageAmountRequest:
+    PaymentMethodType:
+      description: The type of payment method.
+      type: string
+      enum:
+      - card
+      - sepa_direct_debit
+    CardPaymentMethodRequest:
       allOf:
-      - $ref: '#/components/schemas/SplitBaseAmount'
+      - $ref: '#/components/schemas/BasePaymentMethodRequest'
       - type: object
         required:
-        - percentage
+        - dynamic_descriptor
         properties:
-          percentage:
-            allOf:
-            - $ref: '#/components/schemas/Percentage'
-            - description: The percentage of the total amount to allocate to this account.
-    CardDynamicDescriptor:
-      description: 'The card dynamic descriptor.
-
-
-        It will be prefixed with `GPD*` when displayed on the buyer statement. You don''t need to include the `GPD*` prefix in the value sent.
-
-        '
-      type: string
-      pattern: ^[a-zA-Z0-9 *\._-]{1,18}$
-      minLength: 1
-      maxLength: 18
-      example: TITAN*202510-0232
-    SddRemittanceInfo:
-      description: 'The SEPA Direct Debit remittance information shown on the buyer statement.
-
-        '
-      type: string
-      minLength: 1
-      maxLength: 140
-      example: 'Titan Auto Parts Ord. #0232 Inv. #202500632'
-    PaymentMethodBase:
+          dynamic_descriptor:
+            $ref: '#/components/schemas/CardDynamicDescriptor'
+    ReasonBase:
+      description: Reason of the status of the resource when it requires additional steps or is a failure state.
       type: object
       required:
-      - type
+      - code
+      - description
       properties:
-        type:
-          $ref: '#/components/schemas/PaymentMethodType'
-    QueryPaymentsRequest:
-      allOf:
-      - $ref: '#/components/schemas/BaseQueryRequest'
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - payments
-          filters:
-            $ref: '#/components/schemas/PaymentsFiltersRequest'
-          sorts:
-            $ref: '#/components/schemas/PaymentsSortsRequest'
-    MediumString:
-      type: string
-      minLength: 1
-      maxLength: 250
-    PaginationData:
-      description: The list of queried elements.
-      type: array
-      items:
-        type: object
-    BasePaymentMethodRequest:
-      description: The payment method configuration for this payment.
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          description: The payment method type.
+        code:
+          description: Code to identify the cause of the status of the resource.
           type: string
-    StatementDescriptorResponse:
-      description: 'The final statement descriptor shown on the buyer statement.
+        description:
+          description: Human-readable description of the reason for the status of the resource.
+          type: string
+    RefundStatus:
+      description: 'The status of the refund payment.
 
-
-        This value is calculated per payment method:
-
-
-        - **Cards**: `dynamic_descriptor` with the `GPD*` prefix.
-
-        - **SEPA Direct Debit**: `remittance_info`.
+        See the [list, transitions, and description of each status](/payments/refunds/lifecycle) for more details.
 
         '
       type: string
-      minLength: 1
-      maxLength: 140
-      example: GPD*TITAN*202510-0232
-    RefundPaymentRequest:
-      oneOf:
-      - $ref: '#/components/schemas/FullRefundPaymentRequest'
-      - $ref: '#/components/schemas/PartialRefundPaymentRequest'
-      discriminator:
-        propertyName: type
-        mapping:
-          full: '#/components/schemas/FullRefundPaymentRequest'
-          partial: '#/components/schemas/PartialRefundPaymentRequest'
-    RefundPaymentResponse:
-      oneOf:
-      - $ref: '#/components/schemas/FullRefundPaymentResponse'
-      - $ref: '#/components/schemas/PartialRefundPaymentResponse'
-      discriminator:
-        propertyName: type
-        mapping:
-          full: '#/components/schemas/FullRefundPaymentResponse'
-          partial: '#/components/schemas/PartialRefundPaymentResponse'
-    SplitAmountMinor:
-      allOf:
-      - description: The amount allocated to this account in the minor currency unit (e.g. 100 cents for 1 EUR).
-      - $ref: '#/components/schemas/AmountMinor'
-    SplitPercentageAmountCalculated:
-      allOf:
-      - $ref: '#/components/schemas/SplitPercentageAmountRequest'
-      - required:
-        - amount
-        properties:
-          amount:
-            $ref: '#/components/schemas/SplitAmountMinor'
-    PaymentsFiltersRequest:
-      description: Filtering payments.
-      type: object
-      properties:
-        id:
-          allOf:
-          - description: The payment identifier to filter by using an exact match operation.
-          - $ref: '#/components/schemas/PaymentId'
-        reference:
-          description: The payment reference to filter by using a contains operation.
-          type: string
-        seller_legal_name:
-          description: The seller legal name to filter by using a contains operation.
-          type: string
-        statuses:
-          description: The list of payment statuses to filter by.
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/PaymentStatus'
+      enum:
+      - initiated
+      - completed
+      - declined
+      - failed
     BaseRefundPaymentRequest:
       type: object
       required:
@@ -452,601 +294,14 @@ components:
               - description: The URL to which webhook events will be sent.
                 example: https://webhooks.titanauto.com/getpaid
               - $ref: '#/components/schemas/Url'
-    PaymentMethodDisplayHint:
+    SplitRemainingAmountCalculated:
       allOf:
-      - description: A hint of the payment method used.
-      - $ref: '#/components/schemas/ShortString'
-    DateTime:
-      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
-
-        Always includes the ''Z'' UTC indicator.
-
-        '
-      type: string
-      format: date-time
-      minLength: 24
-      maxLength: 24
-      example: '2025-09-01T22:05:48.479Z'
-    ProcessingFeeRequest:
-      description: 'The processing fee covered by this account.
-
-
-        If not specified, the account will not cover any processing fee.
-
-
-        The sum of all processing fees covered by all accounts must be exactly 100%.
-
-        '
-      type: object
-      required:
-      - percentage
-      properties:
-        percentage:
-          allOf:
-          - $ref: '#/components/schemas/Percentage'
-          - description: The percentage of the total processing fee that this account will cover.
-            example: 100
-    PaymentMethodType:
-      description: The type of payment method.
-      type: string
-      enum:
-      - card
-      - sepa_direct_debit
-    PaymentOriginBase:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          description: 'The payment origin type.
-
-
-            - `api`: The payment was created via the API.
-
-            - `checkout`: The payment was created as an attempt of a checkout session.
-
-            '
-          type: string
-          enum:
-          - api
-          - checkout
-    StandingInstructionId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the standing instruction.
-        example: sti_4tbftjwzxja1h71nzas1g0g1xm
-    ReasonBase:
-      description: Reason of the status of the resource when it requires additional steps or is a failure state.
-      type: object
-      required:
-      - code
-      - description
-      properties:
-        code:
-          description: Code to identify the cause of the status of the resource.
-          type: string
-        description:
-          description: Human-readable description of the reason for the status of the resource.
-          type: string
-    CardPaymentMethodHint:
-      allOf:
+      - $ref: '#/components/schemas/SplitRemainingAmountRequest'
       - required:
-        - scheme
+        - amount
         properties:
-          type:
-            type: string
-          scheme:
-            $ref: '#/components/schemas/CardScheme'
-      - $ref: '#/components/schemas/BasePaymentMethodHint'
-    PaymentsSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        allOf:
-        - $ref: '#/components/schemas/BaseSortItemRequest'
-        - properties:
-            field:
-              enum:
-              - created_at
-              - amount
-              - seller_legal_name
-    RefundReason:
-      allOf:
-      - description: 'The reason for the refund status when it requires additional steps or is a failure state.
-
-          See all the [possible refund reasons for each status](/payments/refunds/lifecycle/reason-codes) for more details.
-
-          '
-        properties:
-          code:
-            description: 'Code to identify the cause of the refund status.
-
-              See all the [possible refund reason codes for each status](/payments/refunds/lifecycle/reason-codes) for more details.
-
-              '
-          description:
-            description: Human-readable description of the reason for the refund status.
-      - $ref: '#/components/schemas/ReasonBase'
-    BasePaymentMethodDetails:
-      allOf:
-      - $ref: '#/components/schemas/PaymentMethodBase'
-      - required:
-        - display_hint
-        properties:
-          display_hint:
-            $ref: '#/components/schemas/PaymentMethodDisplayHint'
-    CardScheme:
-      description: The card scheme.
-      type: string
-      enum:
-      - visa
-      - mastercard
-    CreatePaymentResponse:
-      type: object
-      required:
-      - id
-      - status
-      - reference
-      - created_at
-      - updated_at
-      - method
-      - splits
-      - totals
-      properties:
-        id:
-          $ref: '#/components/schemas/PaymentId'
-        status:
-          $ref: '#/components/schemas/PaymentStatus'
-        reason:
-          $ref: '#/components/schemas/PaymentReason'
-        reference:
-          $ref: '#/components/schemas/Reference'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        statement_descriptor:
-          $ref: '#/components/schemas/StatementDescriptorResponse'
-        method:
-          $ref: '#/components/schemas/PaymentMethodDetails'
-        splits:
-          $ref: '#/components/schemas/SplitsCalculatedAndCalculatingFees'
-        authentication:
-          $ref: '#/components/schemas/PaymentAuthentication'
-        totals:
-          $ref: '#/components/schemas/PaymentTotals'
-    PaginationCursor:
-      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
-      type: string
-      maxLength: 250
-      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
-    SplitsCalculatedAndCalculatingFees:
-      description: 'The list of payment splits for the accounts involved in the funds flow.
-
-
-        The final split amounts and processing fees have been calculated.
-
-        '
-      type: object
-      required:
-      - type
-      - accounts
-      properties:
-        type:
-          $ref: '#/components/schemas/SplitsType'
-        accounts:
-          description: The list of accounts involved in the payment that will receive the funds.
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            description: A payment split account.
-            type: object
-            required:
-            - type
-            - id
-            - version
-            - legal_name
-            - split
-            - processing_fee
-            properties:
-              type:
-                $ref: '#/components/schemas/SplitsAccountType'
-              id:
-                $ref: '#/components/schemas/AccountId'
-              version:
-                $ref: '#/components/schemas/AccountVersion'
-              legal_name:
-                $ref: '#/components/schemas/AccountLegalName'
-              split:
-                description: The amount in the payment currency to be allocated to this account.
-                oneOf:
-                - $ref: '#/components/schemas/SplitFixedAmount'
-                - $ref: '#/components/schemas/SplitPercentageAmountCalculated'
-                - $ref: '#/components/schemas/SplitRemainingAmountCalculated'
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    fixed: '#/components/schemas/SplitFixedAmount'
-                    percentage: '#/components/schemas/SplitPercentageAmountCalculated'
-                    remaining: '#/components/schemas/SplitRemainingAmountCalculated'
-              processing_fee:
-                $ref: '#/components/schemas/ProcessingFeeCalculating'
-    CheckoutId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the checkout.
-        example: cko_4kf9v6xp00hzc99rdwr5m97wce
-    ProblemDetailsBase:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      required:
-      - type
-      - title
-      - status
-      properties:
-        type:
-          type: string
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
-          format: uri
-          example: https://docs.getpaid.io/ref/error-types#problem
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
-          example: Invalid Request
-        status:
-          type: integer
-          description: The HTTP status code.
-          minimum: 400
-          maximum: 599
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
-          example: The request body was invalid
-    SddPaymentMethodRequest:
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentMethodRequest'
-      - type: object
-        required:
-        - remittance_info
-        properties:
-          type:
-            description: The payment method type.
-            type: string
-          remittance_info:
-            $ref: '#/components/schemas/SddRemittanceInfo'
-    PaymentStatus:
-      description: 'The status of the payment.
-
-        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
-
-        '
-      type: string
-      enum:
-      - initiated
-      - action_required
-      - submitted
-      - authorized
-      - captured
-      - declined
-      - failed
-      - partially_refunded
-      - refunded
-    EstimatedUpdateBefore:
-      allOf:
-      - description: When the payment status is estimated to be updated next.
-      - $ref: '#/components/schemas/DateTimeOffset'
-    SplitBaseAmount:
-      type: object
-      description: 'The amount in payment currency to be allocated to this account.
-
-
-        The sum of all split amounts for all accounts must be exactly the total amount of the payment
-
-        or use the `remaining` type for one of the accounts to allocate the remaining amount after all
-
-        other splits have been calculated.
-
-        '
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The type of split amount.
-          enum:
-          - fixed
-          - percentage
-          - remaining
-    AccountId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the account.
-        example: acc_44678r08jtm8zbt227tzhc4nw5
-    PaginationFirst:
-      description: Pagination. The number of elements that will be retrieved.
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 100
-    RefundSplitAccount:
-      description: A refund split account.
-      type: object
-      required:
-      - id
-      - split
-      properties:
-        id:
-          $ref: '#/components/schemas/AccountId'
-        split:
-          description: The amount in the payment currency to return from this account.
-          type: object
-          required:
-          - amount
-          properties:
-            amount:
-              allOf:
-              - description: The amount returned from this account in the minor currency unit (e.g. 100 cents for 1 EUR).
-              - $ref: '#/components/schemas/AmountMinor'
-    CardPaymentMethodDetails:
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentMethodDetails'
-      - required:
-        - card
-        properties:
-          card:
-            description: The card details.
-            type: object
-            required:
-            - scheme
-            - holder_name
-            - first_digits
-            - last_digits
-            - expiry_month
-            - expiry_year
-            properties:
-              scheme:
-                $ref: '#/components/schemas/CardScheme'
-              holder_name:
-                description: The name of the cardholder as printed on the card.
-                type: string
-                minLength: 1
-                maxLength: 26
-                example: Jane Doe
-              first_digits:
-                description: The first four to six digits of the card number (BIN) that identify the issuing bank.
-                type: string
-                minLength: 4
-                maxLength: 6
-                example: '424242'
-              last_digits:
-                description: The last four digits of the card number.
-                type: string
-                minLength: 4
-                maxLength: 4
-                example: '4242'
-              expiry_month:
-                description: The expiration month of the card.
-                type: integer
-                minimum: 1
-                maximum: 12
-                example: 12
-              expiry_year:
-                description: The expiration year of the card.
-                type: integer
-                minimum: 2021
-                example: 2025
-              kind:
-                description: Kind of the payment card.
-                type: string
-                enum:
-                - credit
-                - debit
-                example: credit
-              segment:
-                description: Segment of the payment card.
-                type: string
-                enum:
-                - consumer
-                - corporate
-                example: consumer
-    BaseQueryRequest:
-      type: object
-      properties:
-        type:
-          description: 'The type of the Getpaid solution resources to query.
-
-
-            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
-
-            must match the resource targeted by the request URL.
-
-            '
-          type: string
-        first:
-          allOf:
-          - $ref: '#/components/schemas/PaginationFirst'
-        after:
-          $ref: '#/components/schemas/PaginationAfter'
-        filters:
-          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
-        sorts:
-          $ref: '#/components/schemas/BaseSortsRequest'
-    BaseSortItemRequest:
-      description: Each field to sort by.
-      type: object
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          description: The field to sort by. Each field available can only be used once in the list.
-          type: string
-        direction:
-          description: The sort direction
-          type: string
-          enum:
-          - ascending
-          - descending
-    BaseRefundPaymentResponse:
-      type: object
-      required:
-      - id
-      - type
-      - status
-      - reference
-      - created_at
-      - updated_at
-      properties:
-        id:
-          $ref: '#/components/schemas/RefundId'
-        type:
-          $ref: '#/components/schemas/RefundType'
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-          const: initiated
-        reference:
-          $ref: '#/components/schemas/Reference'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-    ShortString:
-      type: string
-      minLength: 1
-      maxLength: 50
-    BasePaymentMethodHint:
-      allOf:
-      - $ref: '#/components/schemas/PaymentMethodBase'
-      - required:
-        - display_hint
-        properties:
-          display_hint:
-            $ref: '#/components/schemas/PaymentMethodDisplayHint'
-    PaymentAuthentication:
-      description: Information about the authentication performed for the payment if any.
-      type: object
-      required:
-      - type
-      - status
-      properties:
-        type:
-          description: The type of authentication performed for the payment.
-          type: string
-          enum:
-          - 3ds
-        status:
-          description: 'The status of the authentication.
-
-
-            - `succeeded`: the authentication was successful.
-
-            - `failed`: the authentication failed.
-
-            '
-          type: string
-          enum:
-          - succeeded
-          - failed
-        result:
-          description: The 3DS authentication result.
-          type: object
-          required:
-          - code
-          - eci
-          properties:
-            code:
-              description: The 3DS authentication result code.
-              type: string
-              minLength: 1
-              maxLength: 1
-              enum:
-              - Y
-              - A
-              - N
-              - U
-              - R
-            eci:
-              description: The Electronic Commerce Indicator (ECI) value for the authentication.
-              type: string
-              minLength: 2
-              maxLength: 2
-              enum:
-              - '05'
-              - '06'
-              - '07'
-              - '01'
-              - '02'
-              - '03'
-    PaymentOrigin:
-      description: The origin of the payment creation.
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginApi'
-      - $ref: '#/components/schemas/PaymentOriginCheckout'
-      discriminator:
-        propertyName: type
-        mapping:
-          api: '#/components/schemas/PaymentOriginApi'
-          checkout: '#/components/schemas/PaymentOriginCheckout'
-    PaymentOriginCheckout:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
-      - required:
-        - id
-        properties:
-          id:
-            $ref: '#/components/schemas/CheckoutId'
-    PaymentId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the payment.
-        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
-    UpdatedAt:
-      allOf:
-      - description: When the resource was last updated.
-      - $ref: '#/components/schemas/DateTime'
-    AmountMinor:
-      type: integer
-      format: amount-minor
-      description: The payment amount in the minor currency unit (e.g. 100 cents for 1 EUR).
-      example: 1000
-    PaymentMethodDetails:
-      description: The payment method used.
-      anyOf:
-      - $ref: '#/components/schemas/CardPaymentMethodDetails'
-      - $ref: '#/components/schemas/SddPaymentMethodDetails'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPaymentMethodDetails'
-          sepa_direct_debit: '#/components/schemas/SddPaymentMethodDetails'
-    SplitRemainingAmountRequest:
-      allOf:
-      - $ref: '#/components/schemas/SplitBaseAmount'
-    PaymentMethodRequest:
-      description: The payment method configuration for this payment.
-      anyOf:
-      - $ref: '#/components/schemas/CardPaymentMethodRequest'
-      - $ref: '#/components/schemas/SddPaymentMethodRequest'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPaymentMethodRequest'
-          sepa_direct_debit: '#/components/schemas/SddPaymentMethodRequest'
-    CardPaymentMethodRequest:
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentMethodRequest'
-      - type: object
-        required:
-        - dynamic_descriptor
-        properties:
-          dynamic_descriptor:
-            $ref: '#/components/schemas/CardDynamicDescriptor'
-    PartialRefundPaymentResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseRefundPaymentResponse'
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
     PaymentTotals:
       description: The payment totals summary to provide an overview of captured, refunded, refundable amounts and processing fees overall and per account associated with the payment.
       type: object
@@ -1128,14 +383,298 @@ components:
                 allOf:
                 - description: The total processing fees covered by this account in the minor currency unit (e.g. 100 cents for 1 EUR).
                 - $ref: '#/components/schemas/AmountMinor'
-    RefundOrigin:
-      description: The origin of the refund creation.
+    SddRemittanceInfo:
+      description: 'The SEPA Direct Debit remittance information shown on the buyer statement.
+
+        '
+      type: string
+      minLength: 1
+      maxLength: 140
+      example: 'Titan Auto Parts Ord. #0232 Inv. #202500632'
+    CreatedAt:
       allOf:
-      - $ref: '#/components/schemas/RefundOriginApi'
+      - description: When the resource was created.
+      - $ref: '#/components/schemas/DateTime'
+    StandingInstructionId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the standing instruction.
+        example: sti_4tbftjwzxja1h71nzas1g0g1xm
+    PaymentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the payment.
+        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+    CreatePaymentResponse:
+      type: object
+      required:
+      - id
+      - status
+      - reference
+      - created_at
+      - updated_at
+      - method
+      - splits
+      - totals
+      properties:
+        id:
+          $ref: '#/components/schemas/PaymentId'
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        reason:
+          $ref: '#/components/schemas/PaymentReason'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        statement_descriptor:
+          $ref: '#/components/schemas/StatementDescriptorResponse'
+        method:
+          $ref: '#/components/schemas/PaymentMethodDetails'
+        splits:
+          $ref: '#/components/schemas/SplitsCalculatedAndCalculatingFees'
+        authentication:
+          $ref: '#/components/schemas/PaymentAuthentication'
+        totals:
+          $ref: '#/components/schemas/PaymentTotals'
+    PaymentOriginCheckout:
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginBase'
+      - required:
+        - id
+        properties:
+          id:
+            $ref: '#/components/schemas/CheckoutId'
+    StatementDescriptorResponse:
+      description: 'The final statement descriptor shown on the buyer statement.
+
+
+        This value is calculated per payment method:
+
+
+        - **Cards**: `dynamic_descriptor` with the `GPD*` prefix.
+
+        - **SEPA Direct Debit**: `remittance_info`.
+
+        '
+      type: string
+      minLength: 1
+      maxLength: 140
+      example: GPD*TITAN*202510-0232
+    RefundReason:
+      allOf:
+      - description: 'The reason for the refund status when it requires additional steps or is a failure state.
+
+          See all the [possible refund reasons for each status](/payments/refunds/lifecycle/reason-codes) for more details.
+
+          '
+        properties:
+          code:
+            description: 'Code to identify the cause of the refund status.
+
+              See all the [possible refund reason codes for each status](/payments/refunds/lifecycle/reason-codes) for more details.
+
+              '
+          description:
+            description: Human-readable description of the reason for the refund status.
+      - $ref: '#/components/schemas/ReasonBase'
+    StandingInstructionStatus:
+      description: 'The status of the standing instruction.
+
+
+        - `new`: requested to creation as part of an initial payment.
+
+        - `active`: standing instruction is active and can be used for subsequent payments.
+
+        '
+      type: string
+      enum:
+      - new
+      - active
+    SplitsType:
+      description: The type of payment split.
+      type: string
+      enum:
+      - per_transaction
+    EstimatedUpdateBefore:
+      allOf:
+      - description: When the payment status is estimated to be updated next.
+      - $ref: '#/components/schemas/DateTimeOffset'
+    SplitAmountMinor:
+      allOf:
+      - description: The amount allocated to this account in the minor currency unit (e.g. 100 cents for 1 EUR).
+      - $ref: '#/components/schemas/AmountMinor'
+    CardScheme:
+      description: The card scheme.
+      type: string
+      enum:
+      - visa
+      - mastercard
+    StandingInstructionTerms:
+      description: Terms for standing instructions of recurring payments.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: 'Type of standing instruction.
+
+
+            - `recurring`: periodic charges at a fixed frequency.
+
+            - `unscheduled`: payments with no fixed schedule or frequency.
+
+            '
+          type: string
+          enum:
+          - recurring
+          - unscheduled
+    PartialRefundPaymentResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseRefundPaymentResponse'
+    PartyRef:
+      description: A reference to a party account involved in the transaction.
+      type: object
+      required:
+      - id
+      - type
+      - legal_name
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        type:
+          description: The type of party.
+          type: string
+          enum:
+          - platform
+          - other
+        legal_name:
+          $ref: '#/components/schemas/AccountLegalName'
+    PaymentWebhooksRequest:
+      description: Configuration for webhooks to receive payment status updates.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          allOf:
+          - description: The URL to which webhook events will be sent.
+            example: https://webhooks.titanauto.com/getpaid
+          - $ref: '#/components/schemas/Url'
+    PaymentsSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        allOf:
+        - $ref: '#/components/schemas/BaseSortItemRequest'
+        - properties:
+            field:
+              enum:
+              - created_at
+              - amount
+              - seller_legal_name
+    PartialRefundPaymentRequest:
+      allOf:
+      - required:
+        - amount
+        - splits
+        properties:
+          type:
+            type: string
+          reference:
+            type: string
+          amount:
+            allOf:
+            - description: The amount to be refunded in minor currency unit (e.g. 100 cents for 1 EUR).
+            - $ref: '#/components/schemas/AmountMinor'
+          splits:
+            description: The list of refund splits for the accounts involved in the funds flow.
+            type: object
+            required:
+            - accounts
+            properties:
+              accounts:
+                description: 'The list of accounts involved in the refund that will return the funds.
+
+
+                  All the accounts involved in the original payment receiving funds must be included
+
+                  even if they did not receive funds in the payment or they are not returning funds in the refund.
+
+                  '
+                type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/RefundSplitAccount'
+      - $ref: '#/components/schemas/BaseRefundPaymentRequest'
+    RefundPaymentResponse:
+      oneOf:
+      - $ref: '#/components/schemas/FullRefundPaymentResponse'
+      - $ref: '#/components/schemas/PartialRefundPaymentResponse'
       discriminator:
         propertyName: type
         mapping:
-          api: '#/components/schemas/RefundOriginApi'
+          full: '#/components/schemas/FullRefundPaymentResponse'
+          partial: '#/components/schemas/PartialRefundPaymentResponse'
+    Percentage:
+      type: number
+      format: float
+      minimum: 0
+      maximum: 100
+      multipleOf: 0.1
+      example: 62.5
+    PaginationAfter:
+      description: Pagination. The `cursor` from next page will be retrieved.
+      type: string
+      maxLength: 250
+    PaymentOriginApi:
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginBase'
+    AccountLegalName:
+      allOf:
+      - description: The legal name of the account.
+      - $ref: '#/components/schemas/MediumString'
+    PaginationCursor:
+      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+      type: string
+      maxLength: 250
+      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    AccountId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the account.
+        example: acc_44678r08jtm8zbt227tzhc4nw5
+    PaymentsFiltersRequest:
+      description: Filtering payments.
+      type: object
+      properties:
+        id:
+          allOf:
+          - description: The payment identifier to filter by using an exact match operation.
+          - $ref: '#/components/schemas/PaymentId'
+        reference:
+          description: The payment reference to filter by using a contains operation.
+          type: string
+        seller_legal_name:
+          description: The seller legal name to filter by using a contains operation.
+          type: string
+        statuses:
+          description: The list of payment statuses to filter by.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/PaymentStatus'
+    AmountMinor:
+      type: integer
+      format: amount-minor
+      description: The payment amount in the minor currency unit (e.g. 100 cents for 1 EUR).
+      example: 1000
     StandingInstructionDetails:
       description: The details of the standing instruction the payment is associated with.
       type: object
@@ -1166,10 +705,473 @@ components:
               allOf:
               - description: The identifier of the first payment in the standing instruction sequence.
               - $ref: '#/components/schemas/PaymentId'
+    PaginationFirst:
+      description: Pagination. The number of elements that will be retrieved.
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 100
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    FullRefundPaymentRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseRefundPaymentRequest'
+    FullRefundPaymentResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseRefundPaymentResponse'
+      - required:
+        - amount
+        - splits
+        properties:
+          amount:
+            allOf:
+            - description: The full amount of the original payment to be refunded in minor units of the currency (e.g., cents for EUR).
+            - $ref: '#/components/schemas/AmountMinor'
+          splits:
+            description: The list of refund splits for the accounts involved in the funds flow from the original payment.
+            type: object
+            required:
+            - accounts
+            properties:
+              accounts:
+                description: The list of accounts involved in the original payment with the funds they are going to return to the buyer.
+                type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                  $ref: '#/components/schemas/RefundSplitAccount'
+    SddPaymentMethodRequest:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethodRequest'
+      - type: object
+        required:
+        - remittance_info
+        properties:
+          type:
+            description: The payment method type.
+            type: string
+          remittance_info:
+            $ref: '#/components/schemas/SddRemittanceInfo'
+    PaymentAuthentication:
+      description: Information about the authentication performed for the payment if any.
+      type: object
+      required:
+      - type
+      - status
+      properties:
+        type:
+          description: The type of authentication performed for the payment.
+          type: string
+          enum:
+          - 3ds
+        status:
+          description: 'The status of the authentication.
+
+
+            - `succeeded`: the authentication was successful.
+
+            - `failed`: the authentication failed.
+
+            '
+          type: string
+          enum:
+          - succeeded
+          - failed
+        result:
+          description: The 3DS authentication result.
+          type: object
+          required:
+          - code
+          - eci
+          properties:
+            code:
+              description: The 3DS authentication result code.
+              type: string
+              minLength: 1
+              maxLength: 1
+              enum:
+              - Y
+              - A
+              - N
+              - U
+              - R
+            eci:
+              description: The Electronic Commerce Indicator (ECI) value for the authentication.
+              type: string
+              minLength: 2
+              maxLength: 2
+              enum:
+              - '05'
+              - '06'
+              - '07'
+              - '01'
+              - '02'
+              - '03'
+    BaseQueryRequest:
+      type: object
+      properties:
+        type:
+          description: 'The type of the Getpaid solution resources to query.
+
+
+            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
+
+            must match the resource targeted by the request URL.
+
+            '
+          type: string
+        first:
+          allOf:
+          - $ref: '#/components/schemas/PaginationFirst'
+        after:
+          $ref: '#/components/schemas/PaginationAfter'
+        filters:
+          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
+        sorts:
+          $ref: '#/components/schemas/BaseSortsRequest'
+    SellerRef:
+      description: A reference to the seller account.
+      type: object
+      required:
+      - id
+      - legal_name
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        legal_name:
+          $ref: '#/components/schemas/AccountLegalName'
+    PaymentRefunds:
+      description: A list of refunds associated with the payment if any.
+      type: array
+      uniqueItems: true
+      items:
+        type: object
+        required:
+        - id
+        - status
+        - type
+        - reference
+        - created_at
+        - updated_at
+        - amount
+        - origin
+        properties:
+          id:
+            $ref: '#/components/schemas/RefundId'
+          status:
+            $ref: '#/components/schemas/RefundStatus'
+          reason:
+            $ref: '#/components/schemas/RefundReason'
+          type:
+            $ref: '#/components/schemas/RefundType'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          created_at:
+            $ref: '#/components/schemas/CreatedAt'
+          updated_at:
+            $ref: '#/components/schemas/UpdatedAt'
+          amount:
+            $ref: '#/components/schemas/AmountMinor'
+          origin:
+            $ref: '#/components/schemas/RefundOrigin'
+    BaseSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        description: Each field to sort by.
+        type: object
+        required:
+        - field
+        - direction
+        properties:
+          field:
+            description: The field to sort by. Each field available can only be used once in the list.
+            type: string
+          direction:
+            description: The sort direction
+            type: string
+            enum:
+            - ascending
+            - descending
+    Url:
+      type: string
+      format: uri
+      maxLength: 1024
+    SplitFixedAmount:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    PaymentOriginBase:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: 'The payment origin type.
+
+
+            - `api`: The payment was created via the API.
+
+            - `checkout`: The payment was created as an attempt of a checkout session.
+
+            '
+          type: string
+          enum:
+          - api
+          - checkout
+    CardPaymentMethodHint:
+      allOf:
+      - required:
+        - scheme
+        properties:
+          type:
+            type: string
+          scheme:
+            $ref: '#/components/schemas/CardScheme'
+      - $ref: '#/components/schemas/BasePaymentMethodHint'
     AccountVersion:
       allOf:
       - description: The account version.
       - $ref: '#/components/schemas/Version'
+    CardDynamicDescriptor:
+      description: 'The card dynamic descriptor.
+
+
+        It will be prefixed with `GPD*` when displayed on the buyer statement. You don''t need to include the `GPD*` prefix in the value sent.
+
+        '
+      type: string
+      pattern: ^[a-zA-Z0-9 *\._-]{1,18}$
+      minLength: 1
+      maxLength: 18
+      example: TITAN*202510-0232
+    RefundId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the refund of a payment.
+        example: rfd_4a4m2pjycdb1jbj68h1rvk9kcz
+    CheckoutId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the checkout.
+        example: cko_4kf9v6xp00hzc99rdwr5m97wce
+    UpdatedAt:
+      allOf:
+      - description: When the resource was last updated.
+      - $ref: '#/components/schemas/DateTime'
+    BasePaymentMethodDetails:
+      allOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - required:
+        - display_hint
+        properties:
+          display_hint:
+            $ref: '#/components/schemas/PaymentMethodDisplayHint'
+    ProcessingFeeAmount:
+      allOf:
+      - description: The processing fee amount covered by this account in the minor currency unit (e.g. 100 cents for 1 EUR).
+      - $ref: '#/components/schemas/AmountMinor'
+    BasePaymentMethodHint:
+      allOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - required:
+        - display_hint
+        properties:
+          display_hint:
+            $ref: '#/components/schemas/PaymentMethodDisplayHint'
+    CardPaymentMethodDetails:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethodDetails'
+      - required:
+        - card
+        properties:
+          card:
+            description: The card details.
+            type: object
+            required:
+            - scheme
+            - holder_name
+            - first_digits
+            - last_digits
+            - expiry_month
+            - expiry_year
+            properties:
+              scheme:
+                $ref: '#/components/schemas/CardScheme'
+              holder_name:
+                description: The name of the cardholder as printed on the card.
+                type: string
+                minLength: 1
+                maxLength: 26
+                example: Jane Doe
+              first_digits:
+                description: The first four to six digits of the card number (BIN) that identify the issuing bank.
+                type: string
+                minLength: 4
+                maxLength: 6
+                example: '424242'
+              last_digits:
+                description: The last four digits of the card number.
+                type: string
+                minLength: 4
+                maxLength: 4
+                example: '4242'
+              expiry_month:
+                description: The expiration month of the card.
+                type: integer
+                minimum: 1
+                maximum: 12
+                example: 12
+              expiry_year:
+                description: The expiration year of the card.
+                type: integer
+                minimum: 2021
+                example: 2025
+              kind:
+                description: Kind of the payment card.
+                type: string
+                enum:
+                - credit
+                - debit
+                example: credit
+              segment:
+                description: Segment of the payment card.
+                type: string
+                enum:
+                - consumer
+                - corporate
+                example: consumer
+    Version:
+      description: A resource version.
+      type: string
+      format: version
+      minLength: 1
+      maxLength: 50
+      example: '2'
+    PaymentOrigin:
+      description: The origin of the payment creation.
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginApi'
+      - $ref: '#/components/schemas/PaymentOriginCheckout'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/PaymentOriginApi'
+          checkout: '#/components/schemas/PaymentOriginCheckout'
+    PaymentCheckoutDescription:
+      allOf:
+      - $ref: '#/components/schemas/MediumString'
+      - description: 'A description of the checkout session only if the payment was part of a checkout.
+
+          This will be visible to the buyer in the payment page but not in the bank or card statement.
+
+          '
+        example: Order 202510-0232
+    SubsequentStandingInstructionRequest:
+      description: Standing instruction for recurring payments.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/StandingInstructionId'
+    DateTimeOffset:
+      description: 'Date-time with time zone offset in ISO 8601 format without second fractions ([RFC 9557](https://www.rfc-editor.org/rfc/rfc9557.html)).
+
+        '
+      type: string
+      format: date-time-offset
+      minLength: 25
+      maxLength: 25
+      example: '2025-09-01T22:05:48-08:00'
+    RefundSplitAccount:
+      description: A refund split account.
+      type: object
+      required:
+      - id
+      - split
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        split:
+          description: The amount in the payment currency to return from this account.
+          type: object
+          required:
+          - amount
+          properties:
+            amount:
+              allOf:
+              - description: The amount returned from this account in the minor currency unit (e.g. 100 cents for 1 EUR).
+              - $ref: '#/components/schemas/AmountMinor'
+    BaseSortItemRequest:
+      description: Each field to sort by.
+      type: object
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          description: The field to sort by. Each field available can only be used once in the list.
+          type: string
+        direction:
+          description: The sort direction
+          type: string
+          enum:
+          - ascending
+          - descending
+    QueryPaymentsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - payments
+          filters:
+            $ref: '#/components/schemas/PaymentsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/PaymentsSortsRequest'
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
     SddPaymentMethodDetails:
       allOf:
       - $ref: '#/components/schemas/BasePaymentMethodDetails'
@@ -1207,127 +1209,183 @@ components:
                     minLength: 15
                     maxLength: 33
                     example: DE85100100100006992334
-    RefundStatus:
-      description: 'The status of the refund payment.
+    PaymentMethodDisplayHint:
+      allOf:
+      - description: A hint of the payment method used.
+      - $ref: '#/components/schemas/ShortString'
+    PaymentMethodDetails:
+      description: The payment method used.
+      anyOf:
+      - $ref: '#/components/schemas/CardPaymentMethodDetails'
+      - $ref: '#/components/schemas/SddPaymentMethodDetails'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodDetails'
+          sepa_direct_debit: '#/components/schemas/SddPaymentMethodDetails'
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
 
-        See the [list, transitions, and description of each status](/payments/refunds/lifecycle) for more details.
-
-        '
-      type: string
-      enum:
-      - initiated
-      - completed
-      - declined
-      - failed
-    SubsequentStandingInstructionRequest:
-      description: Standing instruction for recurring payments.
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          $ref: '#/components/schemas/StandingInstructionId'
-    Version:
-      description: A resource version.
-      type: string
-      format: version
-      minLength: 1
-      maxLength: 50
-      example: '2'
-    SplitRemainingAmountCalculated:
-      allOf:
-      - $ref: '#/components/schemas/SplitRemainingAmountRequest'
-      - required:
-        - amount
-        properties:
-          amount:
-            $ref: '#/components/schemas/SplitAmountMinor'
-    PaymentWebhooksRequest:
-      description: Configuration for webhooks to receive payment status updates.
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          allOf:
-          - description: The URL to which webhook events will be sent.
-            example: https://webhooks.titanauto.com/getpaid
-          - $ref: '#/components/schemas/Url'
-    PaymentOriginApi:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
-    SellerRef:
-      description: A reference to the seller account.
-      type: object
-      required:
-      - id
-      - legal_name
-      properties:
-        id:
-          $ref: '#/components/schemas/AccountId'
-        legal_name:
-          $ref: '#/components/schemas/AccountLegalName'
-    ProcessingFeeCalculating:
-      allOf:
-      - $ref: '#/components/schemas/ProcessingFeeRequest'
-      - properties:
-          amount:
-            $ref: '#/components/schemas/ProcessingFeeAmount'
-    SplitsType:
-      description: The type of payment split.
-      type: string
-      enum:
-      - per_transaction
-    RefundType:
-      description: The type of refund to be processed.
-      type: string
-      enum:
-      - full
-      - partial
-    DateTimeOffset:
-      description: 'Date-time with time zone offset in ISO 8601 format without second fractions ([RFC 9557](https://www.rfc-editor.org/rfc/rfc9557.html)).
+        Always includes the ''Z'' UTC indicator.
 
         '
       type: string
-      format: date-time-offset
-      minLength: 25
-      maxLength: 25
-      example: '2025-09-01T22:05:48-08:00'
-    Percentage:
-      type: number
-      format: float
-      minimum: 0
-      maximum: 100
-      multipleOf: 0.1
-      example: 62.5
-    PaginatedResponse:
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    SplitsRequest:
+      description: 'The list of payment splits for the accounts involved in the funds flow.
+
+
+        See [how splits work](/monetize/splits) for more information.
+
+        '
       type: object
       required:
-      - data
+      - type
+      - accounts
       properties:
-        cursor:
-          $ref: '#/components/schemas/PaginationCursor'
-        data:
-          $ref: '#/components/schemas/PaginationData'
-    StandingInstructionTerms:
-      description: Terms for standing instructions of recurring payments.
+        type:
+          $ref: '#/components/schemas/SplitsType'
+        accounts:
+          description: The list of accounts involved in the payment that will receive the funds.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            description: A payment split account.
+            type: object
+            required:
+            - type
+            - id
+            - split
+            properties:
+              type:
+                $ref: '#/components/schemas/SplitsAccountType'
+              id:
+                $ref: '#/components/schemas/AccountId'
+              split:
+                description: The amount in the payment currency to be allocated to this account.
+                oneOf:
+                - $ref: '#/components/schemas/SplitFixedAmount'
+                - $ref: '#/components/schemas/SplitPercentageAmountRequest'
+                - $ref: '#/components/schemas/SplitRemainingAmountRequest'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    fixed: '#/components/schemas/SplitFixedAmount'
+                    percentage: '#/components/schemas/SplitPercentageAmountRequest'
+                    remaining: '#/components/schemas/SplitRemainingAmountRequest'
+              processing_fee:
+                $ref: '#/components/schemas/ProcessingFeeRequest'
+    SplitsCalculatedAndCalculatingFees:
+      description: 'The list of payment splits for the accounts involved in the funds flow.
+
+
+        The final split amounts and processing fees have been calculated.
+
+        '
+      type: object
+      required:
+      - type
+      - accounts
+      properties:
+        type:
+          $ref: '#/components/schemas/SplitsType'
+        accounts:
+          description: The list of accounts involved in the payment that will receive the funds.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            description: A payment split account.
+            type: object
+            required:
+            - type
+            - id
+            - version
+            - legal_name
+            - split
+            - processing_fee
+            properties:
+              type:
+                $ref: '#/components/schemas/SplitsAccountType'
+              id:
+                $ref: '#/components/schemas/AccountId'
+              version:
+                $ref: '#/components/schemas/AccountVersion'
+              legal_name:
+                $ref: '#/components/schemas/AccountLegalName'
+              split:
+                description: The amount in the payment currency to be allocated to this account.
+                oneOf:
+                - $ref: '#/components/schemas/SplitFixedAmount'
+                - $ref: '#/components/schemas/SplitPercentageAmountCalculated'
+                - $ref: '#/components/schemas/SplitRemainingAmountCalculated'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    fixed: '#/components/schemas/SplitFixedAmount'
+                    percentage: '#/components/schemas/SplitPercentageAmountCalculated'
+                    remaining: '#/components/schemas/SplitRemainingAmountCalculated'
+              processing_fee:
+                $ref: '#/components/schemas/ProcessingFeeCalculating'
+    RefundOriginBase:
       type: object
       required:
       - type
       properties:
         type:
-          description: 'Type of standing instruction.
+          description: 'The refund origin type.
 
 
-            - `recurring`: periodic charges at a fixed frequency.
-
-            - `unscheduled`: payments with no fixed schedule or frequency.
+            - `api`: The refund was created via the API.
 
             '
           type: string
           enum:
-          - recurring
-          - unscheduled
+          - api
+    SplitPercentageAmountRequest:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+      - type: object
+        required:
+        - percentage
+        properties:
+          percentage:
+            allOf:
+            - $ref: '#/components/schemas/Percentage'
+            - description: The percentage of the total amount to allocate to this account.
+    RefundPaymentRequest:
+      oneOf:
+      - $ref: '#/components/schemas/FullRefundPaymentRequest'
+      - $ref: '#/components/schemas/PartialRefundPaymentRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          full: '#/components/schemas/FullRefundPaymentRequest'
+          partial: '#/components/schemas/PartialRefundPaymentRequest'
+    RefundOriginApi:
+      allOf:
+      - $ref: '#/components/schemas/RefundOriginBase'
+    PaginationData:
+      description: The list of queried elements.
+      type: array
+      items:
+        type: object
+    SplitsAccountType:
+      description: 'The type of account.
+
+
+        Exactly one account of type `platform` and one of type `seller` are required and allowed per payment.
+
+        '
+      type: string
+      enum:
+      - platform
+      - seller
+      - other
     Currency:
       type: string
       format: currency
@@ -1335,6 +1393,127 @@ components:
       maxLength: 3
       description: The processing currency code according to the [ISO-4217 standard](https://en.wikipedia.org/wiki/ISO_4217)
       example: EUR
+    BasePaymentMethodRequest:
+      description: The payment method configuration for this payment.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: The payment method type.
+          type: string
+    ProcessingFeeRequest:
+      description: 'The processing fee covered by this account.
+
+
+        If not specified, the account will not cover any processing fee.
+
+
+        The sum of all processing fees covered by all accounts must be exactly 100%.
+
+        '
+      type: object
+      required:
+      - percentage
+      properties:
+        percentage:
+          allOf:
+          - $ref: '#/components/schemas/Percentage'
+          - description: The percentage of the total processing fee that this account will cover.
+            example: 100
+    SplitPercentageAmountCalculated:
+      allOf:
+      - $ref: '#/components/schemas/SplitPercentageAmountRequest'
+      - required:
+        - amount
+        properties:
+          amount:
+            $ref: '#/components/schemas/SplitAmountMinor'
+    SplitBaseAmount:
+      type: object
+      description: 'The amount in payment currency to be allocated to this account.
+
+
+        The sum of all split amounts for all accounts must be exactly the total amount of the payment
+
+        or use the `remaining` type for one of the accounts to allocate the remaining amount after all
+
+        other splits have been calculated.
+
+        '
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of split amount.
+          enum:
+          - fixed
+          - percentage
+          - remaining
+    SplitRemainingAmountRequest:
+      allOf:
+      - $ref: '#/components/schemas/SplitBaseAmount'
+    QueryPaymentsResponse:
+      allOf:
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - payments
+          cursor:
+            type: string
+          data:
+            items:
+              required:
+              - id
+              - reference
+              - status
+              - amount
+              - currency
+              - created_at
+              - updated_at
+              - method
+              - seller
+              - parties
+              properties:
+                id:
+                  $ref: '#/components/schemas/PaymentId'
+                reference:
+                  $ref: '#/components/schemas/Reference'
+                status:
+                  $ref: '#/components/schemas/PaymentStatus'
+                amount:
+                  $ref: '#/components/schemas/AmountMinor'
+                currency:
+                  $ref: '#/components/schemas/Currency'
+                created_at:
+                  $ref: '#/components/schemas/CreatedAt'
+                updated_at:
+                  $ref: '#/components/schemas/UpdatedAt'
+                method:
+                  $ref: '#/components/schemas/PaymentMethodHint'
+                seller:
+                  $ref: '#/components/schemas/SellerRef'
+                parties:
+                  description: The list of parties involved in the transaction.
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/PartyRef'
+      - $ref: '#/components/schemas/PaginatedResponse'
+    PaymentMethodHint:
+      description: The payment method used.
+      oneOf:
+      - $ref: '#/components/schemas/BasePaymentMethodHint'
+      - $ref: '#/components/schemas/CardPaymentMethodHint'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodHint'
+          sepa_direct_debit: '#/components/schemas/BasePaymentMethodHint'
     GetPaymentResponse:
       type: object
       required:
@@ -1390,172 +1569,12 @@ components:
           $ref: '#/components/schemas/PaymentRefunds'
         totals:
           $ref: '#/components/schemas/PaymentTotals'
-    StandingInstructionStatus:
-      description: 'The status of the standing instruction.
-
-
-        - `new`: requested to creation as part of an initial payment.
-
-        - `active`: standing instruction is active and can be used for subsequent payments.
-
-        '
+    RefundType:
+      description: The type of refund to be processed.
       type: string
       enum:
-      - new
-      - active
-    Reference:
-      allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
-    PartyRef:
-      description: A reference to a party account involved in the transaction.
-      type: object
-      required:
-      - id
-      - type
-      - legal_name
-      properties:
-        id:
-          $ref: '#/components/schemas/AccountId'
-        type:
-          description: The type of party.
-          type: string
-          enum:
-          - platform
-          - other
-        legal_name:
-          $ref: '#/components/schemas/AccountLegalName'
-    RefundOriginApi:
-      allOf:
-      - $ref: '#/components/schemas/RefundOriginBase'
-    RefundOriginBase:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          description: 'The refund origin type.
-
-
-            - `api`: The refund was created via the API.
-
-            '
-          type: string
-          enum:
-          - api
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
-    PaymentRefunds:
-      description: A list of refunds associated with the payment if any.
-      type: array
-      uniqueItems: true
-      items:
-        type: object
-        required:
-        - id
-        - status
-        - type
-        - reference
-        - created_at
-        - updated_at
-        - amount
-        - origin
-        properties:
-          id:
-            $ref: '#/components/schemas/RefundId'
-          status:
-            $ref: '#/components/schemas/RefundStatus'
-          reason:
-            $ref: '#/components/schemas/RefundReason'
-          type:
-            $ref: '#/components/schemas/RefundType'
-          reference:
-            $ref: '#/components/schemas/Reference'
-          created_at:
-            $ref: '#/components/schemas/CreatedAt'
-          updated_at:
-            $ref: '#/components/schemas/UpdatedAt'
-          amount:
-            $ref: '#/components/schemas/AmountMinor'
-          origin:
-            $ref: '#/components/schemas/RefundOrigin'
-    CreatedAt:
-      allOf:
-      - description: When the resource was created.
-      - $ref: '#/components/schemas/DateTime'
-    SplitFixedAmount:
-      allOf:
-      - $ref: '#/components/schemas/SplitBaseAmount'
-      - required:
-        - amount
-        properties:
-          amount:
-            $ref: '#/components/schemas/SplitAmountMinor'
-    SplitsAccountType:
-      description: 'The type of account.
-
-
-        Exactly one account of type `platform` and one of type `seller` are required and allowed per payment.
-
-        '
-      type: string
-      enum:
-      - platform
-      - seller
-      - other
-    BaseSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        description: Each field to sort by.
-        type: object
-        required:
-        - field
-        - direction
-        properties:
-          field:
-            description: The field to sort by. Each field available can only be used once in the list.
-            type: string
-          direction:
-            description: The sort direction
-            type: string
-            enum:
-            - ascending
-            - descending
-    Url:
-      type: string
-      format: uri
-      maxLength: 1024
-    FullRefundPaymentResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseRefundPaymentResponse'
-      - required:
-        - amount
-        - splits
-        properties:
-          amount:
-            allOf:
-            - description: The full amount of the original payment to be refunded in minor units of the currency (e.g., cents for EUR).
-            - $ref: '#/components/schemas/AmountMinor'
-          splits:
-            description: The list of refund splits for the accounts involved in the funds flow from the original payment.
-            type: object
-            required:
-            - accounts
-            properties:
-              accounts:
-                description: The list of accounts involved in the original payment with the funds they are going to return to the buyer.
-                type: array
-                minItems: 1
-                uniqueItems: true
-                items:
-                  $ref: '#/components/schemas/RefundSplitAccount'
+      - full
+      - partial
     PaymentReason:
       allOf:
       - description: 'The reason for the payment status when it requires additional steps or is a failure state.
@@ -1573,124 +1592,29 @@ components:
           description:
             description: Human-readable description of the reason for the payment status.
       - $ref: '#/components/schemas/ReasonBase'
-    ProcessingFeeAmount:
-      allOf:
-      - description: The processing fee amount covered by this account in the minor currency unit (e.g. 100 cents for 1 EUR).
-      - $ref: '#/components/schemas/AmountMinor'
-    PaymentCheckoutDescription:
-      allOf:
-      - $ref: '#/components/schemas/MediumString'
-      - description: 'A description of the checkout session only if the payment was part of a checkout.
-
-          This will be visible to the buyer in the payment page but not in the bank or card statement.
-
-          '
-        example: Order 202510-0232
-    SplitsRequest:
-      description: 'The list of payment splits for the accounts involved in the funds flow.
-
-
-        See [how splits work](/monetize/splits) for more information.
-
-        '
+    BaseRefundPaymentResponse:
       type: object
       required:
+      - id
       - type
-      - accounts
+      - status
+      - reference
+      - created_at
+      - updated_at
       properties:
+        id:
+          $ref: '#/components/schemas/RefundId'
         type:
-          $ref: '#/components/schemas/SplitsType'
-        accounts:
-          description: The list of accounts involved in the payment that will receive the funds.
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            description: A payment split account.
-            type: object
-            required:
-            - type
-            - id
-            - split
-            properties:
-              type:
-                $ref: '#/components/schemas/SplitsAccountType'
-              id:
-                $ref: '#/components/schemas/AccountId'
-              split:
-                description: The amount in the payment currency to be allocated to this account.
-                oneOf:
-                - $ref: '#/components/schemas/SplitFixedAmount'
-                - $ref: '#/components/schemas/SplitPercentageAmountRequest'
-                - $ref: '#/components/schemas/SplitRemainingAmountRequest'
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    fixed: '#/components/schemas/SplitFixedAmount'
-                    percentage: '#/components/schemas/SplitPercentageAmountRequest'
-                    remaining: '#/components/schemas/SplitRemainingAmountRequest'
-              processing_fee:
-                $ref: '#/components/schemas/ProcessingFeeRequest'
-    PaymentMethodHint:
-      description: The payment method used.
-      oneOf:
-      - $ref: '#/components/schemas/BasePaymentMethodHint'
-      - $ref: '#/components/schemas/CardPaymentMethodHint'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPaymentMethodHint'
-          sepa_direct_debit: '#/components/schemas/BasePaymentMethodHint'
-    QueryPaymentsResponse:
-      allOf:
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - payments
-          cursor:
-            type: string
-          data:
-            items:
-              required:
-              - id
-              - reference
-              - status
-              - amount
-              - currency
-              - created_at
-              - updated_at
-              - method
-              - seller
-              - parties
-              properties:
-                id:
-                  $ref: '#/components/schemas/PaymentId'
-                reference:
-                  $ref: '#/components/schemas/Reference'
-                status:
-                  $ref: '#/components/schemas/PaymentStatus'
-                amount:
-                  $ref: '#/components/schemas/AmountMinor'
-                currency:
-                  $ref: '#/components/schemas/Currency'
-                created_at:
-                  $ref: '#/components/schemas/CreatedAt'
-                updated_at:
-                  $ref: '#/components/schemas/UpdatedAt'
-                method:
-                  $ref: '#/components/schemas/PaymentMethodHint'
-                seller:
-                  $ref: '#/components/schemas/SellerRef'
-                parties:
-                  description: The list of parties involved in the transaction.
-                  type: array
-                  minItems: 1
-                  items:
-                    $ref: '#/components/schemas/PartyRef'
-      - $ref: '#/components/schemas/PaginatedResponse'
+          $ref: '#/components/schemas/RefundType'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+          const: initiated
+        reference:
+          $ref: '#/components/schemas/Reference'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
     CreatePaymentRequest:
       type: object
       required:
@@ -1714,89 +1638,73 @@ components:
           $ref: '#/components/schemas/SubsequentStandingInstructionRequest'
         webhooks:
           $ref: '#/components/schemas/PaymentWebhooksRequest'
-    PartialRefundPaymentRequest:
+    PaymentMethodBase:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+    RefundOrigin:
+      description: The origin of the refund creation.
       allOf:
-      - required:
-        - amount
-        - splits
-        properties:
-          type:
-            type: string
-          reference:
-            type: string
-          amount:
-            allOf:
-            - description: The amount to be refunded in minor currency unit (e.g. 100 cents for 1 EUR).
-            - $ref: '#/components/schemas/AmountMinor'
-          splits:
-            description: The list of refund splits for the accounts involved in the funds flow.
-            type: object
-            required:
-            - accounts
-            properties:
-              accounts:
-                description: 'The list of accounts involved in the refund that will return the funds.
+      - $ref: '#/components/schemas/RefundOriginApi'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/RefundOriginApi'
+    PaymentStatus:
+      description: 'The status of the payment.
 
+        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
 
-                  All the accounts involved in the original payment receiving funds must be included
-
-                  even if they did not receive funds in the payment or they are not returning funds in the refund.
-
-                  '
-                type: array
-                minItems: 1
-                uniqueItems: true
-                items:
-                  $ref: '#/components/schemas/RefundSplitAccount'
-      - $ref: '#/components/schemas/BaseRefundPaymentRequest'
-    PaginationAfter:
-      description: Pagination. The `cursor` from next page will be retrieved.
+        '
       type: string
+      enum:
+      - initiated
+      - action_required
+      - submitted
+      - authorized
+      - captured
+      - declined
+      - failed
+      - partially_refunded
+      - refunded
+    PaymentMethodRequest:
+      description: The payment method configuration for this payment.
+      anyOf:
+      - $ref: '#/components/schemas/CardPaymentMethodRequest'
+      - $ref: '#/components/schemas/SddPaymentMethodRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodRequest'
+          sepa_direct_debit: '#/components/schemas/SddPaymentMethodRequest'
+    ProcessingFeeCalculating:
+      allOf:
+      - $ref: '#/components/schemas/ProcessingFeeRequest'
+      - properties:
+          amount:
+            $ref: '#/components/schemas/ProcessingFeeAmount'
+    MediumString:
+      type: string
+      minLength: 1
       maxLength: 250
-    RefundId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the refund of a payment.
-        example: rfd_4a4m2pjycdb1jbj68h1rvk9kcz
-    FullRefundPaymentRequest:
-      allOf:
-      - $ref: '#/components/schemas/BaseRefundPaymentRequest'
-    AccountLegalName:
-      allOf:
-      - description: The legal name of the account.
-      - $ref: '#/components/schemas/MediumString'
+    PaginatedResponse:
+      type: object
+      required:
+      - data
+      properties:
+        cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+        data:
+          $ref: '#/components/schemas/PaginationData'
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
   examples:
-    CreatePartialRefund:
-      summary: Create a partial refund
-      value:
-        type: partial
-        reference: RFD-202510-0002
-        amount: 500
-        splits:
-          accounts:
-          - id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
-            split:
-              amount: 450
-          - id: acc_4q90qx2kdczs59yqfq34p09qx6
-            split:
-              amount: 50
-        webhooks:
-          url: https://webhooks.titanauto.com/getpaid
-    CreateFullRefund:
-      summary: Create a full refund
-      value:
-        type: full
-        reference: RFD-202510-0002
-        webhooks:
-          url: https://webhooks.titanauto.com/getpaid
-    QueryPayments:
-      summary: Query payments
-      value:
-        type: payments
-        filters:
-          seller_legal_name: Titan Biking
-          statuses:
-          - captured
     PaymentCreated:
       summary: Payment captured successfully
       value:
@@ -1862,76 +1770,6 @@ components:
             refunded: 0
             refundable: 100
             processing_fees: 67
-    FilteredPayments:
-      summary: Filtered payments
-      value:
-        type: payments
-        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
-        data:
-        - id: pay_4y7kptsvn11qq6d354g5tx735v
-          reference: ORD-202510-0232
-          status: captured
-          amount: 1000
-          currency: EUR
-          created_at: '2023-03-15T12:34:56.999Z'
-          updated_at: '2023-03-15T12:34:56.999Z'
-          method:
-            type: card
-            scheme: visa
-            display_hint: 424242******4242
-          seller:
-            id: acc_44678r08jtm8zbt227tzhc4nw5
-            legal_name: Titan Biking
-          parties:
-          - id: acc_5y789s19kum9act338uaic5ox6
-            type: platform
-            legal_name: Titan Auto Parts GmbH
-        - id: pay_4y7kptsvn11qq6d354g5tx736w
-          reference: ORD-202511-0133
-          status: captured
-          amount: 1000
-          currency: EUR
-          created_at: '2023-03-15T12:34:56.999Z'
-          updated_at: '2023-03-15T12:34:56.999Z'
-          method:
-            type: card
-            scheme: visa
-            display_hint: 411111******1111
-          seller:
-            id: acc_44678r08jtm8zbt227tzhc4nw5
-            legal_name: Titan Biking
-          parties:
-          - id: acc_5y789s19kum9act338uaic5ox6
-            type: platform
-            legal_name: Titan Auto Parts GmbH
-    CreateSubsequentPayment:
-      summary: Create a subsequent payment
-      value:
-        reference: ORD-202510-0232
-        amount: 10000
-        currency: EUR
-        method:
-          type: card
-          dynamic_descriptor: TITAN*202510-0232
-        splits:
-          type: per_transaction
-          accounts:
-          - type: seller
-            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
-            split:
-              type: fixed
-              amount: 9000
-          - type: platform
-            id: acc_4q90qx2kdczs59yqfq34p09qx6
-            split:
-              type: fixed
-              amount: 1000
-            processing_fee:
-              percentage: 100
-        standing_instruction:
-          id: sti_4tbftjwzxja1h71nzas1g0g1xm
-        webhooks:
-          url: https://webhooks.titanauto.com/getpaid
     CompletePayment:
       summary: Get a payment
       value:
@@ -2059,6 +1897,37 @@ components:
           occurred_at: '2025-09-01T22:05:20.000Z'
           amount: 1000
           currency: EUR
+    CreatePartialRefund:
+      summary: Create a partial refund
+      value:
+        type: partial
+        reference: RFD-202510-0002
+        amount: 500
+        splits:
+          accounts:
+          - id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              amount: 450
+          - id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              amount: 50
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    CreateFullRefund:
+      summary: Create a full refund
+      value:
+        type: full
+        reference: RFD-202510-0002
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
+    QueryPayments:
+      summary: Query payments
+      value:
+        type: payments
+        filters:
+          seller_legal_name: Titan Biking
+          statuses:
+          - captured
     FullRefundCreated:
       summary: Full refund created
       value:
@@ -2077,6 +1946,76 @@ components:
           - id: acc_4q90qx2kdczs59yqfq34p09qx6
             split:
               amount: 100
+    FilteredPayments:
+      summary: Filtered payments
+      value:
+        type: payments
+        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+        data:
+        - id: pay_4y7kptsvn11qq6d354g5tx735v
+          reference: ORD-202510-0232
+          status: captured
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-15T12:34:56.999Z'
+          updated_at: '2023-03-15T12:34:56.999Z'
+          method:
+            type: card
+            scheme: visa
+            display_hint: 424242******4242
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
+        - id: pay_4y7kptsvn11qq6d354g5tx736w
+          reference: ORD-202511-0133
+          status: captured
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-15T12:34:56.999Z'
+          updated_at: '2023-03-15T12:34:56.999Z'
+          method:
+            type: card
+            scheme: visa
+            display_hint: 411111******1111
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
+    CreateSubsequentPayment:
+      summary: Create a subsequent payment
+      value:
+        reference: ORD-202510-0232
+        amount: 10000
+        currency: EUR
+        method:
+          type: card
+          dynamic_descriptor: TITAN*202510-0232
+        splits:
+          type: per_transaction
+          accounts:
+          - type: seller
+            id: acc_4f5zanqzxfg9w9jj5e81bm6bc9
+            split:
+              type: fixed
+              amount: 9000
+          - type: platform
+            id: acc_4q90qx2kdczs59yqfq34p09qx6
+            split:
+              type: fixed
+              amount: 1000
+            processing_fee:
+              percentage: 100
+        standing_instruction:
+          id: sti_4tbftjwzxja1h71nzas1g0g1xm
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
     PartialRefundCreated:
       summary: Partial refund created
       value:
@@ -2089,11 +2028,6 @@ components:
   responses:
     400BadRequest:
       description: Bad Request
-      headers:
-        Getpaid-Trace-Id:
-          $ref: '#/components/headers/GetpaidTraceId'
-    500InternalServerError:
-      description: Internal Server Error
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
@@ -2127,6 +2061,16 @@ components:
                   example: Invalid Parameters
                 status:
                   example: 422
+    500InternalServerError:
+      description: Internal Server Error
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    429TooManyRequests:
+      description: Too Many Requests
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
     404NotFound:
       description: Not Found
       headers:
@@ -2145,11 +2089,6 @@ components:
                   example: Not Found
                 status:
                   example: 404
-    429TooManyRequests:
-      description: Too Many Requests
-      headers:
-        Getpaid-Trace-Id:
-          $ref: '#/components/headers/GetpaidTraceId'
     401Unauthorized:
       description: Unauthorized
       headers:

@@ -18,13 +18,16 @@
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "getpaid-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+    "getpaid-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
+    "getpaid-accept-payments-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-applications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-checkouts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "getpaid-onboard-sellers-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-payments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "getpaid-queries-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]

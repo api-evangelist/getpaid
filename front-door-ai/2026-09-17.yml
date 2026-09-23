@@ -1,0 +1,30 @@
+# Front Door AI Index — getpaid — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: getpaid
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.getpaid.io
+  final_host: www.getpaid.io
+  ownership: own
+  owner: getpaid
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 21
+  host_score: 21
+  density: 11.22
+  words: 1872
+  tiers:
+    agentic: 8
+    core: 13
+    model: 0
+  ambiguous: 35
+  top_terms:
+    agent: 34
+    AI: 13
+    AI agent: 6
+    agentic: 1
+    prompts: 1
+    smart: 1

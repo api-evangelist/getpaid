@@ -7,60 +7,7 @@ info:
   description: '# Getting started
 
 
-    Our APIs provide programmatic access to the Getpaid solution. This page contains a comprehensive reference for all
-
-    resources of the Getpaid public API. For walkthrough documentation please see [Getpaid guides](/) for step by step usage
-
-    of the Getpaid platform including the API and [Getpaid API integration](/integration/api) for the technical aspects of
-
-    this Getpaid API.
-
-
-    To get started, book a demo and sign up at <https://getpaid.io>. This will give you access to the [Getpaid
-
-    dashboard](https://dashboard.getpaid.io) where you can configure your account and retrieve your credentials needed to
-
-    authenticate with Getpaid API.
-
-
-    ## Postman
-
-
-    Getpaid provides a Postman collection to test the API features in sandbox. You can [download the Postman collection and
-
-    the environments](/integration/api/postman) to start testing the Getpaid API.
-
-
-    ## Fields formats
-
-
-    | Type | Format |
-
-    | :- | :- |
-
-    | `amount-minor` | Amount in the minor currency unit (e.g. 100 cents for 1 EUR). |
-
-    | `country` | The country code fields follow the [ISO 3166-1 alpha-2 standard](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in uppercase. Examples: `DE`, `US`. |
-
-    | `currency` | The currency code fields follow the [ISO 4217 standard](https://en.wikipedia.org/wiki/ISO_4217) in uppercase. Examples: `EUR`, `USD`. |
-
-    | `date` | Dates are formatted using the complete date format according to the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime): `YYYY-MM-DD`. Example: `2023-09-30`.                                        |
-
-    | `date-time` | Date-time fields are formatted using the [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time in UTC with 3 seconds fractional digits: `YYYY-MM-DDThh:mm:ss.SSSZ`. Example: `2015-09-01T23:59:59.479Z`. |
-
-    | `date-time-offset` | Date-time fields with time-zone are formatted [ISO 8601 standard](https://www.w3.org/TR/NOTE-datetime) for the combined date and time with the time-zone and no second fractional digits: `YYYY-MM-DDThh:mm:ssTZD`. Example: `2015-09-01T23:59:59+01:00`. |
-
-    | `email` | Email fields should follow the [RFC 5322](https://tools.ietf.org/html/rfc5322) standard. Example: `jon.smith@acme.com` |
-
-    | `hex-color` | Colors are represented as a string starting with `#` followed by six hexadecimal digits. Each pair of digits represents the intensity of red, green, and blue components respectively. Examples: `#FFFFFF`, `#000000`, `#FF5733`. |
-
-    | `id` | Identifiers are formatted as a string of 3 alphabetic characters (which represents the type of the identified object), one underscore and 26 alphanumeric characters. Every identifier generated in our system is globally unique. Examples: `acc_44678r08jtm8zbt227tzhc4nw5`, `doc_473cr1y0ghbyc3m1yfbwvn3nxx`. |
-
-    | `ip-address` | IP fields are formatted using the [Internet Protocol version 4 (IPv4)](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) standard: `x.x.x.x` where `x` must be a decimal value between `0` and `255`. Example: `192.158.1.38`. |
-
-    | `version` | A resource version. For resources that can evolved over time, a unique reference of the snapshot used in other resource. For example, the account information used for a payment, the information used for the statement descriptor or the processing configuration are tighted to the version of the account. |
-
-    '
+    Our APIs provide programmatic access to the Getpaid solution.'
 servers:
 - url: https://api.getpaid.io
   description: Live
@@ -141,9 +88,7 @@ webhooks:
       description: 'The `checkout_failed` webhook is sent when the checkout lifetime is reached without a successful payment attempt, and at least one payment was attempted but none were successful.
 
 
-        It can be received days after the checkout is created depending on the payment method selected.
-
-        '
+        It can be received days after the checkout is created depending on the payment method selected.'
       tags:
       - Accept payments webhooks
       security: []
@@ -192,9 +137,7 @@ webhooks:
       description: 'The `checkout_in_progress` webhook is sent when the checkout lifetime reaches its expiration, but a payment attempt is still in progress.
 
 
-        Banking payment methods are typical examples where this webhook can be sent, as the payment processing can take several days depending on the bank processing times.
-
-        '
+        Banking payment methods are typical examples where this webhook can be sent, as the payment processing can take several days depending on the bank processing times.'
       tags:
       - Accept payments webhooks
       security: []
@@ -246,9 +189,7 @@ webhooks:
     post:
       summary: checkout_unattempted
       operationId: checkout_unattempted
-      description: 'The `checkout_unattempted` webhook is sent when the checkout lifetime is reached without a payment.
-
-        '
+      description: The `checkout_unattempted` webhook is sent when the checkout lifetime is reached without a payment.
       tags:
       - Accept payments webhooks
       security: []
@@ -487,34 +428,68 @@ webhooks:
           description: The webhook action will be retried according to the workflow retry schedule
 components:
   schemas:
-    StandingInstructionStatus:
-      description: 'The status of the standing instruction.
-
-
-        - `new`: requested to creation as part of an initial payment.
-
-        - `active`: standing instruction is active and can be used for subsequent payments.
-
-        '
+    PaymentMethodType:
+      description: The type of payment method.
       type: string
       enum:
-      - new
-      - active
-    Reference:
+      - card
+      - sepa_direct_debit
+    PaymentOriginApi:
       allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
+      - $ref: '#/components/schemas/PaymentOriginBase'
+    RefundId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the refund of a payment.
+        example: rfd_4a4m2pjycdb1jbj68h1rvk9kcz
+    CaptureId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of a capture
+        example: cpt_57fm2pjycji1jbj68h1rvk9bnc
     CheckoutId:
       allOf:
       - $ref: '#/components/schemas/Id'
       - description: The unique identifier of the checkout.
         example: cko_4kf9v6xp00hzc99rdwr5m97wce
+    StandingInstructionId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the standing instruction.
+        example: sti_4tbftjwzxja1h71nzas1g0g1xm
+    PaymentOrigin:
+      description: The origin of the payment creation.
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginApi'
+      - $ref: '#/components/schemas/PaymentOriginCheckout'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/PaymentOriginApi'
+          checkout: '#/components/schemas/PaymentOriginCheckout'
+    PaymentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the payment.
+        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    PaymentOriginCheckout:
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginBase'
+      - required:
+        - id
+        properties:
+          id:
+            $ref: '#/components/schemas/CheckoutId'
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
     PaymentStatus:
       description: 'The status of the payment.
 
@@ -532,9 +507,35 @@ components:
       - failed
       - partially_refunded
       - refunded
-    PaymentOriginApi:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
+    StandingInstructionStatus:
+      description: 'The status of the standing instruction.
+
+
+        - `new`: requested to creation as part of an initial payment.
+
+        - `active`: standing instruction is active and can be used for subsequent payments.
+
+        '
+      type: string
+      enum:
+      - new
+      - active
+    WebhookCheckoutPayment:
+      type: object
+      required:
+      - id
+      - method
+      properties:
+        id:
+          $ref: '#/components/schemas/PaymentId'
+        method:
+          description: The payment method used.
+          type: object
+          required:
+          - type
+          properties:
+            type:
+              $ref: '#/components/schemas/PaymentMethodType'
     DateTime:
       description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
 
@@ -546,12 +547,15 @@ components:
       minLength: 24
       maxLength: 24
       example: '2025-09-01T22:05:48.479Z'
-    PaymentMethodType:
-      description: The type of payment method.
+    EventId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the event.
+        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
+    ShortString:
       type: string
-      enum:
-      - card
-      - sepa_direct_debit
+      minLength: 1
+      maxLength: 50
     PaymentOriginBase:
       type: object
       required:
@@ -570,69 +574,6 @@ components:
           enum:
           - api
           - checkout
-    ShortString:
-      type: string
-      minLength: 1
-      maxLength: 50
-    StandingInstructionId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the standing instruction.
-        example: sti_4tbftjwzxja1h71nzas1g0g1xm
-    WebhookCheckoutPayment:
-      type: object
-      required:
-      - id
-      - method
-      properties:
-        id:
-          $ref: '#/components/schemas/PaymentId'
-        method:
-          description: The payment method used.
-          type: object
-          required:
-          - type
-          properties:
-            type:
-              $ref: '#/components/schemas/PaymentMethodType'
-    PaymentOrigin:
-      description: The origin of the payment creation.
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginApi'
-      - $ref: '#/components/schemas/PaymentOriginCheckout'
-      discriminator:
-        propertyName: type
-        mapping:
-          api: '#/components/schemas/PaymentOriginApi'
-          checkout: '#/components/schemas/PaymentOriginCheckout'
-    RefundId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the refund of a payment.
-        example: rfd_4a4m2pjycdb1jbj68h1rvk9kcz
-    EventId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the event.
-        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
-    PaymentOriginCheckout:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
-      - required:
-        - id
-        properties:
-          id:
-            $ref: '#/components/schemas/CheckoutId'
-    PaymentId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the payment.
-        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
-    CaptureId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of a capture
-        example: cpt_57fm2pjycji1jbj68h1rvk9bnc
     WebhookBaseRequest:
       type: object
       required:

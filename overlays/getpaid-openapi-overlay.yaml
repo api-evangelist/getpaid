@@ -25,6 +25,6 @@ actions:
       style: cursor
       request_param: cursor
       response_field: cursor
-notes: >-
+x-notes: >-
   This overlay records API Evangelist enrichment metadata over the harvested,
   unmodified Getpaid OpenAPI. It never mutates the original specification.

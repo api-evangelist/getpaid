@@ -284,6 +284,194 @@ paths:
           $ref: '#/components/responses/500InternalServerError'
 components:
   schemas:
+    BaseSortItemRequest:
+      description: Each field to sort by.
+      type: object
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          description: The field to sort by. Each field available can only be used once in the list.
+          type: string
+        direction:
+          description: The sort direction
+          type: string
+          enum:
+          - ascending
+          - descending
+    CreateApplicationRequest:
+      oneOf:
+      - $ref: '#/components/schemas/OnboardingApplicationRequest'
+      - $ref: '#/components/schemas/ChangeRequestApplicationRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          onboarding: '#/components/schemas/OnboardingApplicationRequest'
+          change_request: '#/components/schemas/ChangeRequestApplicationRequest'
+    QueryApplicationsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - applications
+          filters:
+            $ref: '#/components/schemas/ApplicationsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/ApplicationsSortsRequest'
+    AccountId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the account.
+        example: acc_44678r08jtm8zbt227tzhc4nw5
+    PaginationCursor:
+      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+      type: string
+      maxLength: 250
+      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    CreatedAt:
+      allOf:
+      - description: When the resource was created.
+      - $ref: '#/components/schemas/DateTime'
+    BusinessResponse:
+      description: The seller business details if known at the time of application retrieval.
+      type: object
+      required:
+      - legal_name
+      - country
+      properties:
+        legal_name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The legal name of the business.
+            example: Garage Germany AG
+            minLength: 2
+        country:
+          allOf:
+          - description: The country where the business is registered in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+            example: DE
+          - $ref: '#/components/schemas/Country'
+        legal_structure:
+          $ref: '#/components/schemas/BusinessLegalStructure'
+        registered_address:
+          allOf:
+          - description: The registered address of the business.
+          - $ref: '#/components/schemas/Address'
+        registration_number:
+          $ref: '#/components/schemas/RegistrationNumber'
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
+      type: string
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    ApplicationType:
+      description: 'The type of application to create:
+
+
+        - `onboarding`: to create a new account for the seller and start accepting payments.
+
+        - `change_request`: to update an existing seller account with new information.
+
+        '
+      type: string
+      enum:
+      - onboarding
+      - change_request
+    ApplicationWebhooksRequest:
+      description: Configuration for webhooks to receive onboarding application status updates.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          allOf:
+          - description: The URL to which webhook events will be sent.
+            example: https://webhooks.titanauto.com/getpaid
+          - $ref: '#/components/schemas/Url'
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    GermanRegistrationNumber:
+      allOf:
+      - $ref: '#/components/schemas/BaseRegistrationNumber'
+      - required:
+        - registry
+        properties:
+          registry:
+            description: The Germany district court where the business is registered. See the [list of Germany registry courts](/integration/api/references/registration-numbers/germany-registry-courts).
+            type: string
+    PaginatedResponse:
+      type: object
+      required:
+      - data
+      properties:
+        cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+        data:
+          $ref: '#/components/schemas/PaginationData'
+    BusinessLegalStructure:
+      description: 'The legal structure of the business.
+
+
+        **It is required to provide the legal structure of the business if the country of registration is Canada (CA).**
+
+        '
+      type: string
+      enum:
+      - ca_private_corp
+      - ca_public_corp
+      - ca_non_profit
+    ApplicationFieldRequest:
+      description: 'A field whose access for the seller is controlled by the change request application.
+
+        '
+      type: object
+      required:
+      - name
+      - access
+      properties:
+        name:
+          description: The name of the field whose access is controlled by the application.
+          type: string
+          enum:
+          - themes
+        access:
+          description: The level of access granted to the seller over the field while the application is open.
+          type: string
+          enum:
+          - read_write
+    PaginationFirst:
+      description: Pagination. The number of elements that will be retrieved.
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 100
+    ApplicationStatus:
+      description: The status of the onboarding application.
+      type: string
+      enum:
+      - initiated
+      - identity_verified
+      - submitted
+      - screened
+      - approved
+      - completed
+      - cancelled
+    UpdatedAt:
+      allOf:
+      - description: When the resource was last updated.
+      - $ref: '#/components/schemas/DateTime'
     ApplicationFlow:
       description: The flow required for the onboarding application to complete.
       type: object
@@ -306,6 +494,163 @@ components:
               allOf:
               - $ref: '#/components/schemas/Url'
               - description: The URL to redirect the seller to complete the onboarding.
+    QueryApplicationsResponse:
+      allOf:
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - applications
+          cursor:
+            type: string
+          data:
+            items:
+              required:
+              - id
+              - status
+              - created_at
+              - expires_at
+              properties:
+                id:
+                  $ref: '#/components/schemas/ApplicationId'
+                status:
+                  $ref: '#/components/schemas/ApplicationStatus'
+                reference:
+                  $ref: '#/components/schemas/Reference'
+                legal_name:
+                  $ref: '#/components/schemas/AccountLegalName'
+                country:
+                  $ref: '#/components/schemas/Country'
+                applicant_email:
+                  $ref: '#/components/schemas/Email'
+                created_at:
+                  $ref: '#/components/schemas/CreatedAt'
+                expires_at:
+                  $ref: '#/components/schemas/ApplicationExpiresAt'
+      - $ref: '#/components/schemas/PaginatedResponse'
+    Country:
+      type: string
+      format: country
+      minLength: 2
+      maxLength: 2
+      description: The two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+      example: DE
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    ThemeId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the theme.
+        example: thm_4jkgtzffbf9pzem7dgfhdeztwa
+    AccountLegalName:
+      allOf:
+      - description: The legal name of the account.
+      - $ref: '#/components/schemas/MediumString'
+    AddressOptionalFields:
+      type: object
+      properties:
+        line1:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The first line of the address.
+            example: Immermannstraße
+        line2:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The second line of the address.
+            example: Haus 2, Wohnung 3A
+        street_number:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: 'The number assigned to the building on the street.
+
+              May include alphanumeric formatting such as "7A" or "12-14". street number.
+
+              '
+            example: '40'
+        city:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The city, town, municipality, or locality where the address is located.
+            example: Düsseldorf
+        region:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The administrative area such as region, province, state, or county.
+            example: Nordrhein-Westfalen
+        postal_code:
+          description: The postal code, postcode, or ZIP code used for mail delivery.
+          type: string
+          minLength: 1
+          maxLength: 16
+          example: '40210'
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    Url:
+      type: string
+      format: uri
+      maxLength: 1024
+    PaginationData:
+      description: The list of queried elements.
+      type: array
+      items:
+        type: object
+    ApplicantRequest:
+      description: The details of the person representing the seller that is applying for the Getpaid account if known at the time of application creation.
+      type: object
+      required:
+      - email
+      properties:
+        email:
+          allOf:
+          - $ref: '#/components/schemas/Email'
+          - description: The applicant's email address.
+        first_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The applicant's first name.
+            example: Markus
+            minLength: 2
+        last_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The applicant's last name.
+            example: Doe
+            minLength: 2
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
     CreateApplicationResponse:
       type: object
       required:
@@ -345,19 +690,298 @@ components:
       description: Pagination. The `cursor` from next page will be retrieved.
       type: string
       maxLength: 250
-    AccountLegalName:
-      allOf:
-      - description: The legal name of the account.
-      - $ref: '#/components/schemas/MediumString'
-    UpdatedAt:
-      allOf:
-      - description: When the resource was last updated.
-      - $ref: '#/components/schemas/DateTime'
-    PaginationCursor:
-      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+    BaseCreateApplicationRequest:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/ApplicationType'
+        webhooks:
+          $ref: '#/components/schemas/ApplicationWebhooksRequest'
+    BaseQueryRequest:
+      type: object
+      properties:
+        type:
+          description: 'The type of the Getpaid solution resources to query.
+
+
+            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
+
+            must match the resource targeted by the request URL.
+
+            '
+          type: string
+        first:
+          allOf:
+          - $ref: '#/components/schemas/PaginationFirst'
+        after:
+          $ref: '#/components/schemas/PaginationAfter'
+        filters:
+          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
+        sorts:
+          $ref: '#/components/schemas/BaseSortsRequest'
+    Email:
+      description: An email address.
       type: string
+      format: email
+      maxLength: 320
+      example: jane.doe@company.com
+    GetApplicationResponse:
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      - updated_at
+      - expires_at
+      - account
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplicationId'
+        status:
+          $ref: '#/components/schemas/ApplicationStatus'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        account:
+          description: The account associated with the application.
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              $ref: '#/components/schemas/AccountId'
+        business:
+          description: The business associated with the application.
+          oneOf:
+          - $ref: '#/components/schemas/BusinessResponse'
+          - type: 'null'
+        applicant:
+          description: The applicant that requested the application.
+          oneOf:
+          - $ref: '#/components/schemas/ApplicantResponse'
+          - type: 'null'
+        flow:
+          $ref: '#/components/schemas/ApplicationFlow'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ApplicationExpiresAt'
+    ApplicationId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the onboarding application.
+        example: app_4fekhxdpss1et7rjp8t7rdpnw4
+    Address:
+      allOf:
+      - required:
+        - line1
+        - street_number
+        - city
+        - postal_code
+      - $ref: '#/components/schemas/AddressOptionalFields'
+    ApplicationsFiltersRequest:
+      description: Filtering onboarding applications.
+      type: object
+      properties:
+        id:
+          allOf:
+          - description: The onboarding application identifier to filter by using an exact match operation.
+          - $ref: '#/components/schemas/ApplicationId'
+        statuses:
+          description: The list of onboarding application statuses to filter by.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/ApplicationStatus'
+        legal_name:
+          description: The business legal name to filter by using a contains operation.
+          type: string
+          maxLength: 255
+        reference:
+          description: The onboarding application reference to filter by using a contains operation.
+          type: string
+          maxLength: 200
+        country:
+          allOf:
+          - description: The country to filter by using an exact match operation.
+          - $ref: '#/components/schemas/Country'
+    BaseRegistrationNumber:
+      description: The company registration number.
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          description: The type of registration number. See the list of supported [registration numbers per country](/integration/api/references/registration-numbers).
+          type: string
+          example: vat
+        value:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The registration number. See the format for each registration number type in the [registration numbers list](/integration/api/references/registration-numbers).
+            example: DE123456789
+    BaseSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        description: Each field to sort by.
+        type: object
+        required:
+        - field
+        - direction
+        properties:
+          field:
+            description: The field to sort by. Each field available can only be used once in the list.
+            type: string
+          direction:
+            description: The sort direction
+            type: string
+            enum:
+            - ascending
+            - descending
+    RegistrationNumber:
+      description: 'The business'' registration number.
+
+        The registration number is validated based on the country of the business.
+
+        '
+      anyOf:
+      - $ref: '#/components/schemas/BaseRegistrationNumber'
+      - $ref: '#/components/schemas/GermanRegistrationNumber'
+      discriminator:
+        propertyName: type
+        mapping:
+          vat: '#/components/schemas/BaseRegistrationNumber'
+          de_vr: '#/components/schemas/GermanRegistrationNumber'
+          de_hra: '#/components/schemas/GermanRegistrationNumber'
+          de_hrb: '#/components/schemas/GermanRegistrationNumber'
+          ca_cn: '#/components/schemas/BaseRegistrationNumber'
+          ee_kmkr: '#/components/schemas/BaseRegistrationNumber'
+          si_tin: '#/components/schemas/BaseRegistrationNumber'
+    MediumString:
+      type: string
+      minLength: 1
       maxLength: 250
-      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    ApplicationExpiresAt:
+      allOf:
+      - description: When the onboarding session will expire if not submitted and must be refreshed to extend its lifespan.
+      - $ref: '#/components/schemas/DateTime'
+    ApplicationsSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        allOf:
+        - $ref: '#/components/schemas/BaseSortItemRequest'
+        - properties:
+            field:
+              enum:
+              - id
+              - created_at
+              - status
+              - reference
+              - legal_name
+              - country
+    OnboardingApplicationRequest:
+      allOf:
+      - required:
+        - reference
+        - applicant
+        - business
+        - redirect
+        properties:
+          type:
+            type: string
+          reference:
+            $ref: '#/components/schemas/Reference'
+          applicant:
+            $ref: '#/components/schemas/ApplicantRequest'
+          business:
+            $ref: '#/components/schemas/BusinessRequest'
+          redirect:
+            description: Configuration for the redirect behavior after the onboarding application is submitted.
+            type: object
+            required:
+            - default
+            properties:
+              default:
+                allOf:
+                - $ref: '#/components/schemas/Url'
+                - description: The URL to which the seller will be redirected after the onboarding application is submitted.
+                  example: https://titanauto.com/onboarding/complete?customer=53426
+      - $ref: '#/components/schemas/BaseCreateApplicationRequest'
+    RefreshApplicationResponse:
+      type: object
+      required:
+      - id
+      - updated_at
+      - expires_at
+      - flow
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplicationId'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        expires_at:
+          $ref: '#/components/schemas/ApplicationExpiresAt'
+        flow:
+          $ref: '#/components/schemas/ApplicationFlow'
+    BusinessRequest:
+      description: The seller business details if known at the time of application creation.
+      type: object
+      required:
+      - legal_name
+      - country
+      properties:
+        legal_name:
+          allOf:
+          - $ref: '#/components/schemas/MediumString'
+          - description: The legal name of the business.
+            example: Garage Germany AG
+            minLength: 2
+        country:
+          allOf:
+          - description: The country where the business is registered in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+            example: DE
+          - $ref: '#/components/schemas/Country'
+        legal_structure:
+          $ref: '#/components/schemas/BusinessLegalStructure'
+        registered_address:
+          allOf:
+          - description: The registered address of the business.
+          - $ref: '#/components/schemas/Address'
+        registration_number:
+          $ref: '#/components/schemas/RegistrationNumber'
+    ApplicantResponse:
+      description: The details of the person representing the seller that applied for the Getpaid account if known at the time of application retrieval.
+      type: object
+      required:
+      - email
+      properties:
+        email:
+          allOf:
+          - $ref: '#/components/schemas/Email'
+          - description: The applicant's email address.
+        first_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The applicant's first name.
+            example: Markus
+            minLength: 2
+        last_name:
+          allOf:
+          - $ref: '#/components/schemas/ShortString'
+          - description: The applicant's last name.
+            example: Doe
+            minLength: 2
     ChangeRequestApplicationRequest:
       allOf:
       - required:
@@ -404,631 +1028,49 @@ components:
             - $ref: '#/components/schemas/ThemeId'
             - description: The ID of the platform theme used to brand the hosted change request page. This affects only the appearance of the page itself and does not change the seller account's theme settings. If not provided, the account's default theme is used.
       - $ref: '#/components/schemas/BaseCreateApplicationRequest'
-    AddressOptionalFields:
-      type: object
-      properties:
-        line1:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The first line of the address.
-            example: Immermannstraße
-        line2:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The second line of the address.
-            example: Haus 2, Wohnung 3A
-        street_number:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: 'The number assigned to the building on the street.
-
-              May include alphanumeric formatting such as "7A" or "12-14". street number.
-
-              '
-            example: '40'
-        city:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The city, town, municipality, or locality where the address is located.
-            example: Düsseldorf
-        region:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The administrative area such as region, province, state, or county.
-            example: Nordrhein-Westfalen
-        postal_code:
-          description: The postal code, postcode, or ZIP code used for mail delivery.
-          type: string
-          minLength: 1
-          maxLength: 16
-          example: '40210'
-    CreatedAt:
-      allOf:
-      - description: When the resource was created.
-      - $ref: '#/components/schemas/DateTime'
-    PaginationData:
-      description: The list of queried elements.
-      type: array
-      items:
-        type: object
-    AccountId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the account.
-        example: acc_44678r08jtm8zbt227tzhc4nw5
-    ApplicationId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the onboarding application.
-        example: app_4fekhxdpss1et7rjp8t7rdpnw4
-    BusinessRequest:
-      description: The seller business details if known at the time of application creation.
-      type: object
-      required:
-      - legal_name
-      - country
-      properties:
-        legal_name:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The legal name of the business.
-            example: Garage Germany AG
-            minLength: 2
-        country:
-          allOf:
-          - description: The country where the business is registered in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-            example: DE
-          - $ref: '#/components/schemas/Country'
-        legal_structure:
-          $ref: '#/components/schemas/BusinessLegalStructure'
-        registered_address:
-          allOf:
-          - description: The registered address of the business.
-          - $ref: '#/components/schemas/Address'
-        registration_number:
-          $ref: '#/components/schemas/RegistrationNumber'
-    ApplicantRequest:
-      description: The details of the person representing the seller that is applying for the Getpaid account if known at the time of application creation.
-      type: object
-      required:
-      - email
-      properties:
-        email:
-          allOf:
-          - $ref: '#/components/schemas/Email'
-          - description: The applicant's email address.
-        first_name:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: The applicant's first name.
-            example: Markus
-            minLength: 2
-        last_name:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: The applicant's last name.
-            example: Doe
-            minLength: 2
-    ApplicantResponse:
-      description: The details of the person representing the seller that applied for the Getpaid account if known at the time of application retrieval.
-      type: object
-      required:
-      - email
-      properties:
-        email:
-          allOf:
-          - $ref: '#/components/schemas/Email'
-          - description: The applicant's email address.
-        first_name:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: The applicant's first name.
-            example: Markus
-            minLength: 2
-        last_name:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: The applicant's last name.
-            example: Doe
-            minLength: 2
-    ThemeId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the theme.
-        example: thm_4jkgtzffbf9pzem7dgfhdeztwa
-    PaginationFirst:
-      description: Pagination. The number of elements that will be retrieved.
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 100
-    BaseRegistrationNumber:
-      description: The company registration number.
-      type: object
-      required:
-      - type
-      - value
-      properties:
-        type:
-          description: The type of registration number. See the list of supported [registration numbers per country](/integration/api/references/registration-numbers).
-          type: string
-          example: vat
-        value:
-          allOf:
-          - $ref: '#/components/schemas/ShortString'
-          - description: The registration number. See the format for each registration number type in the [registration numbers list](/integration/api/references/registration-numbers).
-            example: DE123456789
-    Reference:
-      allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
-    Country:
-      type: string
-      format: country
-      minLength: 2
-      maxLength: 2
-      description: The two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-      example: DE
-    BaseCreateApplicationRequest:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          $ref: '#/components/schemas/ApplicationType'
-        webhooks:
-          $ref: '#/components/schemas/ApplicationWebhooksRequest'
-    BusinessLegalStructure:
-      description: 'The legal structure of the business.
-
-
-        **It is required to provide the legal structure of the business if the country of registration is Canada (CA).**
-
-        '
-      type: string
-      enum:
-      - ca_private_corp
-      - ca_public_corp
-      - ca_non_profit
-    BaseSortItemRequest:
-      description: Each field to sort by.
-      type: object
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          description: The field to sort by. Each field available can only be used once in the list.
-          type: string
-        direction:
-          description: The sort direction
-          type: string
-          enum:
-          - ascending
-          - descending
-    ApplicationsFiltersRequest:
-      description: Filtering onboarding applications.
-      type: object
-      properties:
-        id:
-          allOf:
-          - description: The onboarding application identifier to filter by using an exact match operation.
-          - $ref: '#/components/schemas/ApplicationId'
-        statuses:
-          description: The list of onboarding application statuses to filter by.
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/ApplicationStatus'
-        legal_name:
-          description: The business legal name to filter by using a contains operation.
-          type: string
-          maxLength: 255
-        reference:
-          description: The onboarding application reference to filter by using a contains operation.
-          type: string
-          maxLength: 200
-        country:
-          allOf:
-          - description: The country to filter by using an exact match operation.
-          - $ref: '#/components/schemas/Country'
-    RegistrationNumber:
-      description: 'The business'' registration number.
-
-        The registration number is validated based on the country of the business.
-
-        '
-      anyOf:
-      - $ref: '#/components/schemas/BaseRegistrationNumber'
-      - $ref: '#/components/schemas/GermanRegistrationNumber'
-      discriminator:
-        propertyName: type
-        mapping:
-          vat: '#/components/schemas/BaseRegistrationNumber'
-          de_vr: '#/components/schemas/GermanRegistrationNumber'
-          de_hra: '#/components/schemas/GermanRegistrationNumber'
-          de_hrb: '#/components/schemas/GermanRegistrationNumber'
-          ca_cn: '#/components/schemas/BaseRegistrationNumber'
-          ee_kmkr: '#/components/schemas/BaseRegistrationNumber'
-          si_tin: '#/components/schemas/BaseRegistrationNumber'
-    QueryApplicationsRequest:
-      allOf:
-      - $ref: '#/components/schemas/BaseQueryRequest'
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - applications
-          filters:
-            $ref: '#/components/schemas/ApplicationsFiltersRequest'
-          sorts:
-            $ref: '#/components/schemas/ApplicationsSortsRequest'
-    Email:
-      description: An email address.
-      type: string
-      format: email
-      maxLength: 320
-      example: jane.doe@company.com
-    BaseQueryRequest:
-      type: object
-      properties:
-        type:
-          description: 'The type of the Getpaid solution resources to query.
-
-
-            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
-
-            must match the resource targeted by the request URL.
-
-            '
-          type: string
-        first:
-          allOf:
-          - $ref: '#/components/schemas/PaginationFirst'
-        after:
-          $ref: '#/components/schemas/PaginationAfter'
-        filters:
-          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
-        sorts:
-          $ref: '#/components/schemas/BaseSortsRequest'
-    ApplicationFieldRequest:
-      description: 'A field whose access for the seller is controlled by the change request application.
-
-        '
-      type: object
-      required:
-      - name
-      - access
-      properties:
-        name:
-          description: The name of the field whose access is controlled by the application.
-          type: string
-          enum:
-          - themes
-        access:
-          description: The level of access granted to the seller over the field while the application is open.
-          type: string
-          enum:
-          - read_write
-    ApplicationType:
-      description: 'The type of application to create:
-
-
-        - `onboarding`: to create a new account for the seller and start accepting payments.
-
-        - `change_request`: to update an existing seller account with new information.
-
-        '
-      type: string
-      enum:
-      - onboarding
-      - change_request
-    ApplicationWebhooksRequest:
-      description: Configuration for webhooks to receive onboarding application status updates.
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          allOf:
-          - description: The URL to which webhook events will be sent.
-            example: https://webhooks.titanauto.com/getpaid
-          - $ref: '#/components/schemas/Url'
-    GermanRegistrationNumber:
-      allOf:
-      - $ref: '#/components/schemas/BaseRegistrationNumber'
-      - required:
-        - registry
-        properties:
-          registry:
-            description: The Germany district court where the business is registered. See the [list of Germany registry courts](/integration/api/references/registration-numbers/germany-registry-courts).
-            type: string
-    Address:
-      allOf:
-      - required:
-        - line1
-        - street_number
-        - city
-        - postal_code
-      - $ref: '#/components/schemas/AddressOptionalFields'
-    ProblemDetailsBase:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      required:
-      - type
-      - title
-      - status
-      properties:
-        type:
-          type: string
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
-          format: uri
-          example: https://docs.getpaid.io/ref/error-types#problem
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
-          example: Invalid Request
-        status:
-          type: integer
-          description: The HTTP status code.
-          minimum: 400
-          maximum: 599
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
-          example: The request body was invalid
-    ApplicationStatus:
-      description: The status of the onboarding application.
-      type: string
-      enum:
-      - initiated
-      - identity_verified
-      - submitted
-      - screened
-      - approved
-      - completed
-      - cancelled
-    ApplicationExpiresAt:
-      allOf:
-      - description: When the onboarding session will expire if not submitted and must be refreshed to extend its lifespan.
-      - $ref: '#/components/schemas/DateTime'
-    DateTime:
-      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
-
-        Always includes the ''Z'' UTC indicator.
-
-        '
-      type: string
-      format: date-time
-      minLength: 24
-      maxLength: 24
-      example: '2025-09-01T22:05:48.479Z'
-    GetApplicationResponse:
-      type: object
-      required:
-      - id
-      - status
-      - created_at
-      - updated_at
-      - expires_at
-      - account
-      properties:
-        id:
-          $ref: '#/components/schemas/ApplicationId'
-        status:
-          $ref: '#/components/schemas/ApplicationStatus'
-        reference:
-          $ref: '#/components/schemas/Reference'
-        account:
-          description: The account associated with the application.
-          type: object
-          required:
-          - id
-          properties:
-            id:
-              $ref: '#/components/schemas/AccountId'
-        business:
-          description: The business associated with the application.
-          oneOf:
-          - $ref: '#/components/schemas/BusinessResponse'
-          - type: 'null'
-        applicant:
-          description: The applicant that requested the application.
-          oneOf:
-          - $ref: '#/components/schemas/ApplicantResponse'
-          - type: 'null'
-        flow:
-          $ref: '#/components/schemas/ApplicationFlow'
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        expires_at:
-          $ref: '#/components/schemas/ApplicationExpiresAt'
-    BaseSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        description: Each field to sort by.
-        type: object
-        required:
-        - field
-        - direction
-        properties:
-          field:
-            description: The field to sort by. Each field available can only be used once in the list.
-            type: string
-          direction:
-            description: The sort direction
-            type: string
-            enum:
-            - ascending
-            - descending
-    BusinessResponse:
-      description: The seller business details if known at the time of application retrieval.
-      type: object
-      required:
-      - legal_name
-      - country
-      properties:
-        legal_name:
-          allOf:
-          - $ref: '#/components/schemas/MediumString'
-          - description: The legal name of the business.
-            example: Garage Germany AG
-            minLength: 2
-        country:
-          allOf:
-          - description: The country where the business is registered in the form of a two-letter [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
-            example: DE
-          - $ref: '#/components/schemas/Country'
-        legal_structure:
-          $ref: '#/components/schemas/BusinessLegalStructure'
-        registered_address:
-          allOf:
-          - description: The registered address of the business.
-          - $ref: '#/components/schemas/Address'
-        registration_number:
-          $ref: '#/components/schemas/RegistrationNumber'
-    CreateApplicationRequest:
-      oneOf:
-      - $ref: '#/components/schemas/OnboardingApplicationRequest'
-      - $ref: '#/components/schemas/ChangeRequestApplicationRequest'
-      discriminator:
-        propertyName: type
-        mapping:
-          onboarding: '#/components/schemas/OnboardingApplicationRequest'
-          change_request: '#/components/schemas/ChangeRequestApplicationRequest'
-    OnboardingApplicationRequest:
-      allOf:
-      - required:
-        - reference
-        - applicant
-        - business
-        - redirect
-        properties:
-          type:
-            type: string
-          reference:
-            $ref: '#/components/schemas/Reference'
-          applicant:
-            $ref: '#/components/schemas/ApplicantRequest'
-          business:
-            $ref: '#/components/schemas/BusinessRequest'
-          redirect:
-            description: Configuration for the redirect behavior after the onboarding application is submitted.
-            type: object
-            required:
-            - default
-            properties:
-              default:
-                allOf:
-                - $ref: '#/components/schemas/Url'
-                - description: The URL to which the seller will be redirected after the onboarding application is submitted.
-                  example: https://titanauto.com/onboarding/complete?customer=53426
-      - $ref: '#/components/schemas/BaseCreateApplicationRequest'
-    MediumString:
-      type: string
-      minLength: 1
-      maxLength: 250
-    PaginatedResponse:
-      type: object
-      required:
-      - data
-      properties:
-        cursor:
-          $ref: '#/components/schemas/PaginationCursor'
-        data:
-          $ref: '#/components/schemas/PaginationData'
-    Url:
-      type: string
-      format: uri
-      maxLength: 1024
-    ShortString:
-      type: string
-      minLength: 1
-      maxLength: 50
-    QueryApplicationsResponse:
-      allOf:
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - applications
-          cursor:
-            type: string
-          data:
-            items:
-              required:
-              - id
-              - status
-              - created_at
-              - expires_at
-              properties:
-                id:
-                  $ref: '#/components/schemas/ApplicationId'
-                status:
-                  $ref: '#/components/schemas/ApplicationStatus'
-                reference:
-                  $ref: '#/components/schemas/Reference'
-                legal_name:
-                  $ref: '#/components/schemas/AccountLegalName'
-                country:
-                  $ref: '#/components/schemas/Country'
-                applicant_email:
-                  $ref: '#/components/schemas/Email'
-                created_at:
-                  $ref: '#/components/schemas/CreatedAt'
-                expires_at:
-                  $ref: '#/components/schemas/ApplicationExpiresAt'
-      - $ref: '#/components/schemas/PaginatedResponse'
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
-    RefreshApplicationResponse:
-      type: object
-      required:
-      - id
-      - updated_at
-      - expires_at
-      - flow
-      properties:
-        id:
-          $ref: '#/components/schemas/ApplicationId'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-        expires_at:
-          $ref: '#/components/schemas/ApplicationExpiresAt'
-        flow:
-          $ref: '#/components/schemas/ApplicationFlow'
-    ApplicationsSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        allOf:
-        - $ref: '#/components/schemas/BaseSortItemRequest'
-        - properties:
-            field:
-              enum:
-              - id
-              - created_at
-              - status
-              - reference
-              - legal_name
-              - country
   examples:
+    ApplicationCreated:
+      summary: Application created successfully
+      value:
+        id: app_4fekhxdpss1et7rjp8t7rdpnw4
+        status: initiated
+        reference: '53426'
+        created_at: '2025-10-24T14:45:22.993Z'
+        updated_at: '2025-10-24T14:45:22.993Z'
+        expires_at: '2025-10-24T14:15:22.993Z'
+        account:
+          id: acc_4fekhxdpss1et7rjp8t7rdpnw4
+        flow:
+          next_step:
+            type: redirect
+            url: https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    CreateApplicationCanada:
+      summary: Create a canadian application
+      value:
+        type: onboarding
+        reference: APP-SELL-021
+        applicant:
+          email: markus.miller@mapleleafgarage.ca
+        business:
+          legal_name: Maple Leaf Garage Inc.
+          country: CA
+          legal_structure: ca_private_corp
+        redirect:
+          default: https://mapleleafgarage.ca/onboarding/complete?reference=APP-SELL-021
+    CreateApplication:
+      summary: Create an application
+      value:
+        type: onboarding
+        reference: '53426'
+        applicant:
+          email: markus.keller@garagegermany.de
+        business:
+          legal_name: Garage Deutschland AG
+          country: DE
+        redirect:
+          default: https://titanauto.com/onboarding/complete?customer=53426
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
     FilteredApplications:
       summary: Filtered applications
       value:
@@ -1051,16 +1093,52 @@ components:
           applicant_email: lena.schmidt@titanauto.de
           created_at: '2026-01-10T09:12:41.380Z'
           expires_at: '2026-01-24T09:12:41.380Z'
-    ApplicationRefreshed:
-      summary: Application refreshed successfully
+    ChangeRequestApplicationCreated:
+      summary: Change request application created successfully
       value:
-        id: app_4fekhxdpss1et7rjp8t7rdpnw4
-        updated_at: '2025-10-24T14:45:22.993Z'
-        expires_at: '2025-11-09T14:15:22.993Z'
+        id: app_5mzpjyeqtt2fu8skq9u8seqow5
+        status: initiated
+        reference: '53426'
+        created_at: '2026-05-12T10:15:00.000Z'
+        updated_at: '2026-05-12T10:15:00.000Z'
+        expires_at: '2026-05-26T10:15:00.000Z'
+        account:
+          id: acc_4fekhxdpss1et7rjp8t7rdpnw4
         flow:
           next_step:
             type: redirect
-            url: https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+            url: https://onboarding.getpaid.io/v2/app_5mzpjyeqtt2fu8skq9u8seqow5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    QueryApplications:
+      summary: Query applications
+      value:
+        type: applications
+        filters:
+          statuses:
+          - submitted
+          - completed
+          country: DE
+          legal_name: Garage
+        sorts:
+        - field: created_at
+          direction: descending
+    OnboardingApplicationCancelled:
+      summary: Onboarding application cancelled successfully
+      value:
+        id: app_4fekhxdpss1et7rjp8t7rdpnw4
+        status: cancelled
+        reference: '456126'
+        account:
+          id: acc_f6m9n2q3ps8et4rjk7d1xbvw5c
+        business:
+          legal_name: Test Company GmbH
+          country: DE
+        applicant:
+          email: markus.keller@garagegermany.de
+          first_name: Markus
+          last_name: Keller
+        created_at: '2026-02-03T10:00:00.000Z'
+        updated_at: '2026-02-03T11:15:00.000Z'
+        expires_at: '2026-02-18T10:00:00.000Z'
     ChangeRequestApplicationCancelled:
       summary: Change request application cancelled successfully
       value:
@@ -1072,6 +1150,16 @@ components:
         created_at: '2026-05-12T10:15:00.000Z'
         updated_at: '2026-05-12T11:30:00.000Z'
         expires_at: '2026-05-26T10:15:00.000Z'
+    ApplicationRefreshed:
+      summary: Application refreshed successfully
+      value:
+        id: app_4fekhxdpss1et7rjp8t7rdpnw4
+        updated_at: '2025-10-24T14:45:22.993Z'
+        expires_at: '2025-11-09T14:15:22.993Z'
+        flow:
+          next_step:
+            type: redirect
+            url: https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     CreateApplicationSellerDetailsCanada:
       summary: Create a canadian application pre-filling seller
       value:
@@ -1097,36 +1185,20 @@ components:
           default: https://mapleleafgarage.ca/onboarding/complete?reference=APP-SELL-021
         webhooks:
           url: https://mapleleafgarage.com/webhooks/getpaid
-    ApplicationCreated:
-      summary: Application created successfully
+    CreateChangeRequestApplication:
+      summary: Create a change request application
       value:
-        id: app_4fekhxdpss1et7rjp8t7rdpnw4
-        status: initiated
-        reference: '53426'
-        created_at: '2025-10-24T14:45:22.993Z'
-        updated_at: '2025-10-24T14:45:22.993Z'
-        expires_at: '2025-10-24T14:15:22.993Z'
+        type: change_request
         account:
           id: acc_4fekhxdpss1et7rjp8t7rdpnw4
-        flow:
-          next_step:
-            type: redirect
-            url: https://onboarding.getpaid.io/v2/app_4fekhxdpss1et7rjp8t7rdpnw4?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    ChangeRequestApplicationCreated:
-      summary: Change request application created successfully
-      value:
-        id: app_5mzpjyeqtt2fu8skq9u8seqow5
-        status: initiated
         reference: '53426'
-        created_at: '2026-05-12T10:15:00.000Z'
-        updated_at: '2026-05-12T10:15:00.000Z'
-        expires_at: '2026-05-26T10:15:00.000Z'
-        account:
-          id: acc_4fekhxdpss1et7rjp8t7rdpnw4
-        flow:
-          next_step:
-            type: redirect
-            url: https://onboarding.getpaid.io/v2/app_5mzpjyeqtt2fu8skq9u8seqow5?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        fields:
+        - name: themes
+          access: read_write
+        redirect:
+          default: https://titanauto.com/change-request/complete?customer=53426
+        webhooks:
+          url: https://webhooks.titanauto.com/getpaid
     CreateApplicationSellerDetails:
       summary: Create an application pre-filling seller details
       value:
@@ -1154,33 +1226,6 @@ components:
           default: https://titanauto.com/onboarding/complete?customer=53426
         webhooks:
           url: https://webhooks.titanauto.com/getpaid
-    CreateChangeRequestApplication:
-      summary: Create a change request application
-      value:
-        type: change_request
-        account:
-          id: acc_4fekhxdpss1et7rjp8t7rdpnw4
-        reference: '53426'
-        fields:
-        - name: themes
-          access: read_write
-        redirect:
-          default: https://titanauto.com/change-request/complete?customer=53426
-        webhooks:
-          url: https://webhooks.titanauto.com/getpaid
-    QueryApplications:
-      summary: Query applications
-      value:
-        type: applications
-        filters:
-          statuses:
-          - submitted
-          - completed
-          country: DE
-          legal_name: Garage
-        sorts:
-        - field: created_at
-          direction: descending
     ApplicationInitiated:
       summary: Application in initiated status
       value:
@@ -1221,19 +1266,6 @@ components:
         created_at: '2026-02-01T14:30:00.000Z'
         updated_at: '2026-02-06T09:45:00.000Z'
         expires_at: '2026-02-16T14:30:00.000Z'
-    CreateApplicationCanada:
-      summary: Create a canadian application
-      value:
-        type: onboarding
-        reference: APP-SELL-021
-        applicant:
-          email: markus.miller@mapleleafgarage.ca
-        business:
-          legal_name: Maple Leaf Garage Inc.
-          country: CA
-          legal_structure: ca_private_corp
-        redirect:
-          default: https://mapleleafgarage.ca/onboarding/complete?reference=APP-SELL-021
     CreateChangeRequestApplicationWithTheme:
       summary: Create a change request application branded with a custom platform theme
       value:
@@ -1249,56 +1281,14 @@ components:
           default: https://titanauto.com/change-request/complete?customer=53426
         webhooks:
           url: https://webhooks.titanauto.com/getpaid
-    CreateApplication:
-      summary: Create an application
-      value:
-        type: onboarding
-        reference: '53426'
-        applicant:
-          email: markus.keller@garagegermany.de
-        business:
-          legal_name: Garage Deutschland AG
-          country: DE
-        redirect:
-          default: https://titanauto.com/onboarding/complete?customer=53426
-        webhooks:
-          url: https://webhooks.titanauto.com/getpaid
-    OnboardingApplicationCancelled:
-      summary: Onboarding application cancelled successfully
-      value:
-        id: app_4fekhxdpss1et7rjp8t7rdpnw4
-        status: cancelled
-        reference: '456126'
-        account:
-          id: acc_f6m9n2q3ps8et4rjk7d1xbvw5c
-        business:
-          legal_name: Test Company GmbH
-          country: DE
-        applicant:
-          email: markus.keller@garagegermany.de
-          first_name: Markus
-          last_name: Keller
-        created_at: '2026-02-03T10:00:00.000Z'
-        updated_at: '2026-02-03T11:15:00.000Z'
-        expires_at: '2026-02-18T10:00:00.000Z'
   responses:
     500InternalServerError:
       description: Internal Server Error
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
-    400BadRequest:
-      description: Bad Request
-      headers:
-        Getpaid-Trace-Id:
-          $ref: '#/components/headers/GetpaidTraceId'
-    429TooManyRequests:
-      description: Too Many Requests
-      headers:
-        Getpaid-Trace-Id:
-          $ref: '#/components/headers/GetpaidTraceId'
-    409Conflict:
-      description: Conflict
+    404NotFound:
+      description: Not Found
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
@@ -1310,13 +1300,21 @@ components:
             - type: object
               properties:
                 type:
-                  example: https://docs.getpaid.io/integration/api/responses#409---conflict
+                  example: https://docs.getpaid.io/integration/api/responses#404---not-found
                 title:
-                  example: Conflict
+                  example: Not Found
                 status:
-                  example: 409
-                detail:
-                  example: Request cannot be completed due to the current state of the server
+                  example: 404
+    400BadRequest:
+      description: Bad Request
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
+    429TooManyRequests:
+      description: Too Many Requests
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
     422InvalidParameters:
       description: Invalid Parameters
       headers:
@@ -1347,8 +1345,8 @@ components:
                   example: Invalid Parameters
                 status:
                   example: 422
-    404NotFound:
-      description: Not Found
+    409Conflict:
+      description: Conflict
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
@@ -1360,11 +1358,13 @@ components:
             - type: object
               properties:
                 type:
-                  example: https://docs.getpaid.io/integration/api/responses#404---not-found
+                  example: https://docs.getpaid.io/integration/api/responses#409---conflict
                 title:
-                  example: Not Found
+                  example: Conflict
                 status:
-                  example: 404
+                  example: 409
+                detail:
+                  example: Request cannot be completed due to the current state of the server
     401Unauthorized:
       description: Unauthorized
       headers:

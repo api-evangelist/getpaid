@@ -428,28 +428,76 @@ webhooks:
           description: The webhook action will be retried according to the workflow retry schedule
 components:
   schemas:
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
+      type: string
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
+    PaymentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the payment.
+        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+    PaymentOrigin:
+      description: The origin of the payment creation.
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginApi'
+      - $ref: '#/components/schemas/PaymentOriginCheckout'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/PaymentOriginApi'
+          checkout: '#/components/schemas/PaymentOriginCheckout'
+    PaymentMethodType:
+      description: The type of payment method.
+      type: string
+      enum:
+      - card
+      - sepa_direct_debit
+    PaymentOriginCheckout:
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginBase'
+      - required:
+        - id
+        properties:
+          id:
+            $ref: '#/components/schemas/CheckoutId'
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    CheckoutId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the checkout.
+        example: cko_4kf9v6xp00hzc99rdwr5m97wce
     EventId:
       allOf:
       - $ref: '#/components/schemas/Id'
       - description: The unique identifier of the event.
         example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
-    PaymentStatus:
-      description: 'The status of the payment.
-
-        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
-
-        '
-      type: string
-      enum:
-      - initiated
-      - action_required
-      - submitted
-      - authorized
-      - captured
-      - declined
-      - failed
-      - partially_refunded
-      - refunded
+    WebhookCheckoutPayment:
+      type: object
+      required:
+      - id
+      - method
+      properties:
+        id:
+          $ref: '#/components/schemas/PaymentId'
+        method:
+          description: The payment method used.
+          type: object
+          required:
+          - type
+          properties:
+            type:
+              $ref: '#/components/schemas/PaymentMethodType'
     WebhookBaseRequest:
       type: object
       required:
@@ -475,70 +523,24 @@ components:
         data:
           description: The event data specific to each event type and version.
           type: object
-    DateTime:
-      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
-
-        Always includes the ''Z'' UTC indicator.
-
-        '
-      type: string
-      format: date-time
-      minLength: 24
-      maxLength: 24
-      example: '2025-09-01T22:05:48.479Z'
-    PaymentOrigin:
-      description: The origin of the payment creation.
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginApi'
-      - $ref: '#/components/schemas/PaymentOriginCheckout'
-      discriminator:
-        propertyName: type
-        mapping:
-          api: '#/components/schemas/PaymentOriginApi'
-          checkout: '#/components/schemas/PaymentOriginCheckout'
-    ShortString:
-      type: string
-      minLength: 1
-      maxLength: 50
-    StandingInstructionStatus:
-      description: 'The status of the standing instruction.
-
-
-        - `new`: requested to creation as part of an initial payment.
-
-        - `active`: standing instruction is active and can be used for subsequent payments.
-
-        '
-      type: string
-      enum:
-      - new
-      - active
-    PaymentMethodType:
-      description: The type of payment method.
-      type: string
-      enum:
-      - card
-      - sepa_direct_debit
-    PaymentId:
+    StandingInstructionId:
       allOf:
       - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the payment.
-        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+      - description: The unique identifier of the standing instruction.
+        example: sti_4tbftjwzxja1h71nzas1g0g1xm
+    PaymentOriginApi:
+      allOf:
+      - $ref: '#/components/schemas/PaymentOriginBase'
     RefundId:
       allOf:
       - $ref: '#/components/schemas/Id'
       - description: The unique identifier of the refund of a payment.
         example: rfd_4a4m2pjycdb1jbj68h1rvk9kcz
-    Reference:
+    CaptureId:
       allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of a capture
+        example: cpt_57fm2pjycji1jbj68h1rvk9bnc
     PaymentOriginBase:
       type: object
       required:
@@ -557,48 +559,46 @@ components:
           enum:
           - api
           - checkout
-    StandingInstructionId:
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    StandingInstructionStatus:
+      description: 'The status of the standing instruction.
+
+
+        - `new`: requested to creation as part of an initial payment.
+
+        - `active`: standing instruction is active and can be used for subsequent payments.
+
+        '
+      type: string
+      enum:
+      - new
+      - active
+    PaymentStatus:
+      description: 'The status of the payment.
+
+        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
+
+        '
+      type: string
+      enum:
+      - initiated
+      - action_required
+      - submitted
+      - authorized
+      - captured
+      - declined
+      - failed
+      - partially_refunded
+      - refunded
+    Reference:
       allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the standing instruction.
-        example: sti_4tbftjwzxja1h71nzas1g0g1xm
-    PaymentOriginCheckout:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
-      - required:
-        - id
-        properties:
-          id:
-            $ref: '#/components/schemas/CheckoutId'
-    WebhookCheckoutPayment:
-      type: object
-      required:
-      - id
-      - method
-      properties:
-        id:
-          $ref: '#/components/schemas/PaymentId'
-        method:
-          description: The payment method used.
-          type: object
-          required:
-          - type
-          properties:
-            type:
-              $ref: '#/components/schemas/PaymentMethodType'
-    PaymentOriginApi:
-      allOf:
-      - $ref: '#/components/schemas/PaymentOriginBase'
-    CheckoutId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the checkout.
-        example: cko_4kf9v6xp00hzc99rdwr5m97wce
-    CaptureId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of a capture
-        example: cpt_57fm2pjycji1jbj68h1rvk9bnc
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
   parameters:
     GetpaidTraceId:
       name: Getpaid-Trace-Id

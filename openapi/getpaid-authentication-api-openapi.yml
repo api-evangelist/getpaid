@@ -64,6 +64,57 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailsBase'
 components:
   schemas:
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
+    RequestAccessTokenResponse:
+      type: object
+      required:
+      - access_token
+      - scope
+      - expires_in
+      - token_type
+      properties:
+        access_token:
+          description: The OAuth access token (JWT) used to authenticate to Getpaid API.
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        scope:
+          description: The API scopes granted to the access token.
+          type: string
+          example: accounts:read documents:read_write payments:read
+        expires_in:
+          description: The duration (in seconds) until the access token expires.
+          type: integer
+          example: 86400
+        token_type:
+          description: The type of token returned.
+          type: string
+          enum:
+          - Bearer
     RequestAccessTokenRequest:
       type: object
       required:
@@ -91,71 +142,20 @@ components:
           description: The OAuth grant type.
           type: string
           const: client_credentials
-    RequestAccessTokenResponse:
-      type: object
-      required:
-      - access_token
-      - scope
-      - expires_in
-      - token_type
-      properties:
-        access_token:
-          description: The OAuth access token (JWT) used to authenticate to Getpaid API.
-          type: string
-          example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-        scope:
-          description: The API scopes granted to the access token.
-          type: string
-          example: accounts:read documents:read_write payments:read
-        expires_in:
-          description: The duration (in seconds) until the access token expires.
-          type: integer
-          example: 86400
-        token_type:
-          description: The type of token returned.
-          type: string
-          enum:
-          - Bearer
-    ProblemDetailsBase:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      required:
-      - type
-      - title
-      - status
-      properties:
-        type:
-          type: string
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
-          format: uri
-          example: https://docs.getpaid.io/ref/error-types#problem
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
-          example: Invalid Request
-        status:
-          type: integer
-          description: The HTTP status code.
-          minimum: 400
-          maximum: 599
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
-          example: The request body was invalid
   examples:
-    LiveAccessToken:
-      summary: Live access token
-      value:
-        client_id: g6gWu46zeP0HH4jkW3i22yJ2shDrNxJ8
-        client_secret: VJG133mOfuHhSfkIS6gozTXzr7FBm-0HS42OZ0cmxJkcHyGrVZMLGJtyruTA4CQv
-        audience: https://api.getpaid.io
-        grant_type: client_credentials
     SandboxAccessToken:
       summary: Sandbox access token
       value:
         client_id: 0UvlOgIPIKqAzd0yi7Xnk8NroSsRLOaj
         client_secret: S6gozTXzrS42OZ0cmxVJG133mOfuHhSfkIJkcH7FBm-0HyGrVZMLGJtyruTA4CQv
         audience: https://api.sandbox.getpaid.io
+        grant_type: client_credentials
+    LiveAccessToken:
+      summary: Live access token
+      value:
+        client_id: g6gWu46zeP0HH4jkW3i22yJ2shDrNxJ8
+        client_secret: VJG133mOfuHhSfkIS6gozTXzr7FBm-0HS42OZ0cmxJkcHyGrVZMLGJtyruTA4CQv
+        audience: https://api.getpaid.io
         grant_type: client_credentials
   securitySchemes:
     OAuth:

@@ -80,47 +80,257 @@ paths:
           $ref: '#/components/responses/500InternalServerError'
 components:
   schemas:
-    BaseSortItemRequest:
-      description: Each field to sort by.
-      type: object
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          description: The field to sort by. Each field available can only be used once in the list.
-          type: string
-        direction:
-          description: The sort direction
-          type: string
-          enum:
-          - ascending
-          - descending
-    CheckoutStatus:
-      description: 'The status of the checkout.
+    CardPaymentMethodHint:
+      allOf:
+      - required:
+        - scheme
+        properties:
+          type:
+            type: string
+          scheme:
+            $ref: '#/components/schemas/CardScheme'
+      - $ref: '#/components/schemas/BasePaymentMethodHint'
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
 
-        See the [list, transitions, and description of each status](/payments/checkouts#lifecycle) for more details.
+        Always includes the ''Z'' UTC indicator.
 
         '
       type: string
-      enum:
-      - initiated
-      - started
-      - in_progress
-      - completed
-      - failed
-      - expired
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
     CardScheme:
       description: The card scheme.
       type: string
       enum:
       - visa
       - mastercard
+    PaymentId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the payment.
+        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
+    CheckoutsFiltersRequest:
+      description: Filtering checkouts.
+      type: object
+      properties:
+        id:
+          allOf:
+          - description: The checkout identifier to filter by using an exact match operation.
+          - $ref: '#/components/schemas/CheckoutId'
+        reference:
+          description: The checkout reference to filter by using a contains operation.
+          type: string
+        seller_legal_name:
+          description: The seller legal name to filter by using a contains operation.
+          type: string
+        statuses:
+          description: The list of checkout statuses to filter by.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/CheckoutStatus'
+    QueryPaymentMethodHint:
+      description: The payment method used in a checkout.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          description: The type of payment method.
+          type: string
+          enum:
+          - card
+          - sepa_direct_debit
+        scheme:
+          description: The scheme of the payment method (e.g., visa, mastercard).
+          type: string
+    QueryResourcesResponse:
+      oneOf:
+      - $ref: '#/components/schemas/QueryCheckoutsResponse'
+      - $ref: '#/components/schemas/QueryPaymentsResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          checkouts: '#/components/schemas/QueryCheckoutsResponse'
+          payments: '#/components/schemas/QueryPaymentsResponse'
+    QueryPaymentsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - payments
+          filters:
+            $ref: '#/components/schemas/PaymentsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/PaymentsSortsRequest'
+    BasePaymentMethodHint:
+      allOf:
+      - $ref: '#/components/schemas/PaymentMethodBase'
+      - required:
+        - display_hint
+        properties:
+          display_hint:
+            $ref: '#/components/schemas/PaymentMethodDisplayHint'
+    PaymentMethodType:
+      description: The type of payment method.
+      type: string
+      enum:
+      - card
+      - sepa_direct_debit
+    Currency:
+      type: string
+      format: currency
+      minLength: 3
+      maxLength: 3
+      description: The processing currency code according to the [ISO-4217 standard](https://en.wikipedia.org/wiki/ISO_4217)
+      example: EUR
+    QueryCheckoutsResponse:
+      allOf:
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - checkouts
+          cursor:
+            type: string
+          data:
+            items:
+              required:
+              - id
+              - reference
+              - status
+              - amount
+              - currency
+              - created_at
+              - updated_at
+              - expires_at
+              - payment_methods
+              - seller
+              - parties
+              properties:
+                id:
+                  $ref: '#/components/schemas/CheckoutId'
+                reference:
+                  $ref: '#/components/schemas/Reference'
+                status:
+                  $ref: '#/components/schemas/CheckoutStatus'
+                amount:
+                  $ref: '#/components/schemas/AmountMinor'
+                currency:
+                  $ref: '#/components/schemas/Currency'
+                created_at:
+                  $ref: '#/components/schemas/CreatedAt'
+                updated_at:
+                  $ref: '#/components/schemas/UpdatedAt'
+                expires_at:
+                  $ref: '#/components/schemas/CheckoutExpiresAt'
+                payment_methods:
+                  description: The list of payment methods available in the checkout.
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/QueryPaymentMethodHint'
+                seller:
+                  $ref: '#/components/schemas/SellerRef'
+                parties:
+                  description: The list of parties involved in the transaction.
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/PartyRef'
+      - $ref: '#/components/schemas/PaginatedResponse'
+    CreatedAt:
+      allOf:
+      - description: When the resource was created.
+      - $ref: '#/components/schemas/DateTime'
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    MediumString:
+      type: string
+      minLength: 1
+      maxLength: 250
+    PaymentsSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        allOf:
+        - $ref: '#/components/schemas/BaseSortItemRequest'
+        - properties:
+            field:
+              enum:
+              - created_at
+              - amount
+              - seller_legal_name
+    PaginatedResponse:
+      type: object
+      required:
+      - data
+      properties:
+        cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+        data:
+          $ref: '#/components/schemas/PaginationData'
+    ProblemDetailsBase:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
+          format: uri
+          example: https://docs.getpaid.io/ref/error-types#problem
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          example: Invalid Request
+        status:
+          type: integer
+          description: The HTTP status code.
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: The request body was invalid
+    PaginationCursor:
+      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
+      type: string
+      maxLength: 250
+      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+    CheckoutId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the checkout.
+        example: cko_4kf9v6xp00hzc99rdwr5m97wce
     AccountId:
       allOf:
       - $ref: '#/components/schemas/Id'
       - description: The unique identifier of the account.
         example: acc_44678r08jtm8zbt227tzhc4nw5
+    PaginationFirst:
+      description: Pagination. The number of elements that will be retrieved.
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 100
     QueryResourcesRequest:
       oneOf:
       - $ref: '#/components/schemas/QueryCheckoutsRequest'
@@ -130,28 +340,95 @@ components:
         mapping:
           checkouts: '#/components/schemas/QueryCheckoutsRequest'
           payments: '#/components/schemas/QueryPaymentsRequest'
-    PaymentStatus:
-      description: 'The status of the payment.
+    PaginationAfter:
+      description: Pagination. The `cursor` from next page will be retrieved.
+      type: string
+      maxLength: 250
+    CheckoutExpiresAt:
+      allOf:
+      - description: When the checkout session will expire if not completed.
+      - $ref: '#/components/schemas/DateTime'
+    PaymentMethodDisplayHint:
+      allOf:
+      - description: A hint of the payment method used.
+      - $ref: '#/components/schemas/ShortString'
+    QueriesResourceType:
+      description: 'The type of the Getpaid solution resources to get analytics from:
 
-        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
+
+        - `checkouts`
+
+        - `payments`
 
         '
       type: string
       enum:
-      - initiated
-      - action_required
-      - submitted
-      - authorized
-      - captured
-      - declined
-      - failed
-      - partially_refunded
-      - refunded
-    PaginationCursor:
-      description: The cursor to the last item. If non-empty, can be used to fetch the next page. If not set, there is no more elements.
-      type: string
-      maxLength: 250
-      example: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+      - checkouts
+      - payments
+    PaymentMethodHint:
+      description: The payment method used.
+      oneOf:
+      - $ref: '#/components/schemas/BasePaymentMethodHint'
+      - $ref: '#/components/schemas/CardPaymentMethodHint'
+      discriminator:
+        propertyName: type
+        mapping:
+          card: '#/components/schemas/CardPaymentMethodHint'
+          sepa_direct_debit: '#/components/schemas/BasePaymentMethodHint'
+    SellerRef:
+      description: A reference to the seller account.
+      type: object
+      required:
+      - id
+      - legal_name
+      properties:
+        id:
+          $ref: '#/components/schemas/AccountId'
+        legal_name:
+          $ref: '#/components/schemas/AccountLegalName'
+    BaseSortsRequest:
+      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        description: Each field to sort by.
+        type: object
+        required:
+        - field
+        - direction
+        properties:
+          field:
+            description: The field to sort by. Each field available can only be used once in the list.
+            type: string
+          direction:
+            description: The sort direction
+            type: string
+            enum:
+            - ascending
+            - descending
+    BaseQueryRequest:
+      type: object
+      properties:
+        type:
+          description: 'The type of the Getpaid solution resources to query.
+
+
+            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
+
+            must match the resource targeted by the request URL.
+
+            '
+          type: string
+        first:
+          allOf:
+          - $ref: '#/components/schemas/PaginationFirst'
+        after:
+          $ref: '#/components/schemas/PaginationAfter'
+        filters:
+          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
+        sorts:
+          $ref: '#/components/schemas/BaseSortsRequest'
     QueryPaymentsResponse:
       allOf:
       - required:
@@ -220,72 +497,32 @@ components:
           - other
         legal_name:
           $ref: '#/components/schemas/AccountLegalName'
-    CreatedAt:
-      allOf:
-      - description: When the resource was created.
-      - $ref: '#/components/schemas/DateTime'
-    BasePaymentMethodHint:
-      allOf:
-      - $ref: '#/components/schemas/PaymentMethodBase'
-      - required:
-        - display_hint
-        properties:
-          display_hint:
-            $ref: '#/components/schemas/PaymentMethodDisplayHint'
-    QueryPaymentMethodHint:
-      description: The payment method used in a checkout.
+    AmountMinor:
+      type: integer
+      format: amount-minor
+      description: The payment amount in the minor currency unit (e.g. 100 cents for 1 EUR).
+      example: 1000
+    CheckoutStatus:
+      description: 'The status of the checkout.
+
+        See the [list, transitions, and description of each status](/payments/checkouts#lifecycle) for more details.
+
+        '
+      type: string
+      enum:
+      - initiated
+      - started
+      - in_progress
+      - completed
+      - failed
+      - expired
+    PaymentMethodBase:
       type: object
       required:
       - type
       properties:
         type:
-          description: The type of payment method.
-          type: string
-          enum:
-          - card
-          - sepa_direct_debit
-        scheme:
-          description: The scheme of the payment method (e.g., visa, mastercard).
-          type: string
-    DateTime:
-      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
-
-        Always includes the ''Z'' UTC indicator.
-
-        '
-      type: string
-      format: date-time
-      minLength: 24
-      maxLength: 24
-      example: '2025-09-01T22:05:48.479Z'
-    CardPaymentMethodHint:
-      allOf:
-      - required:
-        - scheme
-        properties:
-          type:
-            type: string
-          scheme:
-            $ref: '#/components/schemas/CardScheme'
-      - $ref: '#/components/schemas/BasePaymentMethodHint'
-    ShortString:
-      type: string
-      minLength: 1
-      maxLength: 50
-    QueryCheckoutsRequest:
-      allOf:
-      - $ref: '#/components/schemas/BaseQueryRequest'
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - checkouts
-          filters:
-            $ref: '#/components/schemas/CheckoutsFiltersRequest'
-          sorts:
-            $ref: '#/components/schemas/CheckoutsSortsRequest'
+          $ref: '#/components/schemas/PaymentMethodType'
     CheckoutsSortsRequest:
       description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
       type: array
@@ -300,71 +537,76 @@ components:
               - created_at
               - amount
               - seller_legal_name
-    PaginatedResponse:
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
+    BaseSortItemRequest:
+      description: Each field to sort by.
       type: object
       required:
-      - data
+      - field
+      - direction
       properties:
-        cursor:
-          $ref: '#/components/schemas/PaginationCursor'
-        data:
-          $ref: '#/components/schemas/PaginationData'
-    QueriesResourceType:
-      description: 'The type of the Getpaid solution resources to get analytics from:
+        field:
+          description: The field to sort by. Each field available can only be used once in the list.
+          type: string
+        direction:
+          description: The sort direction
+          type: string
+          enum:
+          - ascending
+          - descending
+    PaymentStatus:
+      description: 'The status of the payment.
 
-
-        - `checkouts`
-
-        - `payments`
+        See the [list, transitions, and description of each status](/payments/lifecycle) for more details.
 
         '
       type: string
       enum:
-      - checkouts
-      - payments
-    PaymentMethodType:
-      description: The type of payment method.
-      type: string
-      enum:
-      - card
-      - sepa_direct_debit
-    CheckoutsFiltersRequest:
-      description: Filtering checkouts.
-      type: object
-      properties:
-        id:
-          allOf:
-          - description: The checkout identifier to filter by using an exact match operation.
-          - $ref: '#/components/schemas/CheckoutId'
-        reference:
-          description: The checkout reference to filter by using a contains operation.
-          type: string
-        seller_legal_name:
-          description: The seller legal name to filter by using a contains operation.
-          type: string
-        statuses:
-          description: The list of checkout statuses to filter by.
-          type: array
-          minItems: 1
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/CheckoutStatus'
-    PaymentId:
+      - initiated
+      - action_required
+      - submitted
+      - authorized
+      - captured
+      - declined
+      - failed
+      - partially_refunded
+      - refunded
+    UpdatedAt:
       allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the payment.
-        example: pay_4a4m2pjycdb1jbj68h1rvk9kcz
-    PaginationFirst:
-      description: Pagination. The number of elements that will be retrieved.
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 100
-    AmountMinor:
-      type: integer
-      format: amount-minor
-      description: The payment amount in the minor currency unit (e.g. 100 cents for 1 EUR).
-      example: 1000
+      - description: When the resource was last updated.
+      - $ref: '#/components/schemas/DateTime'
+    AccountLegalName:
+      allOf:
+      - description: The legal name of the account.
+      - $ref: '#/components/schemas/MediumString'
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
+    PaginationData:
+      description: The list of queried elements.
+      type: array
+      items:
+        type: object
+    QueryCheckoutsRequest:
+      allOf:
+      - $ref: '#/components/schemas/BaseQueryRequest'
+      - required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - checkouts
+          filters:
+            $ref: '#/components/schemas/CheckoutsFiltersRequest'
+          sorts:
+            $ref: '#/components/schemas/CheckoutsSortsRequest'
     PaymentsFiltersRequest:
       description: Filtering payments.
       type: object
@@ -386,256 +628,9 @@ components:
           uniqueItems: true
           items:
             $ref: '#/components/schemas/PaymentStatus'
-    UpdatedAt:
-      allOf:
-      - description: When the resource was last updated.
-      - $ref: '#/components/schemas/DateTime'
-    PaymentMethodDisplayHint:
-      allOf:
-      - description: A hint of the payment method used.
-      - $ref: '#/components/schemas/ShortString'
-    Reference:
-      allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
-    CheckoutExpiresAt:
-      allOf:
-      - description: When the checkout session will expire if not completed.
-      - $ref: '#/components/schemas/DateTime'
-    AccountLegalName:
-      allOf:
-      - description: The legal name of the account.
-      - $ref: '#/components/schemas/MediumString'
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
-    PaymentMethodBase:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          $ref: '#/components/schemas/PaymentMethodType'
-    PaymentMethodHint:
-      description: The payment method used.
-      oneOf:
-      - $ref: '#/components/schemas/BasePaymentMethodHint'
-      - $ref: '#/components/schemas/CardPaymentMethodHint'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPaymentMethodHint'
-          sepa_direct_debit: '#/components/schemas/BasePaymentMethodHint'
-    ProblemDetailsBase:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      required:
-      - type
-      - title
-      - status
-      properties:
-        type:
-          type: string
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the problem type. It should provide human-readable documentation for the problem type. When this member is not present, its value is assumed to be "about:blank".
-          format: uri
-          example: https://docs.getpaid.io/ref/error-types#problem
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
-          example: Invalid Request
-        status:
-          type: integer
-          description: The HTTP status code.
-          minimum: 400
-          maximum: 599
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
-          example: The request body was invalid
-    PaginationAfter:
-      description: Pagination. The `cursor` from next page will be retrieved.
-      type: string
-      maxLength: 250
-    BaseQueryRequest:
-      type: object
-      properties:
-        type:
-          description: 'The type of the Getpaid solution resources to query.
-
-
-            Some query endpoints infer the resource type from the request path. In those cases, if this field is set, it
-
-            must match the resource targeted by the request URL.
-
-            '
-          type: string
-        first:
-          allOf:
-          - $ref: '#/components/schemas/PaginationFirst'
-        after:
-          $ref: '#/components/schemas/PaginationAfter'
-        filters:
-          description: Filters to reduce the data set to query. If not set, all resources available of the given type will be queried.
-        sorts:
-          $ref: '#/components/schemas/BaseSortsRequest'
-    SellerRef:
-      description: A reference to the seller account.
-      type: object
-      required:
-      - id
-      - legal_name
-      properties:
-        id:
-          $ref: '#/components/schemas/AccountId'
-        legal_name:
-          $ref: '#/components/schemas/AccountLegalName'
-    QueryResourcesResponse:
-      oneOf:
-      - $ref: '#/components/schemas/QueryCheckoutsResponse'
-      - $ref: '#/components/schemas/QueryPaymentsResponse'
-      discriminator:
-        propertyName: type
-        mapping:
-          checkouts: '#/components/schemas/QueryCheckoutsResponse'
-          payments: '#/components/schemas/QueryPaymentsResponse'
-    Currency:
-      type: string
-      format: currency
-      minLength: 3
-      maxLength: 3
-      description: The processing currency code according to the [ISO-4217 standard](https://en.wikipedia.org/wiki/ISO_4217)
-      example: EUR
-    BaseSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        description: Each field to sort by.
-        type: object
-        required:
-        - field
-        - direction
-        properties:
-          field:
-            description: The field to sort by. Each field available can only be used once in the list.
-            type: string
-          direction:
-            description: The sort direction
-            type: string
-            enum:
-            - ascending
-            - descending
-    MediumString:
-      type: string
-      minLength: 1
-      maxLength: 250
-    QueryCheckoutsResponse:
-      allOf:
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - checkouts
-          cursor:
-            type: string
-          data:
-            items:
-              required:
-              - id
-              - reference
-              - status
-              - amount
-              - currency
-              - created_at
-              - updated_at
-              - expires_at
-              - payment_methods
-              - seller
-              - parties
-              properties:
-                id:
-                  $ref: '#/components/schemas/CheckoutId'
-                reference:
-                  $ref: '#/components/schemas/Reference'
-                status:
-                  $ref: '#/components/schemas/CheckoutStatus'
-                amount:
-                  $ref: '#/components/schemas/AmountMinor'
-                currency:
-                  $ref: '#/components/schemas/Currency'
-                created_at:
-                  $ref: '#/components/schemas/CreatedAt'
-                updated_at:
-                  $ref: '#/components/schemas/UpdatedAt'
-                expires_at:
-                  $ref: '#/components/schemas/CheckoutExpiresAt'
-                payment_methods:
-                  description: The list of payment methods available in the checkout.
-                  type: array
-                  minItems: 1
-                  items:
-                    $ref: '#/components/schemas/QueryPaymentMethodHint'
-                seller:
-                  $ref: '#/components/schemas/SellerRef'
-                parties:
-                  description: The list of parties involved in the transaction.
-                  type: array
-                  minItems: 1
-                  items:
-                    $ref: '#/components/schemas/PartyRef'
-      - $ref: '#/components/schemas/PaginatedResponse'
-    PaymentsSortsRequest:
-      description: Fields to sort the data by. If not set, the data will be sorted by the creation date descending.
-      type: array
-      minItems: 1
-      uniqueItems: true
-      items:
-        allOf:
-        - $ref: '#/components/schemas/BaseSortItemRequest'
-        - properties:
-            field:
-              enum:
-              - created_at
-              - amount
-              - seller_legal_name
-    CheckoutId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the checkout.
-        example: cko_4kf9v6xp00hzc99rdwr5m97wce
-    PaginationData:
-      description: The list of queried elements.
-      type: array
-      items:
-        type: object
-    QueryPaymentsRequest:
-      allOf:
-      - $ref: '#/components/schemas/BaseQueryRequest'
-      - required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - payments
-          filters:
-            $ref: '#/components/schemas/PaymentsFiltersRequest'
-          sorts:
-            $ref: '#/components/schemas/PaymentsSortsRequest'
   responses:
     500InternalServerError:
       description: Internal Server Error
-      headers:
-        Getpaid-Trace-Id:
-          $ref: '#/components/headers/GetpaidTraceId'
-    400BadRequest:
-      description: Bad Request
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
@@ -674,68 +669,40 @@ components:
                   example: Invalid Parameters
                 status:
                   example: 422
+    400BadRequest:
+      description: Bad Request
+      headers:
+        Getpaid-Trace-Id:
+          $ref: '#/components/headers/GetpaidTraceId'
     401Unauthorized:
       description: Unauthorized
       headers:
         Getpaid-Trace-Id:
           $ref: '#/components/headers/GetpaidTraceId'
   examples:
+    QueryPayments:
+      summary: Query payments
+      value:
+        type: payments
+        filters:
+          seller_legal_name: Titan Biking
+          statuses:
+          - captured
+    QueryCheckouts:
+      summary: Query checkouts
+      value:
+        type: checkouts
+        filters:
+          seller_legal_name: Titan Biking
+          statuses:
+          - expired
+          - failed
     QueryNext20Payments:
       summary: Query next 20 payments
       value:
         type: payments
         after: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
         first: 20
-        filters:
-          seller_legal_name: Titan Biking
-          statuses:
-          - captured
-    FilteredPayments:
-      summary: Filtered payments
-      value:
-        type: payments
-        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
-        data:
-        - id: pay_4y7kptsvn11qq6d354g5tx735v
-          reference: ORD-202510-0232
-          status: captured
-          amount: 1000
-          currency: EUR
-          created_at: '2023-03-15T12:34:56.999Z'
-          updated_at: '2023-03-15T12:34:56.999Z'
-          method:
-            type: card
-            scheme: visa
-            display_hint: 424242******4242
-          seller:
-            id: acc_44678r08jtm8zbt227tzhc4nw5
-            legal_name: Titan Biking
-          parties:
-          - id: acc_5y789s19kum9act338uaic5ox6
-            type: platform
-            legal_name: Titan Auto Parts GmbH
-        - id: pay_4y7kptsvn11qq6d354g5tx736w
-          reference: ORD-202511-0133
-          status: captured
-          amount: 1000
-          currency: EUR
-          created_at: '2023-03-15T12:34:56.999Z'
-          updated_at: '2023-03-15T12:34:56.999Z'
-          method:
-            type: card
-            scheme: visa
-            display_hint: 411111******1111
-          seller:
-            id: acc_44678r08jtm8zbt227tzhc4nw5
-            legal_name: Titan Biking
-          parties:
-          - id: acc_5y789s19kum9act338uaic5ox6
-            type: platform
-            legal_name: Titan Auto Parts GmbH
-    QueryPayments:
-      summary: Query payments
-      value:
-        type: payments
         filters:
           seller_legal_name: Titan Biking
           statuses:
@@ -786,15 +753,48 @@ components:
           - id: acc_5y789s19kum9act338uaic5ox6
             type: platform
             legal_name: Titan Auto Parts GmbH
-    QueryCheckouts:
-      summary: Query checkouts
+    FilteredPayments:
+      summary: Filtered payments
       value:
-        type: checkouts
-        filters:
-          seller_legal_name: Titan Biking
-          statuses:
-          - expired
-          - failed
+        type: payments
+        cursor: Q3VyaW9zaXR5IEtpbGxlZCB0aGUgQ2F0Cg==
+        data:
+        - id: pay_4y7kptsvn11qq6d354g5tx735v
+          reference: ORD-202510-0232
+          status: captured
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-15T12:34:56.999Z'
+          updated_at: '2023-03-15T12:34:56.999Z'
+          method:
+            type: card
+            scheme: visa
+            display_hint: 424242******4242
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
+        - id: pay_4y7kptsvn11qq6d354g5tx736w
+          reference: ORD-202511-0133
+          status: captured
+          amount: 1000
+          currency: EUR
+          created_at: '2023-03-15T12:34:56.999Z'
+          updated_at: '2023-03-15T12:34:56.999Z'
+          method:
+            type: card
+            scheme: visa
+            display_hint: 411111******1111
+          seller:
+            id: acc_44678r08jtm8zbt227tzhc4nw5
+            legal_name: Titan Biking
+          parties:
+          - id: acc_5y789s19kum9act338uaic5ox6
+            type: platform
+            legal_name: Titan Auto Parts GmbH
   headers:
     GetpaidTraceId:
       description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests

@@ -95,21 +95,27 @@ webhooks:
         5XX:
           description: The webhook action will be retried according to the workflow retry schedule
 components:
+  parameters:
+    GetpaidTraceId:
+      name: Getpaid-Trace-Id
+      in: header
+      description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests
+      required: true
+      schema:
+        type: string
+        example: 96ce50247f87f540bb2d86771b3728b8
   schemas:
-    ShortString:
+    DateTime:
+      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
+
+        Always includes the ''Z'' UTC indicator.
+
+        '
       type: string
-      minLength: 1
-      maxLength: 50
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
-    EventId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the event.
-        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
+      format: date-time
+      minLength: 24
+      maxLength: 24
+      example: '2025-09-01T22:05:48.479Z'
     WebhookBaseRequest:
       type: object
       required:
@@ -135,36 +141,30 @@ components:
         data:
           description: The event data specific to each event type and version.
           type: object
-    DateTime:
-      description: 'UTC timestamp in ISO 8601 format with milliseconds ([RFC 3339](https://www.rfc-editor.org/rfc/rfc3339.html)).
-
-        Always includes the ''Z'' UTC indicator.
-
-        '
-      type: string
-      format: date-time
-      minLength: 24
-      maxLength: 24
-      example: '2025-09-01T22:05:48.479Z'
     ApplicationId:
       allOf:
       - $ref: '#/components/schemas/Id'
       - description: The unique identifier of the onboarding application.
         example: app_4fekhxdpss1et7rjp8t7rdpnw4
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
     Reference:
       allOf:
       - $ref: '#/components/schemas/ShortString'
       - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
         example: ORD-202510-0232
-  parameters:
-    GetpaidTraceId:
-      name: Getpaid-Trace-Id
-      in: header
-      description: The trace identifier for the request. It is a good idea to log this and provide it with any support requests
-      required: true
-      schema:
-        type: string
-        example: 96ce50247f87f540bb2d86771b3728b8
+    ShortString:
+      type: string
+      minLength: 1
+      maxLength: 50
+    EventId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the event.
+        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
   securitySchemes:
     OAuth:
       type: oauth2

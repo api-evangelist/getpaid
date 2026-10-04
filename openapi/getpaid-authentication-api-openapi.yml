@@ -143,19 +143,19 @@ components:
           type: string
           const: client_credentials
   examples:
-    SandboxAccessToken:
-      summary: Sandbox access token
-      value:
-        client_id: 0UvlOgIPIKqAzd0yi7Xnk8NroSsRLOaj
-        client_secret: S6gozTXzrS42OZ0cmxVJG133mOfuHhSfkIJkcH7FBm-0HyGrVZMLGJtyruTA4CQv
-        audience: https://api.sandbox.getpaid.io
-        grant_type: client_credentials
     LiveAccessToken:
       summary: Live access token
       value:
         client_id: g6gWu46zeP0HH4jkW3i22yJ2shDrNxJ8
         client_secret: VJG133mOfuHhSfkIS6gozTXzr7FBm-0HS42OZ0cmxJkcHyGrVZMLGJtyruTA4CQv
         audience: https://api.getpaid.io
+        grant_type: client_credentials
+    SandboxAccessToken:
+      summary: Sandbox access token
+      value:
+        client_id: 0UvlOgIPIKqAzd0yi7Xnk8NroSsRLOaj
+        client_secret: S6gozTXzrS42OZ0cmxVJG133mOfuHhSfkIJkcH7FBm-0HyGrVZMLGJtyruTA4CQv
+        audience: https://api.sandbox.getpaid.io
         grant_type: client_credentials
   securitySchemes:
     OAuth:

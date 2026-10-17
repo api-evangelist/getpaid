@@ -96,15 +96,20 @@ webhooks:
           description: The webhook action will be retried according to the workflow retry schedule
 components:
   schemas:
-    Id:
-      type: string
-      format: id
-      minLength: 30
-      maxLength: 50
     ShortString:
       type: string
       minLength: 1
       maxLength: 50
+    EventId:
+      allOf:
+      - $ref: '#/components/schemas/Id'
+      - description: The unique identifier of the event.
+        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
+    Reference:
+      allOf:
+      - $ref: '#/components/schemas/ShortString'
+      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
+        example: ORD-202510-0232
     WebhookBaseRequest:
       type: object
       required:
@@ -130,11 +135,11 @@ components:
         data:
           description: The event data specific to each event type and version.
           type: object
-    EventId:
-      allOf:
-      - $ref: '#/components/schemas/Id'
-      - description: The unique identifier of the event.
-        example: evt_4a4m2pjycdb1jbj68h1rvk9kcz
+    Id:
+      type: string
+      format: id
+      minLength: 30
+      maxLength: 50
     ApplicationId:
       allOf:
       - $ref: '#/components/schemas/Id'
@@ -151,11 +156,6 @@ components:
       minLength: 24
       maxLength: 24
       example: '2025-09-01T22:05:48.479Z'
-    Reference:
-      allOf:
-      - $ref: '#/components/schemas/ShortString'
-      - description: An identifier in your system. It is recommended to make it unique but the uniqueness is not enforced by the solution.
-        example: ORD-202510-0232
   parameters:
     GetpaidTraceId:
       name: Getpaid-Trace-Id

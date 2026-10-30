@@ -64,6 +64,139 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-GetPaid is a company surfaced as a portfolio company of insight-partners and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Getpaid is a licensed European (EEA) embedded-payments platform that lets software platforms and marketplaces process payments while keeping the merchant relationship and capturing the transaction margin. It provides white-labeled hosted checkout across 30+ payment methods, atomic real-time split settlement that distributes a single transaction across sellers, the platform and agents, seller onboarding with KYC/KYB, subscriptions and invoicing with SEPA Direct Debit, and an AI-native agent-payments API with scoped authority tokens and spending limits. The v2 REST API uses OAuth 2.0 client-credentials auth, cursor pagination, RFC 7807 problem-details errors, an idempotency-key header, and 10 webhook events. Getpaid is a PCI-DSS Level 1, GDPR- and PSD2/SCA-aligned licensed payment institution with hubs in Germany, Spain and Finland.
 
-Backed by: insight-partners
+**Areas:** Company · Payments · Embedded Payments · Split Settlement · Checkout · Marketplace · Onboarding · Subscription · Agentic Payments · Europe
+
+## GetPaid on APIs.io
+
+Everything profiled for GetPaid is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/getpaid/](https://apis.io/providers/getpaid/)** — or go straight to one of the APIs or properties below.
+
+### APIs (8)
+
+- [GetPaid Accounts API](https://apis.io/apis/getpaid/getpaid-accounts-api/) — Getpaid accounts created for sellers so they can start accepting payments and receiving payouts.
+- [GetPaid Applications API](https://apis.io/apis/getpaid/getpaid-applications-api/) — Onboarding applications to collect the necessary information from sellers to create their Getpaid accounts and start accepting payments.
+- [GetPaid Authentication API](https://apis.io/apis/getpaid/getpaid-authentication-api/) — <!-- markdownlint-disable link-fragments --> In order to authenticate with Getpaid API you need to request an OAuth 2.0 access token using your client ID…
+- [GetPaid Checkouts API](https://apis.io/apis/getpaid/getpaid-checkouts-api/) — Payment checkout sessions for one-time payments that the buyer can complete using Getpaid hosted checkout.
+- [GetPaid Payments API](https://apis.io/apis/getpaid/getpaid-payments-api/) — Create and manage payments initiated by the platform on behalf of the buyer. For recurring and unscheduled payments based on a previous standing instruction.
+- [GetPaid Queries API](https://apis.io/apis/getpaid/getpaid-queries-api/) — List resources filtering and sorting them as needed.
+- [GetPaid Accept payments webhooks API](https://apis.io/apis/getpaid/getpaid-accept-payments-webhooks-api/) — Webhooks related to accepting payment events.
+- [GetPaid Onboard sellers webhooks API](https://apis.io/apis/getpaid/getpaid-onboard-sellers-webhooks-api/) — Webhooks related to onboarding and accounts events.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Getpaid Webhooks](https://apis.io/asyncapis/getpaid/getpaid-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [getpaid](https://apis.io/servers/getpaid/getpaid/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Getpaid Agentic Access](https://apis.io/agentic-access/getpaid/getpaid-agentic-access/)
+
+#### Collections (6)
+
+Postman and Open Collection request collections.
+
+- [Getpaid Accounts API](https://apis.io/collections/getpaid/open-getpaid-accounts-api/)
+- [Getpaid Accounts Applications API](https://apis.io/collections/getpaid/open-getpaid-applications-api/)
+- [Getpaid Accounts Authentication API](https://apis.io/collections/getpaid/open-getpaid-authentication-api/)
+- [Getpaid Accounts Checkouts API](https://apis.io/collections/getpaid/open-getpaid-checkouts-api/)
+- [Getpaid Accounts Payments API](https://apis.io/collections/getpaid/open-getpaid-payments-api/)
+- [Getpaid Accounts Queries API](https://apis.io/collections/getpaid/open-getpaid-queries-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Getpaid Openapi Overlay](https://apis.io/overlays/getpaid/getpaid-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Getpaid Authentication](https://apis.io/security/getpaid/getpaid-authentication/)
+- [Getpaid Domain Security](https://apis.io/security/getpaid/getpaid-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Getpaid Scopes](https://apis.io/scopes/getpaid/getpaid-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.getpaid.io/)
+- [Documentation](https://docs.getpaid.io)
+- [API reference](https://docs.getpaid.io/api)
+- [Sign up](https://dashboard.getpaid.io)
+- [Compliance](https://getpaid.io/compliance)
+- [Privacy policy](https://www.getpaid.io/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 48.6** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 62.2 |
+| Contract governance | 18.2 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 68.5 |
+| Access clarity | 18.4 |
+
+**Agent readiness 50.1** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | verified |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 44.6** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/getpaid/](https://apis.io/providers/getpaid/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for GetPaid: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/getpaid/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
